@@ -19,21 +19,21 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/test1"
+                android:id="@+id/item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView"
-                app:layout_constraintEnd_toStartOf="@+id/test2"
+                android:text="Item"
+                app:layout_constraintEnd_toStartOf="@+id/quantity"
                 app:layout_constraintHorizontal_bias="0.205"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/test2"
+                android:id="@+id/quantity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="60dp"
-                android:text="TextView"
+                android:text="Quantity"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>

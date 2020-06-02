@@ -4,14 +4,44 @@
 
     //testing and testing2 used for debugging features
     <string-array name="testing">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
+        <item>Vegetables</item>
+        <item>Meat</item>
+        <item>Chicken Potato</item>
+        <item>Vegetables</item>
+        <item>Meat</item>
+        <item>Chicken Potato</item>
+        <item>Vegetables</item>
+        <item>Meat</item>
+        <item>Chicken Potato</item>
+        <item>Vegetables</item>
+        <item>Meat</item>
+        <item>Chicken Potato</item>
+        <item>Vegetables</item>
+        <item>Meat</item>
+        <item>Chicken Potato</item>
+        <item>Vegetables</item>
+        <item>Meat</item>
+        <item>Chicken Potato</item>
     </string-array>
 
     <string-array name="testing2">
-        <item>one</item>
-        <item>two</item>
-        <item>three</item>
+        <item>1</item>
+        <item>10</item>
+        <item>3</item>
+        <item>1</item>
+        <item>10</item>
+        <item>3</item>
+        <item>1</item>
+        <item>10</item>
+        <item>3</item>
+        <item>1</item>
+        <item>10</item>
+        <item>3</item>
+        <item>1</item>
+        <item>10</item>
+        <item>3</item>
+        <item>1</item>
+        <item>10</item>
+        <item>3</item>
     </string-array>
 </resources>
