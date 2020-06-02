@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -20,41 +19,6 @@ public class InventoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inventory);
 
-        //Displaying user auth for debugging purposes
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        String message = auth.toString();
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
-    // signOut and delete for debugging purposes
-    public void delete(View view) {
-        AuthUI.getInstance()
-                .delete(this)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        // ...
-                    }
-                });
-
-        //Displaying user auth for debugging purposes
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        String message = auth.toString();
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
-
-    public void signOut(View view) {
-        AuthUI.getInstance()
-            .signOut(this)
-            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                public void onComplete(@NonNull Task<Void> task) {
-                    // ...
-                }
-            });
-
-        //Displaying user auth for debugging purposes
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        String message = auth.toString();
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
 }
