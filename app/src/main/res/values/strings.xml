@@ -1,4 +1,17 @@
 <resources>
     <string name="app_name">FoodCache</string>
     <string name="sign_in">Sign In</string>
+
+    //testing and testing2 used for debugging features
+    <string-array name="testing">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="testing2">
+        <item>one</item>
+        <item>two</item>
+        <item>three</item>
+    </string-array>
 </resources>
