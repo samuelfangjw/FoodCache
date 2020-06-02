@@ -48,24 +48,22 @@ public class MainActivity extends AppCompatActivity {
         signInButton = findViewById(R.id.sign_in_button);
 
         if (auth.getCurrentUser() != null) {
-            //Start signed in Activity
+            // Start signed in Activity
             startMainActivity();
         } else {
-            signInButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    createSignInIntent();
-                }
-            });
+            // User is not signed in, prompt user to sign in
+            createSignInIntent();
         }
     }
 
+    // Starts the main activity after user has been authenticated
     private void startMainActivity() {
         Intent intent = new Intent(this, InventoryActivity.class);
         startActivity(intent);
         finish();
     }
 
+    // Open sign in page
     public void createSignInIntent() {
         // Firebase Authentication providers
         List<AuthUI.IdpConfig> providers = Arrays.asList(
@@ -73,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 new AuthUI.IdpConfig.GoogleBuilder().build(),
                 new AuthUI.IdpConfig.AnonymousBuilder().build());
 
-        // Create and launch sign-in intent
+        // Create and launch sign-in intent, calls onActivityResult automatically
         startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
@@ -82,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 RC_SIGN_IN);
     }
 
+    // process result of sign in request
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -95,10 +94,11 @@ public class MainActivity extends AppCompatActivity {
     private void handleSignInResponse(int resultCode, Intent data) {
         IdpResponse response = IdpResponse.fromResultIntent(data);
         Toast toast;
-        //Successfully signed in
+        // Successfully signed in
         if (resultCode == RESULT_OK) {
             startMainActivity();
         } else {
+            // Sign in unsuccessful
             if (response == null) {
                 Toast.makeText(this, "Sign in Cancelled", Toast.LENGTH_SHORT).show();
             } else {

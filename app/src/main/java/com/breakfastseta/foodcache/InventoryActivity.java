@@ -26,7 +26,7 @@ public class InventoryActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
-
+    // signOut and delete for debugging purposes
     public void delete(View view) {
         AuthUI.getInstance()
                 .delete(this)
