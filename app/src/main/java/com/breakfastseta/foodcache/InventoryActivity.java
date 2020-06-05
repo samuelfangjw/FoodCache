@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -95,6 +96,18 @@ public class InventoryActivity extends AppCompatActivity {
                 adapter.deleteItem(viewHolder.getAdapterPosition());
             }
         }).attachToRecyclerView(recyclerView);
+
+        adapter.setOnItemClickListener(new ItemAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+                Item item = documentSnapshot.toObject(Item.class);
+                String id = documentSnapshot.getId(); //id stored in firebase database
+                Toast.makeText(InventoryActivity.this,
+                        "Position: " + position + " ID: " + id, Toast.LENGTH_SHORT).show();
+                // Start another activity here
+                // String path = documentSnapshot.getReference().getPath() gets path
+            }
+        });
     }
 
     // Starts listening for changes on activity start
