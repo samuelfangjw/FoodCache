@@ -105,27 +105,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-//    public void signOut() {
-//        AuthUI.getInstance()
-//                .signOut(this)
-//                .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                    public void onComplete(@NonNull Task<Void> task) {
-//                        // ...
-//                    }
-//                });
-//    }
-//
-//    public void delete() {
-//        AuthUI.getInstance()
-//                .delete(this)
-//                .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Void> task) {
-//                        // ...
-//                    }
-//                });
-//    }
-
 //    public void themeAndLogo() {
 //        List<AuthUI.IdpConfig> providers = Collections.emptyList();
 //
