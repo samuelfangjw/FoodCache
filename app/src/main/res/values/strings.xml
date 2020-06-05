@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">FoodCache</string>
     <string name="sign_in">Sign In</string>
+    <string name="profile_icon">Profile</string>
 
     //testing and testing2 used for debugging features
     <string-array name="testing">
