@@ -4,4 +4,5 @@
     <string name="profile_icon">Profile</string>
     <string name="ingredient">Ingredient</string>
     <string name="quantity">Quantity</string>
+    <string name="add_item_button">Add Item</string>
 </resources>
