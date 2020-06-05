@@ -63,6 +63,7 @@ public class InventoryActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.profile:
                 Toast.makeText(this, "profile button pressed", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(InventoryActivity.this, ProfileActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

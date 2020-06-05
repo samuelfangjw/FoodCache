@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private static final int RC_SIGN_IN = 100;
-    Button signInButton;
     private FirebaseAuth auth;
 
     @Override
@@ -45,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         auth = FirebaseAuth.getInstance();
-        signInButton = findViewById(R.id.sign_in_button);
 
         if (auth.getCurrentUser() != null) {
             // Start signed in Activity
