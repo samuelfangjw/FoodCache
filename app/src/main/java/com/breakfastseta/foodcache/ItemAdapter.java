@@ -12,10 +12,9 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.ItemHolder> {
-    /**
+    /*
      * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
      * FirestoreRecyclerOptions} for configuration options.
-     *
      * @param options
      */
     public ItemAdapter(@NonNull FirestoreRecyclerOptions<Item> options) {
@@ -24,9 +23,8 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
 
     @Override
     protected void onBindViewHolder(@NonNull ItemHolder holder, int position, @NonNull Item model) {
-        // if integer, use setText(String.valueOf(model.thingy))
         holder.textViewIngredient.setText(model.getIngredient());
-        holder.textViewQuantity.setText(model.getQuantity());
+        holder.textViewQuantity.setText(String.valueOf(model.getQuantity()));
     }
 
     @NonNull

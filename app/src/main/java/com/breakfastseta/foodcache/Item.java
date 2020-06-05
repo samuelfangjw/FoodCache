@@ -2,13 +2,13 @@ package com.breakfastseta.foodcache;
 
 public class Item {
     private String ingredient;
-    private String quantity;
+    private int quantity;
 
     public Item() {
         //empty constructor required for Firestore
     }
 
-    public Item(String ingredient, String quantity) {
+    public Item(String ingredient, int quantity) {
         this.ingredient = ingredient;
         this.quantity = quantity;
     }
@@ -17,7 +17,7 @@ public class Item {
         return ingredient;
     }
 
-    public String getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
