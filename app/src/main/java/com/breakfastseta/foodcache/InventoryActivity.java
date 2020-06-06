@@ -62,7 +62,6 @@ public class InventoryActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.profile:
-                Toast.makeText(this, "profile button pressed", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(InventoryActivity.this, ProfileActivity.class));
                 return true;
             default:
@@ -71,7 +70,6 @@ public class InventoryActivity extends AppCompatActivity {
     }
 
     private void setUpRecyclerView() {
-        //Not sure what to replace this with
         Query query = inventoryRef.orderBy("ingredient", Query.Direction.ASCENDING);
 
         FirestoreRecyclerOptions<Item> options = new FirestoreRecyclerOptions.Builder<Item>()

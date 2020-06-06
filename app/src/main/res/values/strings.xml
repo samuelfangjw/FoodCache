@@ -7,4 +7,6 @@
     <string name="add_item_button">Add Item</string>
     <string name="delete_account">Delete Account</string>
     <string name="sign_out">Sign Out</string>
+    <string name="expiry_date">Expiry Date</string>
+    <string name="days_left">Days left</string>
 </resources>
