@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+// Example Code for Theme/logo and privacy/terms
 //    public void themeAndLogo() {
 //        List<AuthUI.IdpConfig> providers = Collections.emptyList();
 //
