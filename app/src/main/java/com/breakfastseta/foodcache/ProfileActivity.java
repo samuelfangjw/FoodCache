@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -27,7 +28,7 @@ public class ProfileActivity extends AppCompatActivity {
                 .signOut(this)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(ProfileActivity.this, "Sign Out Successful", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(ProfileActivity.this, MainActivity.class));
                     }
                 });
     }
@@ -38,7 +39,7 @@ public class ProfileActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(ProfileActivity.this, "Successfully Deleted Account", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(ProfileActivity.this, MainActivity.class));
                     }
                 });
     }
