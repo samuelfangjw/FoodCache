@@ -101,10 +101,14 @@ public class InventoryActivity extends AppCompatActivity {
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
                 Item item = documentSnapshot.toObject(Item.class);
                 String id = documentSnapshot.getId(); //id stored in firebase database
+                String path = documentSnapshot.getReference().getPath();
                 Toast.makeText(InventoryActivity.this,
-                        "Position: " + position + " ID: " + id, Toast.LENGTH_SHORT).show();
-                // Start another activity here
-                // String path = documentSnapshot.getReference().getPath() gets path
+                        path, Toast.LENGTH_SHORT).show();
+
+                // Starting EditItem activity
+                Intent intent = new Intent(InventoryActivity.this, EditItem.class);
+                intent.putExtra("path", path);
+                startActivity(intent);
             }
         });
     }

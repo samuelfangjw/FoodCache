@@ -9,4 +9,5 @@
     <string name="sign_out">Sign Out</string>
     <string name="expiry_date">Expiry Date</string>
     <string name="days_left">Days left</string>
+    <string name="save_button">Save</string>
 </resources>

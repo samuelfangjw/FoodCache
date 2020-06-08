@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".EditItem"
+            android:parentActivityName=".InventoryActivity" />
+        <activity
             android:name=".ProfileActivity"
             android:parentActivityName=".InventoryActivity" />
         <activity

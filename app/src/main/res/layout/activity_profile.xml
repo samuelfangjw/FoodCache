@@ -26,7 +26,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/delete_account"
-        android:onClick="delete"
-        tools:ignore="OnClick" />
+        android:onClick="delete" />
 
 </LinearLayout>
