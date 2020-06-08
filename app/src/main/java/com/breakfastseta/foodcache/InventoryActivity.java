@@ -1,25 +1,20 @@
 package com.breakfastseta.foodcache;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
-import com.firebase.ui.auth.AuthUI;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -102,8 +97,6 @@ public class InventoryActivity extends AppCompatActivity {
                 Item item = documentSnapshot.toObject(Item.class);
                 String id = documentSnapshot.getId(); //id stored in firebase database
                 String path = documentSnapshot.getReference().getPath();
-                Toast.makeText(InventoryActivity.this,
-                        path, Toast.LENGTH_SHORT).show();
 
                 // Starting EditItem activity
                 Intent intent = new Intent(InventoryActivity.this, EditItem.class);

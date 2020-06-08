@@ -1,12 +1,12 @@
 package com.breakfastseta.foodcache;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -14,8 +14,6 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -45,6 +43,7 @@ public class EditItem extends AppCompatActivity {
 
         path = getIntent().getStringExtra("path");
 
+        assert path != null;
         DocumentReference docRef = db.document(path);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -52,7 +51,6 @@ public class EditItem extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                         setTextView(document);
                     } else {
                         Log.d(TAG, "No such document");
@@ -71,8 +69,9 @@ public class EditItem extends AppCompatActivity {
         Timestamp timestamp = document.getTimestamp("dateTimestamp");
 
         //Formatting Date
+        assert timestamp != null;
         Date expiry = timestamp.toDate();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
         String expiryString = dateFormat.format(expiry);
 
         //Calculating Days Left
@@ -81,9 +80,9 @@ public class EditItem extends AppCompatActivity {
         int diff = (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
 
         //Formatting Strings
-        String daysLeft = "Days Left: " + String.valueOf(diff);
-        String quantityString = "Quantity: " + String.valueOf(quantity);
-        String expiryDate= "Expiry Date: " + expiryString;
+        String daysLeft = "Days Left: " + diff;
+        String quantityString = "Quantity: " + quantity;
+        String expiryDate = "Expiry Date: " + expiryString;
 
         //Setting TextView's
         textViewIngredient.setText(ingredient);
