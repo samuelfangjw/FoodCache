@@ -41,4 +41,11 @@
         android:text="@string/add_item_button"
         android:onClick="addNote" />
 
+    <Button
+        android:id="@+id/scam_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Scan"
+        android:onClick="scanItem" />
+
 </LinearLayout>
