@@ -76,19 +76,6 @@ public class ScanActivity extends AppCompatActivity {
         cameraKitView.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-//    private View.OnClickListener photoOnClickListener = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            cameraKitView.captureImage(new CameraKitView.ImageCallback() {
-//                @Override
-//                public void onImage(CameraKitView cameraKitView, byte[] bytes) {
-//                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-//                    processImage(bitmap);
-//                }
-//            });
-//        }
-//    };
-
     public void captureImage() {
         cameraKitView.captureImage(new CameraKitView.ImageCallback() {
             @Override
@@ -100,14 +87,14 @@ public class ScanActivity extends AppCompatActivity {
     }
 
     private void processImage(Bitmap bitmap) {
-        InputImage image = InputImage.fromBitmap(bitmap, 0);
+        InputImage image = InputImage.fromBitmap(bitmap, 90);
         BarcodeScannerOptions options =
                 new BarcodeScannerOptions.Builder()
                         .setBarcodeFormats(
-                                Barcode.FORMAT_UPC_A)
+                                Barcode.FORMAT_UPC_A,
+                                Barcode.FORMAT_EAN_13)
                         .build();
-//        BarcodeScanner scanner = BarcodeScanning.getClient(options);
-        BarcodeScanner scanner = BarcodeScanning.getClient();
+        BarcodeScanner scanner = BarcodeScanning.getClient(options);
         Task<List<Barcode>> result = scanner.process(image)
                 .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
                     @Override
@@ -132,8 +119,6 @@ public class ScanActivity extends AppCompatActivity {
 
     private void processBarcode(List<Barcode> barcodes) {
         for (Barcode barcode : barcodes) {
-//            Rect bounds = barcode.getBoundingBox();
-//            Point[] corners = barcode.getCornerPoints();
 
             String rawValue = barcode.getRawValue();
 
