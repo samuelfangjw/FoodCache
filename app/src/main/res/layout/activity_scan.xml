@@ -17,11 +17,4 @@
         app:camera_focus="continuous"
         app:camera_permissions="camera" />
 
-    <Button
-        android:id="@+id/button_detect"
-        android:layout_alignParentBottom="true"
-        android:text="Scan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
 </RelativeLayout>

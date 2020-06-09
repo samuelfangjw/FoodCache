@@ -1,13 +1,11 @@
 package com.breakfastseta.foodcache;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,7 +24,6 @@ import java.util.List;
 
 public class ScanActivity extends AppCompatActivity {
     private CameraKitView cameraKitView;
-    Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +33,16 @@ public class ScanActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         cameraKitView = findViewById(R.id.camera);
-        button = findViewById(R.id.button_detect);
 
-        button.setOnClickListener(new View.OnClickListener() {
+        cameraKitView.setPreviewListener(new CameraKitView.PreviewListener() {
             @Override
-            public void onClick(View v) {
+            public void onStart() {
                 captureImage();
+            }
+
+            @Override
+            public void onStop() {
+
             }
         });
     }
@@ -119,11 +120,15 @@ public class ScanActivity extends AppCompatActivity {
 
     private void processBarcode(List<Barcode> barcodes) {
         for (Barcode barcode : barcodes) {
-
             String rawValue = barcode.getRawValue();
-
-            Log.d("Scan", "Barcode " +rawValue);
-            Toast.makeText(this, rawValue, Toast.LENGTH_SHORT).show();
+            returnResult(rawValue);
         }
+    }
+
+    private void returnResult(String barcode) {
+        Intent intent = new Intent();
+        intent.putExtra("Barcode", barcode);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }

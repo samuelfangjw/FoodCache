@@ -3,6 +3,7 @@ package com.breakfastseta.foodcache;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -10,6 +11,7 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.Timestamp;
@@ -23,6 +25,8 @@ import java.util.Date;
 import java.util.Objects;
 
 public class AddIngredientActivity extends AppCompatActivity {
+    private static final int SCAN_REQUEST = 10;
+
     private EditText editTextIngredient;
     private NumberPicker numberPickerQuantity;
     private TextView textViewExpiryDate;
@@ -86,6 +90,20 @@ public class AddIngredientActivity extends AppCompatActivity {
 
     public void scanItem(View view) {
         Intent intent = new Intent(this, ScanActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, SCAN_REQUEST);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SCAN_REQUEST) {
+            Log.d("Scan", "" + resultCode);
+            if (resultCode == RESULT_OK) {
+                String barcode = data.getStringExtra("Barcode");
+                Toast.makeText(this, barcode, Toast.LENGTH_SHORT).show();
+                Log.d("Scan", "Add Activity: " + barcode);
+            }
+        }
     }
 }
