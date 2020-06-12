@@ -11,8 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ScanActivity"
-            android:parentActivityName=".AddIngredientActivity"/>
+        <activity android:name=".ShoppingListActivity"></activity>
+        <activity
+            android:name=".ScanActivity"
+            android:parentActivityName=".AddIngredientActivity" />
         <activity
             android:name=".EditItem"
             android:parentActivityName=".InventoryActivity" />

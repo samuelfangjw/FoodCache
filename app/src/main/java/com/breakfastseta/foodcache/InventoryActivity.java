@@ -59,6 +59,9 @@ public class InventoryActivity extends AppCompatActivity {
             case R.id.profile:
                 startActivity(new Intent(InventoryActivity.this, ProfileActivity.class));
                 return true;
+            case R.id.shopping_list:
+                startActivity(new Intent(InventoryActivity.this, ShoppingListActivity.class));
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
