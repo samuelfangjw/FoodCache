@@ -15,4 +15,8 @@
     <string name="profile_picture">Profile Picture</string>
     <string name="units">Units</string>
     <string name="scan">Scan</string>
+    <string name="save">Save</string>
+    <string name="shopping_list_ingredient">Shopping List Ingredient</string>
+    <string name="prio">Prio</string>
+    <string name="description">Description</string>
 </resources>
