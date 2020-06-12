@@ -122,4 +122,5 @@ public class InventoryActivity extends AppCompatActivity {
         super.onStop();
         adapter.stopListening();
     }
+
 }
