@@ -1,9 +1,14 @@
 package com.breakfastseta.foodcache;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +20,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -23,10 +30,12 @@ public class EditItem extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    TextView textViewIngredient;
-    TextView textViewQuantity;
+    EditText editTextIngredient;
+    EditText editTextQuantity;
     TextView textViewExpiry;
     TextView textViewDaysLeft;
+
+    Date expiry;
 
     private String path;
     private static final String TAG = "EditItem";
@@ -36,8 +45,8 @@ public class EditItem extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_item);
 
-        textViewIngredient = findViewById(R.id.edit_ingredient);
-        textViewQuantity = findViewById(R.id.edit_quantity);
+        editTextIngredient = findViewById(R.id.edit_ingredient);
+        editTextQuantity = findViewById(R.id.edit_quantity);
         textViewExpiry = findViewById(R.id.edit_expiry_date);
         textViewDaysLeft = findViewById(R.id.edit_days_left);
 
@@ -70,7 +79,7 @@ public class EditItem extends AppCompatActivity {
 
         //Formatting Date
         assert timestamp != null;
-        Date expiry = timestamp.toDate();
+        expiry = timestamp.toDate();
         @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
         String expiryString = dateFormat.format(expiry);
 
@@ -81,13 +90,66 @@ public class EditItem extends AppCompatActivity {
 
         //Formatting Strings
         String daysLeft = "Days Left: " + diff;
-        String quantityString = "Quantity: " + quantity;
-        String expiryDate = "Expiry Date: " + expiryString;
+        String quantityString = "" + quantity;
+        String expiryDate = expiryString;
 
         //Setting TextView's
-        textViewIngredient.setText(ingredient);
-        textViewQuantity.setText(quantityString);
+        editTextIngredient.setText(ingredient);
+        editTextQuantity.setText(quantityString);
         textViewExpiry.setText(expiryDate);
         textViewDaysLeft.setText(daysLeft);
+    }
+
+
+    public void saveEditIngredient(View view) {
+        String ingredient = editTextIngredient.getText().toString();
+        String quantityString = editTextQuantity.getText().toString();
+        String dateString = textViewExpiry.getText().toString();
+
+        // trim removes empty spaces
+        if (ingredient.trim().isEmpty() || dateString == null || quantityString == null) {
+            Toast.makeText(this, "Please fill in all values", Toast.LENGTH_SHORT).show();
+        } else {
+            int quantity = Integer.parseInt(quantityString);
+            Timestamp dateTimestamp = new Timestamp(expiry);
+
+            DocumentReference docRef = db.document(path);
+            docRef.update("ingredient", ingredient);
+            docRef.update("quantity", quantity);
+            docRef.update("dateTimestamp", dateTimestamp);
+
+            finish();
+        }
+    }
+
+    public void pickDate(View view) {
+        final Calendar cldr = Calendar.getInstance();
+        int day = cldr.get(Calendar.DAY_OF_MONTH);
+        int month = cldr.get(Calendar.MONTH);
+        int year = cldr.get(Calendar.YEAR);
+
+        // open date picker dialog
+        DatePickerDialog picker = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                        String s = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
+                        try {
+                            expiry = simpleDateFormat.parse(s);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        textViewExpiry.setText(s);
+
+                        // set days left
+                        Date now = new Date();
+                        long diffInMillies = Math.abs(expiry.getTime() - now.getTime());
+                        int diff = (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+                        String daysLeft = "Days Left: " + diff;
+                        textViewDaysLeft.setText(daysLeft);
+                    }
+                }, year, month, day);
+        picker.show();
     }
 }
