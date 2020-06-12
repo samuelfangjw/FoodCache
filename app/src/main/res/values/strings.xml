@@ -10,4 +10,7 @@
     <string name="expiry_date">Expiry Date</string>
     <string name="days_left">Days left</string>
     <string name="save_button">Save</string>
+    <string name="name">Name</string>
+    <string name="username">Username</string>
+    <string name="profile_picture">Profile Picture</string>
 </resources>
