@@ -13,4 +13,6 @@
     <string name="name">Name</string>
     <string name="username">Username</string>
     <string name="profile_picture">Profile Picture</string>
+    <string name="units">Units</string>
+    <string name="scan">Scan</string>
 </resources>

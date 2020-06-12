@@ -59,6 +59,7 @@ public class EditItem extends AppCompatActivity {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
+                    assert document != null;
                     if (document.exists()) {
                         setTextView(document);
                     } else {
@@ -91,12 +92,11 @@ public class EditItem extends AppCompatActivity {
         //Formatting Strings
         String daysLeft = "Days Left: " + diff;
         String quantityString = "" + quantity;
-        String expiryDate = expiryString;
 
         //Setting TextView's
         editTextIngredient.setText(ingredient);
         editTextQuantity.setText(quantityString);
-        textViewExpiry.setText(expiryDate);
+        textViewExpiry.setText(expiryString);
         textViewDaysLeft.setText(daysLeft);
     }
 
@@ -107,7 +107,7 @@ public class EditItem extends AppCompatActivity {
         String dateString = textViewExpiry.getText().toString();
 
         // trim removes empty spaces
-        if (ingredient.trim().isEmpty() || dateString == null || quantityString == null) {
+        if (ingredient.trim().isEmpty() || dateString.trim().isEmpty() || quantityString.trim().isEmpty()) {
             Toast.makeText(this, "Please fill in all values", Toast.LENGTH_SHORT).show();
         } else {
             int quantity = Integer.parseInt(quantityString);

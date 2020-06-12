@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +27,7 @@ public class AddIngredientActivity extends AppCompatActivity {
     private static final int SCAN_REQUEST = 10;
 
     private EditText editTextIngredient;
-    private NumberPicker numberPickerQuantity;
+    private EditText editTextQuantity;
     private TextView textViewExpiryDate;
     private Date date = null;
 
@@ -41,22 +40,19 @@ public class AddIngredientActivity extends AppCompatActivity {
         setTitle("Add Ingredient");
 
         editTextIngredient = findViewById(R.id.edit_text_ingredient);
-        numberPickerQuantity = findViewById(R.id.number_picker_quantity);
+        editTextQuantity = findViewById(R.id.edit_text_quantity);
         textViewExpiryDate = findViewById(R.id.expiry_date);
-
-        numberPickerQuantity.setMinValue(0);
-        numberPickerQuantity.setMaxValue(50);
-
     }
 
     public void addNote(View view) {
         String ingredient = editTextIngredient.getText().toString();
-        int quantity = numberPickerQuantity.getValue();
+        String quantityString = editTextQuantity.getText().toString();
 
         // trim removes empty spaces
-        if (ingredient.trim().isEmpty() || date == null) {
+        if (ingredient.trim().isEmpty() || date == null || quantityString.trim().isEmpty()) {
             Toast.makeText(this, "Please fill in all values", Toast.LENGTH_SHORT).show();
         } else {
+            int quantity = Integer.parseInt(quantityString);
             Timestamp dateTimestamp = new Timestamp(date);
             CollectionReference inventoryRef = FirebaseFirestore.getInstance()
                     .collection("Inventory");
@@ -100,6 +96,7 @@ public class AddIngredientActivity extends AppCompatActivity {
         if (requestCode == SCAN_REQUEST) {
             Log.d("Scan", "" + resultCode);
             if (resultCode == RESULT_OK) {
+                assert data != null;
                 String barcode = data.getStringExtra("Barcode");
                 Toast.makeText(this, barcode, Toast.LENGTH_SHORT).show();
                 Log.d("Scan", "Add Activity: " + barcode);

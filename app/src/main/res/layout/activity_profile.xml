@@ -11,8 +11,8 @@
         android:id="@+id/profile_picture"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:srcCompat="@tools:sample/avatars"
-        android:contentDescription="@string/profile_picture"/>
+        android:contentDescription="@string/profile_picture"
+        tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/username"
@@ -24,20 +24,20 @@
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/name"/>
+        android:text="@string/name" />
 
     <Button
         android:id="@+id/sign_out_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/sign_out"
-        android:onClick="signOut" />
+        android:onClick="signOut"
+        android:text="@string/sign_out" />
 
     <Button
         android:id="@+id/delete_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/delete_account"
-        android:onClick="delete" />
+        android:onClick="delete"
+        android:text="@string/delete_account" />
 
 </LinearLayout>

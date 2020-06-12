@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,41 +11,53 @@
         android:id="@+id/edit_text_ingredient"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:hint="@string/ingredient"
         android:inputType="text"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-    <TextView
+    <EditText
+        android:id="@+id/edit_text_quantity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/quantity"
+        android:layout_below="@+id/edit_text_ingredient"
+        android:hint="@string/quantity"
+        android:inputType="number"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-    <NumberPicker
-        android:id="@+id/number_picker_quantity"
+    <EditText
+        android:id="@+id/edit_text_units"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edit_text_ingredient"
+        android:layout_toEndOf="@+id/edit_text_quantity"
+        android:hint="@string/units"
+        android:inputType="number"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <TextView
         android:id="@+id/expiry_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/edit_text_quantity"
         android:hint="@string/expiry_date"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:onClick="pickDate"/>
+        android:onClick="pickDate"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <Button
         android:id="@+id/add_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/add_item_button"
-        android:onClick="addNote" />
+        android:layout_above="@id/scan_item"
+        android:onClick="addNote"
+        android:text="@string/add_item_button" />
 
     <Button
-        android:id="@+id/scam_item"
+        android:id="@+id/scan_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Scan"
-        android:onClick="scanItem" />
+        android:layout_alignParentBottom="true"
+        android:onClick="scanItem"
+        android:text="@string/scan" />
 
-</LinearLayout>
+</RelativeLayout>

@@ -12,9 +12,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
 
-import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -46,7 +44,7 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
         //Formatting Strings
         String daysLeft = "Days Left: " + String.valueOf(diff);
         String quantity = "Quantity: " + String.valueOf(model.getQuantity());
-        String expiryDate= "Expiry Date: " + expiryString;
+        String expiryDate = "Expiry Date: " + expiryString;
 
         //Set TextViews
         holder.textViewIngredient.setText(model.getIngredient());
