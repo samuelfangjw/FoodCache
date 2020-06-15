@@ -19,4 +19,5 @@
     <string name="shopping_list_ingredient">Shopping List Ingredient</string>
     <string name="prio">Prio</string>
     <string name="description">Description</string>
+    <string name="barcode">Barcode</string>
 </resources>

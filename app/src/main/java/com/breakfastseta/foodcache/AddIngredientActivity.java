@@ -10,17 +10,23 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class AddIngredientActivity extends AppCompatActivity {
@@ -29,7 +35,14 @@ public class AddIngredientActivity extends AppCompatActivity {
     private EditText editTextIngredient;
     private EditText editTextQuantity;
     private TextView textViewExpiryDate;
+    private EditText editTextBarcode;
     private Date date = null;
+
+    private boolean barcodeNotFound = false;
+
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference barcodeRef = db.collection("Barcodes");
+    private CollectionReference inventoryRef = db.collection("Inventory");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +55,7 @@ public class AddIngredientActivity extends AppCompatActivity {
         editTextIngredient = findViewById(R.id.edit_text_ingredient);
         editTextQuantity = findViewById(R.id.edit_text_quantity);
         textViewExpiryDate = findViewById(R.id.expiry_date);
+        editTextBarcode = findViewById(R.id.edit_text_barcode);
     }
 
     public void addNote(View view) {
@@ -52,10 +66,14 @@ public class AddIngredientActivity extends AppCompatActivity {
         if (ingredient.trim().isEmpty() || date == null || quantityString.trim().isEmpty()) {
             Toast.makeText(this, "Please fill in all values", Toast.LENGTH_SHORT).show();
         } else {
+            if (barcodeNotFound) {
+                String barcode = editTextBarcode.getText().toString();
+                Map<String, Object> docData = new HashMap<>();
+                docData.put("Name", ingredient);
+                barcodeRef.document(barcode).set(docData);
+            }
             int quantity = Integer.parseInt(quantityString);
             Timestamp dateTimestamp = new Timestamp(date);
-            CollectionReference inventoryRef = FirebaseFirestore.getInstance()
-                    .collection("Inventory");
             inventoryRef.add(new Item(ingredient, quantity, dateTimestamp));
             Toast.makeText(this, "Note Added Successfully", Toast.LENGTH_SHORT).show();
         }
@@ -98,9 +116,40 @@ public class AddIngredientActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 assert data != null;
                 String barcode = data.getStringExtra("Barcode");
-                Toast.makeText(this, barcode, Toast.LENGTH_SHORT).show();
-                Log.d("Scan", "Add Activity: " + barcode);
+                editTextBarcode.setText(barcode);
+                checkBarcode(barcode);
             }
         }
+    }
+
+    //checks if barcode is stored in database and updates database if present
+    private void checkBarcode(String barcode) {
+        barcodeRef.document(barcode).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                           @Override
+                                           public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                               if (task.isSuccessful()) {
+                                                   DocumentSnapshot document = task.getResult();
+                                                   assert document != null;
+                                                   if (document.exists()) {
+                                                       Log.d("AddIngredient", "Document exists!");
+                                                       String name = document.getString("Name");
+                                                       editTextIngredient.setText(name);
+                                                   } else {
+                                                       barcodeNotFound = true;
+                                                       Toast.makeText(AddIngredientActivity.this, "No Matching Product Found", Toast.LENGTH_SHORT).show();
+                                                       Log.d("AddIngredient", "Document does not exist!");
+                                                   }
+                                               } else {
+                                                   Log.d("AddIngredient", "Failed with: ", task.getException());
+                                               }
+                                           }
+                                       }
+                );
+    }
+
+    public void debugBarcode(View view) {
+        String s = editTextBarcode.getText().toString();
+        checkBarcode(s);
     }
 }
