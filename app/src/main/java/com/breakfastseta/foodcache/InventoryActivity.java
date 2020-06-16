@@ -57,7 +57,7 @@ public class InventoryActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.profile:
-                startActivity(new Intent(InventoryActivity.this, ProfileActivity.class));
+                startActivity(new Intent(InventoryActivity.this, FoodcacheActivity.class));
                 return true;
             case R.id.shopping_list:
                 startActivity(new Intent(InventoryActivity.this, ShoppingListActivity.class));
