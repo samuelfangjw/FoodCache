@@ -1,5 +1,6 @@
 package com.breakfastseta.foodcache;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,15 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,6 +28,13 @@ public class CardFragment extends Fragment {
 
     private static final String ARG_COUNT = "param1";
     private Integer counter;
+
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference inventoryRef = db.collection("Inventory");
+
+    View view;
+    RecyclerView recyclerView;
+    private ItemAdapter adapter;
 
     public CardFragment() {
         // Required empty public constructor
@@ -43,7 +60,13 @@ public class CardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_card, container, false);
+        view = inflater.inflate(R.layout.fragment_card, container, false);
+
+        recyclerView = view.findViewById(R.id.cardRecyclerView);
+
+        setUpRecyclerView();
+
+        return view;
     }
 
     @Override
@@ -52,5 +75,64 @@ public class CardFragment extends Fragment {
 
 //        TextView textViewCounter = view.findViewById(R.id.tv_counter);
 //        textViewCounter.setText("Fragment No " + (counter + 1));
+    }
+
+    private void setUpRecyclerView() {
+        Query query = inventoryRef.orderBy("ingredient", Query.Direction.ASCENDING);
+
+        FirestoreRecyclerOptions<Item> options = new FirestoreRecyclerOptions.Builder<Item>()
+                .setQuery(query, Item.class)
+                .build();
+
+        adapter = new ItemAdapter(options);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(adapter);
+
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                adapter.deleteItem(viewHolder.getAdapterPosition());
+            }
+        }).attachToRecyclerView(recyclerView);
+
+        adapter.setOnItemClickListener(new ItemAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+                Item item = documentSnapshot.toObject(Item.class);
+                String id = documentSnapshot.getId(); //id stored in firebase database
+                String path = documentSnapshot.getReference().getPath();
+
+                // Starting EditItem activity
+                Intent intent = new Intent(getContext(), EditItem.class);
+                intent.putExtra("path", path);
+                startActivity(intent);
+            }
+        });
+    }
+
+    // Starts listening for changes on activity start
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (adapter != null) {
+            adapter.startListening();
+        }
+    }
+
+    // Stops listening for changes on activity stop
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (adapter != null) {
+            adapter.startListening();
+        }
     }
 }
