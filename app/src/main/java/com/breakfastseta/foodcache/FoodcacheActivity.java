@@ -14,6 +14,8 @@ public class FoodcacheActivity extends AppCompatActivity {
     TabLayout tabLayout;
     ViewPager2 viewPager;
 
+    String[] tabs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,11 +24,13 @@ public class FoodcacheActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.view_pager);
         tabLayout = findViewById(R.id.tabs);
 
+        tabs = getResources().getStringArray(R.array.tabs);
+
         viewPager.setAdapter(createCardAdapter());
         new TabLayoutMediator(tabLayout, viewPager,
                 new TabLayoutMediator.TabConfigurationStrategy() {
                     @Override public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                        tab.setText("Tab " + (position + 1));
+                        tab.setText(tabs[position]);
                     }
                 }).attach();
     }

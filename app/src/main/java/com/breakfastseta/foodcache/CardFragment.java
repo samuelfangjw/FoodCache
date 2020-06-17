@@ -36,6 +36,8 @@ public class CardFragment extends Fragment {
     RecyclerView recyclerView;
     private ItemAdapter adapter;
 
+    String[] tabs;
+
     public CardFragment() {
         // Required empty public constructor
     }
@@ -54,6 +56,8 @@ public class CardFragment extends Fragment {
         if (getArguments() != null) {
             counter = getArguments().getInt(ARG_COUNT);
         }
+
+        tabs = getResources().getStringArray(R.array.tabs);
     }
 
     @Override
@@ -78,7 +82,8 @@ public class CardFragment extends Fragment {
     }
 
     private void setUpRecyclerView() {
-        Query query = inventoryRef.orderBy("ingredient", Query.Direction.ASCENDING);
+        CollectionReference collectionRef = inventoryRef.document(tabs[counter]).collection("Ingredients");
+        Query query = collectionRef.orderBy("ingredient", Query.Direction.ASCENDING);
 
         FirestoreRecyclerOptions<Item> options = new FirestoreRecyclerOptions.Builder<Item>()
                 .setQuery(query, Item.class)

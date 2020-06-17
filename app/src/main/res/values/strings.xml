@@ -20,4 +20,9 @@
     <string name="prio">Prio</string>
     <string name="description">Description</string>
     <string name="barcode">Barcode</string>
+
+    <string-array name="tabs">
+        <item>Pantry</item>
+        <item>Fridge</item>
+    </string-array>
 </resources>
