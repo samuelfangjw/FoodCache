@@ -5,8 +5,10 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,12 +32,15 @@ public class EditItem extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    EditText editTextIngredient;
-    EditText editTextQuantity;
-    TextView textViewExpiry;
-    TextView textViewDaysLeft;
+    private EditText editTextIngredient;
+    private EditText editTextQuantity;
+    private TextView textViewExpiry;
+    private TextView textViewDaysLeft;
+    private Spinner spinnerUnits;
 
     Date expiry;
+
+    ArrayAdapter<CharSequence> adapterUnits;
 
     private String path;
     private static final String TAG = "EditItem";
@@ -49,6 +54,15 @@ public class EditItem extends AppCompatActivity {
         editTextQuantity = findViewById(R.id.edit_quantity);
         textViewExpiry = findViewById(R.id.edit_expiry_date);
         textViewDaysLeft = findViewById(R.id.edit_days_left);
+        spinnerUnits = findViewById(R.id.spinner_edit_units);
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        adapterUnits = ArrayAdapter.createFromResource(this,
+                R.array.units, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapterUnits.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinnerUnits.setAdapter(adapterUnits);
 
         path = getIntent().getStringExtra("path");
 
@@ -77,6 +91,7 @@ public class EditItem extends AppCompatActivity {
         String ingredient = document.getString("ingredient");
         Long quantity = document.getLong("quantity");
         Timestamp timestamp = document.getTimestamp("dateTimestamp");
+        String units = document.getString("units");
 
         //Formatting Date
         assert timestamp != null;
@@ -93,6 +108,12 @@ public class EditItem extends AppCompatActivity {
         String daysLeft = "Days Left: " + diff;
         String quantityString = "" + quantity;
 
+        //Setting Spinner
+        if (units != null) {
+            int spinnerPosition = adapterUnits.getPosition(units);
+            spinnerUnits.setSelection(spinnerPosition);
+        }
+
         //Setting TextView's
         editTextIngredient.setText(ingredient);
         editTextQuantity.setText(quantityString);
@@ -105,6 +126,7 @@ public class EditItem extends AppCompatActivity {
         String ingredient = editTextIngredient.getText().toString();
         String quantityString = editTextQuantity.getText().toString();
         String dateString = textViewExpiry.getText().toString();
+        String units = spinnerUnits.getSelectedItem().toString();
 
         // trim removes empty spaces
         if (ingredient.trim().isEmpty() || dateString.trim().isEmpty() || quantityString.trim().isEmpty()) {
@@ -117,6 +139,7 @@ public class EditItem extends AppCompatActivity {
             docRef.update("ingredient", ingredient);
             docRef.update("quantity", quantity);
             docRef.update("dateTimestamp", dateTimestamp);
+            docRef.update("units", units);
 
             finish();
         }

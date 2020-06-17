@@ -40,10 +40,12 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
         long diffInMillies = Math.abs(expiry.getTime() - now.getTime());
         int diff = (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
 
+        //Getting Units
+        String units = model.getUnits();
 
         //Formatting Strings
         String daysLeft = "Days Left: " + String.valueOf(diff);
-        String quantity = "Quantity: " + String.valueOf(model.getQuantity());
+        String quantity = "Quantity: " + String.valueOf(model.getQuantity()) + units;
         String expiryDate = "Expiry Date: " + expiryString;
 
         //Set TextViews

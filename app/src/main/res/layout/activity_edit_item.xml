@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,6 +10,7 @@
         android:id="@+id/edit_ingredient"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:text="@string/ingredient"
         android:inputType="text"
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
@@ -17,6 +18,7 @@
     <TextView
         android:id="@+id/text_view_quantity"
         android:layout_width="wrap_content"
+        android:layout_below="@id/edit_ingredient"
         android:layout_height="wrap_content"
         android:text="@string/quantity"
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
@@ -24,15 +26,25 @@
     <EditText
         android:id="@+id/edit_quantity"
         android:layout_width="wrap_content"
+        android:layout_below="@id/text_view_quantity"
         android:layout_height="wrap_content"
         android:text="@string/quantity"
         android:inputType="number"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+    <Spinner
+        android:id="@+id/spinner_edit_units"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_view_quantity"
+        android:layout_toEndOf="@id/edit_quantity"
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
     <TextView
         android:id="@+id/text_view_expiry_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/edit_quantity"
         android:text="@string/expiry_date"
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
@@ -41,6 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/expiry_date"
+        android:layout_below="@id/text_view_expiry_date"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:onClick="pickDate"/>
 
@@ -48,14 +61,16 @@
         android:id="@+id/edit_days_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/edit_expiry_date"
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
     <Button
         android:id="@+id/edit_save_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:text="@string/save_button"
         android:onClick="saveEditIngredient"/>
 
 
-</LinearLayout>
+</RelativeLayout>

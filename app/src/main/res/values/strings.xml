@@ -25,4 +25,9 @@
         <item>Pantry</item>
         <item>Fridge</item>
     </string-array>
+
+    <string-array name="units">
+        <item>Items</item>
+        <item>g</item>
+    </string-array>
 </resources>

@@ -76,9 +76,6 @@ public class CardFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-//        TextView textViewCounter = view.findViewById(R.id.tv_counter);
-//        textViewCounter.setText("Fragment No " + (counter + 1));
     }
 
     private void setUpRecyclerView() {
@@ -90,7 +87,6 @@ public class CardFragment extends Fragment {
                 .build();
 
         adapter = new ItemAdapter(options);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);

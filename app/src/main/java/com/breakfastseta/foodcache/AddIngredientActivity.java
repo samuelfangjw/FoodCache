@@ -37,6 +37,7 @@ public class AddIngredientActivity extends AppCompatActivity {
     private EditText editTextIngredient;
     private EditText editTextQuantity;
     private TextView textViewExpiryDate;
+    private Spinner spinnerUnits;
     private Spinner spinnerTab;
     private EditText editTextBarcode;
 
@@ -58,8 +59,17 @@ public class AddIngredientActivity extends AppCompatActivity {
         editTextIngredient = findViewById(R.id.edit_text_ingredient);
         editTextQuantity = findViewById(R.id.edit_text_quantity);
         textViewExpiryDate = findViewById(R.id.expiry_date);
+        spinnerUnits = findViewById(R.id.spinner_units);
         spinnerTab = findViewById(R.id.tab_spinner);
         editTextBarcode = findViewById(R.id.edit_text_barcode);
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapterUnits = ArrayAdapter.createFromResource(this,
+                R.array.units, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapterUnits.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinnerUnits.setAdapter(adapterUnits);
 
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -74,6 +84,7 @@ public class AddIngredientActivity extends AppCompatActivity {
         String ingredient = editTextIngredient.getText().toString();
         String quantityString = editTextQuantity.getText().toString();
         String tab = spinnerTab.getSelectedItem().toString();
+        String units = spinnerUnits.getSelectedItem().toString();
 
         // trim removes empty spaces
         if (ingredient.trim().isEmpty() || date == null || quantityString.trim().isEmpty()) {
@@ -88,7 +99,7 @@ public class AddIngredientActivity extends AppCompatActivity {
             }
             int quantity = Integer.parseInt(quantityString);
             Timestamp dateTimestamp = new Timestamp(date);
-            inventoryRef.document(tab).collection("Ingredients").add(new Item(ingredient, quantity, dateTimestamp));
+            inventoryRef.document(tab).collection("Ingredients").add(new Item(ingredient, quantity, dateTimestamp, units));
             Toast.makeText(this, "Note Added Successfully", Toast.LENGTH_SHORT).show();
         }
     }
