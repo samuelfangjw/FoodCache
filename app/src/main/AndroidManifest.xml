@@ -11,23 +11,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".FoodcacheActivity"></activity>
+        <activity android:name=".FoodcacheActivity"
+            android:launchMode="singleTop"></activity>
         <activity android:name=".ShoppingListActivity" />
         <activity
             android:name=".ScanActivity"
             android:parentActivityName=".AddIngredientActivity" />
         <activity
             android:name=".EditItem"
-            android:parentActivityName=".InventoryActivity" />
+            android:parentActivityName=".FoodcacheActivity" />
         <activity
             android:name=".ProfileActivity"
-            android:parentActivityName=".InventoryActivity" />
+            android:parentActivityName=".FoodcacheActivity" />
         <activity
             android:name=".AddIngredientActivity"
-            android:parentActivityName=".InventoryActivity" />
-        <activity
-            android:name=".InventoryActivity"
-            android:launchMode="singleTop" />
+            android:parentActivityName=".FoodcacheActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
