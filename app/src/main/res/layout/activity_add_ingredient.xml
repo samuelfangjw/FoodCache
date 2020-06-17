@@ -44,11 +44,17 @@
         android:onClick="pickDate"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
+    <Spinner
+        android:id="@+id/tab_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/expiry_date" />
+
     <EditText
         android:id="@+id/edit_text_barcode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/expiry_date"
+        android:layout_below="@id/tab_spinner"
         android:hint="@string/barcode"
         android:inputType="number" />
 

@@ -43,7 +43,8 @@ public class FoodcacheActivity extends AppCompatActivity {
         viewPager.setAdapter(createCardAdapter());
         new TabLayoutMediator(tabLayout, viewPager,
                 new TabLayoutMediator.TabConfigurationStrategy() {
-                    @Override public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                    @Override
+                    public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
                         tab.setText(tabs[position]);
                     }
                 }).attach();
