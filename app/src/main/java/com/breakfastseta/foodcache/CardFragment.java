@@ -80,7 +80,7 @@ public class CardFragment extends Fragment {
 
     private void setUpRecyclerView() {
         CollectionReference collectionRef = inventoryRef.document(tabs[counter]).collection("Ingredients");
-        Query query = collectionRef.orderBy("ingredient", Query.Direction.ASCENDING);
+        Query query = collectionRef.orderBy("dateTimestamp", Query.Direction.ASCENDING);
 
         FirestoreRecyclerOptions<Item> options = new FirestoreRecyclerOptions.Builder<Item>()
                 .setQuery(query, Item.class)
