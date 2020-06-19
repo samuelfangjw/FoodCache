@@ -1,5 +1,6 @@
 package com.breakfastseta.foodcache;
 
+import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,7 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull ItemHolder holder, int position, @NonNull Item model) {
+    protected void onBindViewHolder(@NonNull final ItemHolder holder, int position, @NonNull Item model) {
         //Formatting Date
         Date expiry = model.getDateTimestamp().toDate();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
@@ -37,14 +38,35 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
 
         //Calculating Days Left
         Date now = new Date();
-        long diffInMillies = Math.abs(expiry.getTime() - now.getTime());
-        int diff = (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+        long diffInMillies = expiry.getTime() - now.getTime();
+        if (diffInMillies < 0) {
+            diffInMillies = 0;
+        }
+
+        //Countdown Timer
+        CountDownTimer cdt = new CountDownTimer(diffInMillies, 3600000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                long days = TimeUnit.MILLISECONDS.toDays(millisUntilFinished);
+
+                String daysLeft = "Days Left: " + String.valueOf(days);
+                holder.textViewDaysLeft.setText(daysLeft);
+            }
+
+            @Override
+            public void onFinish() {
+                holder.textViewDaysLeft.setText("EXPIRED");
+            }
+        };
+        cdt.start();
 
         //Getting Units
         String units = model.getUnits();
+        if (units.equals("Items")) {
+            units = "";
+        }
 
         //Formatting Strings
-        String daysLeft = "Days Left: " + String.valueOf(diff);
         String quantity = "Quantity: " + String.valueOf(model.getQuantity()) + units;
         String expiryDate = "Expiry Date: " + expiryString;
 
@@ -52,7 +74,6 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
         holder.textViewIngredient.setText(model.getIngredient());
         holder.textViewQuantity.setText(quantity);
         holder.textViewExpiryDate.setText(expiryDate);
-        holder.textViewDaysLeft.setText(daysLeft);
     }
 
     @NonNull

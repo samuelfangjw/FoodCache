@@ -44,8 +44,8 @@
             android:id="@+id/days_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/ingredient"
-            android:layout_alignParentEnd="true"
+            android:layout_below="@id/expiry_date"
+            android:layout_alignParentStart="true"
             android:text="@string/days_left"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
     </RelativeLayout>
