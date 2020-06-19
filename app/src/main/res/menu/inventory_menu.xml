@@ -14,13 +14,4 @@
         android:title="Shopping List"
         app:showAsAction="ifRoom" />
 
-    <item
-        android:id="@+id/add_alarm"
-        android:title="Add Alarm"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/remove_alarm"
-        android:title="Remove Alarm"
-        app:showAsAction="never" />
 </menu>
