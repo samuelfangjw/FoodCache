@@ -10,8 +10,12 @@ import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.DocumentSnapshot;
+
+import java.util.concurrent.RecursiveAction;
 
 public class ShoppingListAdapter extends FirestoreRecyclerAdapter<ShoppingListItem, ShoppingListAdapter.ShoppingListHolder> {
+    private OnItemClickListener listener;
 
     public ShoppingListAdapter(@NonNull FirestoreRecyclerOptions<ShoppingListItem> options) {
         super(options);
@@ -21,7 +25,6 @@ public class ShoppingListAdapter extends FirestoreRecyclerAdapter<ShoppingListIt
     protected void onBindViewHolder(@NonNull ShoppingListHolder holder, int position, @NonNull ShoppingListItem model) {
         holder.textViewTitle.setText(model.getItemName());
         holder.textViewDescription.setText(model.getDescription());
-        holder.textViewPriority.setText(String.valueOf(model.getPriority()));
         holder.textViewQuantity.setText(String.valueOf(model.getNoItems()));
     }
 
@@ -33,18 +36,38 @@ public class ShoppingListAdapter extends FirestoreRecyclerAdapter<ShoppingListIt
         return new ShoppingListHolder(v);
     }
 
+    public void deleteItem(int position) {
+        getSnapshots().getSnapshot(position).getReference().delete();
+    }
+
     class ShoppingListHolder extends RecyclerView.ViewHolder {
         TextView textViewTitle;
         TextView textViewDescription;
-        TextView textViewPriority;
         TextView textViewQuantity;
 
         public ShoppingListHolder(View itemView) {
             super(itemView);
             textViewTitle = itemView.findViewById(R.id.shopping_list_ingredient);
             textViewDescription = itemView.findViewById(R.id.shopping_list_description);
-            textViewPriority = itemView.findViewById(R.id.text_view_priority);
             textViewQuantity = itemView.findViewById(R.id.shopping_list_quantity);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View V) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION && listener != null) {
+                        listener.onItemClick(getSnapshots().getSnapshot(position), position);
+                    }
+                }
+            });
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(DocumentSnapshot documentSnapshot, int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 }

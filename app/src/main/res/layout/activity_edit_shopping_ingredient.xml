@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".EditShoppingIngredient">
+
+    <EditText
+        android:id="@+id/edit_shopitem_edit_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Edit Name"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/edit_shopitem_edit_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Edit Description"
+        android:inputType="textMultiLine" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Quantity"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+    <NumberPicker
+        android:id="@+id/edit_number_picker_quantity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/edit_shopitem_save_button"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="Save"
+        android:onClick="saveEditedIngredient" />
+
+
+</LinearLayout>
