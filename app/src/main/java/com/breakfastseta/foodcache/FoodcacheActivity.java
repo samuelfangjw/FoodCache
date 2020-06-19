@@ -39,6 +39,7 @@ public class FoodcacheActivity extends AppCompatActivity {
 
     String[] tabs;
     long shortest = Long.MAX_VALUE;
+    int count = 0;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference inventoryRef = db.collection("Inventory");
@@ -69,6 +70,11 @@ public class FoodcacheActivity extends AppCompatActivity {
                         tab.setText(tabs[position]);
                     }
                 }).attach();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
         manageNotifications();
     }
@@ -118,6 +124,7 @@ public class FoodcacheActivity extends AppCompatActivity {
                             Timestamp timestamp = (Timestamp) document.getData().get("dateTimestamp");
                             long seconds = timestamp.getSeconds();
                             shortest = Math.min(shortest, seconds);
+                            callbackHelper();
                         }
                     } else {
                         Log.d("TAG", "Error getting documents: ", task.getException());
@@ -125,20 +132,25 @@ public class FoodcacheActivity extends AppCompatActivity {
                 }
             });
         }
+    }
 
-        // TODO it's asynchronouse let's fix this another time :)
-//        long timediff = (shortest - now.getSeconds() - 259200);
-//
-//        Log.d(TAG, "manageNotifications " + timediff);
-//
-//        if (timediff < 86400) {
-//            timediff = 86400 * 1000;
-//        } else {
-//            timediff = timediff * 1000;
-//        }
-//
-//        Log.d(TAG, "manageNotifications " + timediff);
-//        startAlarm(timediff);
+    private void callbackHelper() {
+        count++;
+        if (count >= tabs.length) {
+            final Timestamp now = new Timestamp(new Date());
+            long timediff = (shortest - now.getSeconds() - 259200);
+
+            Log.d(TAG, "manageNotifications " + timediff);
+
+            if (timediff < 86400) {
+                timediff = 86400 * 1000;
+            } else {
+                timediff = timediff * 1000;
+            }
+
+            Log.d(TAG, "manageNotifications " + timediff);
+            startAlarm(timediff);
+        }
     }
 
     private void startAlarm(long time) {
