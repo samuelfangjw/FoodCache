@@ -102,20 +102,4 @@ public class MainActivity extends AppCompatActivity {
 //                RC_SIGN_IN);
 //        // [END auth_fui_theme_logo]
 //    }
-//
-//    public void privacyAndTerms() {
-//        List<AuthUI.IdpConfig> providers = Collections.emptyList();
-//        // [START auth_fui_pp_tos]
-//        startActivityForResult(
-//                AuthUI.getInstance()
-//                        .createSignInIntentBuilder()
-//                        .setAvailableProviders(providers)
-//                        .setTosAndPrivacyPolicyUrls(
-//                                "https://example.com/terms.html",
-//                                "https://example.com/privacy.html")
-//                        .build(),
-//                RC_SIGN_IN);
-//        // [END auth_fui_pp_tos]
-//    }
-
 }

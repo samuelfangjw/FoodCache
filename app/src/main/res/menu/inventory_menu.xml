@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item
         android:id="@+id/profile"
         android:icon="@drawable/ic_profile"
@@ -12,4 +13,14 @@
         android:icon="@drawable/ic_shopping_list"
         android:title="Shopping List"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/add_alarm"
+        android:title="Add Alarm"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/remove_alarm"
+        android:title="Remove Alarm"
+        app:showAsAction="never" />
 </menu>
