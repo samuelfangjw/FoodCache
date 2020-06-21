@@ -48,6 +48,8 @@ public class AddIngredientActivity extends AppCompatActivity {
     private CollectionReference barcodeRef = db.collection("Barcodes");
     private CollectionReference inventoryRef = db.collection("Inventory");
 
+    ArrayAdapter<CharSequence> adapterUnits;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +66,7 @@ public class AddIngredientActivity extends AppCompatActivity {
         editTextBarcode = findViewById(R.id.edit_text_barcode);
 
         // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapterUnits = ArrayAdapter.createFromResource(this,
+        adapterUnits = ArrayAdapter.createFromResource(this,
                 R.array.units, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         adapterUnits.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -93,8 +95,16 @@ public class AddIngredientActivity extends AppCompatActivity {
             // updating barcode database if barcode not found
             if (barcodeNotFound) {
                 String barcode = editTextBarcode.getText().toString();
+                int quantity = Integer.parseInt(quantityString);
+
+                Date now = new Date();
+                long expiryDays = date.getTime() - now.getTime();
+
                 Map<String, Object> docData = new HashMap<>();
                 docData.put("Name", ingredient);
+                docData.put("expiryDays", expiryDays);
+                docData.put("quantity", quantity);
+                docData.put("units", units);
                 barcodeRef.document(barcode).set(docData);
             }
             int quantity = Integer.parseInt(quantityString);
@@ -159,7 +169,25 @@ public class AddIngredientActivity extends AppCompatActivity {
                                                    if (document.exists()) {
                                                        Log.d("AddIngredient", "Document exists!");
                                                        String name = document.getString("Name");
+                                                       long expiry = document.getLong("expiryDays");
+                                                       long quantity = document.getLong("quantity");
+                                                       String units = document.getString("units");
+
+                                                       // Calculating date
+                                                       Date now = new Date();
+                                                       long timeInMillies = now.getTime() + expiry;
+                                                       Date date = new Date(timeInMillies);
+                                                       SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+                                                       String expiryString = dateFormat.format(date);
+
                                                        editTextIngredient.setText(name);
+                                                       editTextQuantity.setText(String.valueOf(quantity));
+                                                       textViewExpiryDate.setText(expiryString);
+
+                                                       if (units != null) {
+                                                           int spinnerPosition = adapterUnits.getPosition(units);
+                                                           spinnerUnits.setSelection(spinnerPosition);
+                                                       }
                                                    } else {
                                                        barcodeNotFound = true;
                                                        Toast.makeText(AddIngredientActivity.this, "No Matching Product Found", Toast.LENGTH_SHORT).show();
