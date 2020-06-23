@@ -10,7 +10,9 @@ import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.concurrent.RecursiveAction;
 
@@ -38,6 +40,17 @@ public class ShoppingListAdapter extends FirestoreRecyclerAdapter<ShoppingListIt
 
     public void deleteItem(int position) {
         getSnapshots().getSnapshot(position).getReference().delete();
+    }
+
+    public void restoreItem(ShoppingListItem item) {
+        CollectionReference notebookRef = FirebaseFirestore.getInstance()
+                .collection("ShoppingList");
+
+        String name = item.getItemName();
+        String description = item.getDescription();
+        int quantity = item.getNoItems();
+
+        notebookRef.add(new ShoppingListItem(name, description, quantity));
     }
 
     class ShoppingListHolder extends RecyclerView.ViewHolder {

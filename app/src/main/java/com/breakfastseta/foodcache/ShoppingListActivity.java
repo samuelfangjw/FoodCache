@@ -1,11 +1,13 @@
 package com.breakfastseta.foodcache;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.vision.text.Line;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -22,6 +25,7 @@ import com.google.firebase.firestore.Query;
 public class ShoppingListActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference notebookRef = db.collection("ShoppingList");
+    private CoordinatorLayout coordinatorLayout;
 
     private  ShoppingListAdapter adapter;
     @Override
@@ -38,6 +42,7 @@ public class ShoppingListActivity extends AppCompatActivity {
         });
 
         setUpRecyclerView();
+        coordinatorLayout = findViewById(R.id.activityShoppingList);
     }
 
     private void setUpRecyclerView() {
@@ -63,7 +68,22 @@ public class ShoppingListActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                final int shopItemPos = viewHolder.getAdapterPosition();
+                final ShoppingListItem shopItem = adapter.getItem(shopItemPos);
+
                 adapter.deleteItem(viewHolder.getAdapterPosition());
+
+                Snackbar snackbar = Snackbar
+                        .make(coordinatorLayout, "Item was removed from the list.", Snackbar.LENGTH_LONG);
+                snackbar.setAction("UNDO", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        adapter.restoreItem(shopItem);
+                    }
+                });
+                snackbar.setActionTextColor(Color.YELLOW);
+                snackbar.show();
             }
         }).attachToRecyclerView(recyclerView);
 
