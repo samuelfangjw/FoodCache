@@ -49,7 +49,7 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
             public void onTick(long millisUntilFinished) {
                 long days = TimeUnit.MILLISECONDS.toDays(millisUntilFinished);
 
-                String daysLeft = "Days Left: " + String.valueOf(days);
+                String daysLeft = "Days Left: " + String.valueOf(days + 1);
                 holder.textViewDaysLeft.setText(daysLeft);
             }
 

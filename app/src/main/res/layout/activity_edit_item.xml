@@ -37,7 +37,7 @@
         android:id="@+id/spinner_edit_units"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/text_view_quantity"
+        android:layout_alignBottom="@id/edit_quantity"
         android:layout_toEndOf="@id/edit_quantity"
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
@@ -45,8 +45,7 @@
         android:id="@+id/text_view_expiry_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/edit_ingredient"
-        android:layout_alignParentEnd="true"
+        android:layout_below="@id/edit_quantity"
         android:text="@string/expiry_date"
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
@@ -55,7 +54,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/text_view_expiry_date"
-        android:layout_alignParentEnd="true"
         android:onClick="pickDate"
         android:text="@string/expiry_date"
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
@@ -65,7 +63,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/edit_expiry_date"
-        android:layout_alignParentEnd="true"
         android:text="@string/days_left"
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
