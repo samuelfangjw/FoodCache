@@ -146,7 +146,16 @@ public class EditItem extends AppCompatActivity {
     }
 
     public void pickDate(View view) {
+        @SuppressLint("SimpleDateFormat") final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+        Date expiryDate = new Date();
+        try {
+            expiryDate = dateFormat.parse(textViewExpiry.getText().toString());
+        } catch (ParseException e){
+            e.printStackTrace();
+        }
+
         final Calendar cldr = Calendar.getInstance();
+        cldr.setTime(expiryDate);
         int day = cldr.get(Calendar.DAY_OF_MONTH);
         int month = cldr.get(Calendar.MONTH);
         int year = cldr.get(Calendar.YEAR);
@@ -163,7 +172,7 @@ public class EditItem extends AppCompatActivity {
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-                        textViewExpiry.setText(s);
+                        textViewExpiry.setText(dateFormat.format(expiry));
 
                         // set days left
                         Date now = new Date();

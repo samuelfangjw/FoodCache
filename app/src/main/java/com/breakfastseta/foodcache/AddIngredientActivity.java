@@ -1,5 +1,6 @@
 package com.breakfastseta.foodcache;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -115,7 +116,12 @@ public class AddIngredientActivity extends AppCompatActivity {
     }
 
     public void pickDate(View view) {
+        @SuppressLint("SimpleDateFormat") final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+
         final Calendar cldr = Calendar.getInstance();
+        if (date != null) {
+            cldr.setTime(date);
+        }
         int day = cldr.get(Calendar.DAY_OF_MONTH);
         int month = cldr.get(Calendar.MONTH);
         int year = cldr.get(Calendar.YEAR);
@@ -131,7 +137,7 @@ public class AddIngredientActivity extends AppCompatActivity {
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-                        textViewExpiryDate.setText(s);
+                        textViewExpiryDate.setText(dateFormat.format(date));
                     }
                 }, year, month, day);
         picker.show();
@@ -176,7 +182,7 @@ public class AddIngredientActivity extends AppCompatActivity {
                                                        // Calculating date
                                                        Date now = new Date();
                                                        long timeInMillies = now.getTime() + expiry;
-                                                       Date date = new Date(timeInMillies);
+                                                       date = new Date(timeInMillies);
                                                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
                                                        String expiryString = dateFormat.format(date);
 
