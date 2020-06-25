@@ -17,10 +17,16 @@ import com.google.android.gms.vision.text.Line;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseOptions;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+
+import java.sql.Time;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ShoppingListActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -75,17 +81,59 @@ public class ShoppingListActivity extends AppCompatActivity {
 
                 // For undo feature when swiping to delete. Creates new snackbar with UNDO
                 // restoreItem method added in adapter.
-                Snackbar snackbar = Snackbar
-                        .make(coordinatorLayout, "Item was removed from the list.", Snackbar.LENGTH_LONG);
-                snackbar.setAction("UNDO", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                if (direction == ItemTouchHelper.LEFT) {
+                    // left swipe removes shopping list item and deletes it
+                    Snackbar snackbar = Snackbar
+                            .make(coordinatorLayout, "Item was deleted from Shopping List!", Snackbar.LENGTH_LONG);
+                    snackbar.setAction("UNDO", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
 
-                        adapter.restoreItem(shopItem);
-                    }
-                }).setDuration(5000);
-                snackbar.setActionTextColor(Color.YELLOW);
-                snackbar.show();
+                            adapter.restoreItem(shopItem);
+                        }
+                    }).setDuration(5000);
+                    snackbar.setActionTextColor(Color.YELLOW);
+                    snackbar.show();
+                } else {
+                    // right swipe adds to foodCache
+                    Snackbar snackbar = Snackbar
+                            .make(coordinatorLayout, "Item was moved to FoodCache!", Snackbar.LENGTH_LONG);
+                    snackbar.setAction("UNDO", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            adapter.restoreItem(shopItem);
+                        }
+                    }).setDuration(5000).setActionTextColor(Color.YELLOW)
+                    .addCallback(new Snackbar.Callback() {
+                        @Override
+                        public void onDismissed(Snackbar transientBottomBar, int event) {
+                            switch(event) {
+                                case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
+                                    CollectionReference inventoryRef = FirebaseFirestore.getInstance()
+                                            .collection("Inventory");
+
+                                    // TODO: barcode see if in system
+                                    String ingredient = shopItem.getItemName();
+                                    int quantity = shopItem.getNoItems();
+                                    Date date = new Date();
+                                    Timestamp dateTimestamp = new Timestamp(date);
+                                    // TODO: if item not in system, input placeholder that when user opens foodcache, user will be notified to edit expiry date and location
+                                    String units = "Items";
+
+                                    Map<String, Object> incompleteItem = new HashMap<>();
+                                    incompleteItem.put("Name", ingredient);
+                                    incompleteItem.put("quantity", quantity);
+                                    incompleteItem.put("units", units);
+
+                                    inventoryRef.document("Unclassified").collection("Ingredients")
+                                            .add(incompleteItem);
+                                    break;
+                            }
+                        }
+                    });
+                    snackbar.show();
+                }
             }
         }).attachToRecyclerView(recyclerView);
 

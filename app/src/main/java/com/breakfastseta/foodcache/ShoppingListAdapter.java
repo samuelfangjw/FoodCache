@@ -28,6 +28,7 @@ public class ShoppingListAdapter extends FirestoreRecyclerAdapter<ShoppingListIt
         holder.textViewTitle.setText(model.getItemName());
         holder.textViewDescription.setText(model.getDescription());
         holder.textViewQuantity.setText(String.valueOf(model.getNoItems()));
+        holder.textViewUnits.setText(model.getUnits());
     }
 
     @NonNull
@@ -49,20 +50,23 @@ public class ShoppingListAdapter extends FirestoreRecyclerAdapter<ShoppingListIt
         String name = item.getItemName();
         String description = item.getDescription();
         int quantity = item.getNoItems();
+        String units = item.getUnits();
 
-        notebookRef.add(new ShoppingListItem(name, description, quantity));
+        notebookRef.add(new ShoppingListItem(name, description, quantity, units));
     }
 
     class ShoppingListHolder extends RecyclerView.ViewHolder {
         TextView textViewTitle;
         TextView textViewDescription;
         TextView textViewQuantity;
+        TextView textViewUnits;
 
         public ShoppingListHolder(View itemView) {
             super(itemView);
             textViewTitle = itemView.findViewById(R.id.shopping_list_ingredient);
             textViewDescription = itemView.findViewById(R.id.shopping_list_description);
             textViewQuantity = itemView.findViewById(R.id.shopping_list_quantity);
+            textViewUnits = itemView.findViewById(R.id.shopping_list_units);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

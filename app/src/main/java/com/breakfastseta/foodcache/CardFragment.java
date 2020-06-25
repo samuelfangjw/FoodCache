@@ -116,7 +116,8 @@ public class CardFragment extends Fragment {
 
                 adapter.deleteItem(viewHolder.getAdapterPosition());
 
-                Snackbar snackbar = Snackbar
+
+                final Snackbar snackbar = Snackbar
                         .make(view.findViewById(R.id.cardfragment), "Item was removed from the list.", Snackbar.LENGTH_LONG);
                 snackbar.setAction("UNDO", new View.OnClickListener() {
                     @Override
@@ -124,9 +125,26 @@ public class CardFragment extends Fragment {
 
                         adapter.restoreItem(ingredient, ab);
                     }
-                }).setDuration(5000);
+                }).setDuration(5000).setActionTextColor(Color.YELLOW)
+                .addCallback(new Snackbar.Callback() {
+                    @Override
+                    public void onDismissed(Snackbar transientBottomBar, int event) {
+                        switch(event) {
+                            // when snackbar finishes showing
+                            case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
+                                CollectionReference notebookRef = FirebaseFirestore.getInstance()
+                                        .collection("ShoppingList");
 
-                snackbar.setActionTextColor(Color.YELLOW);
+                                String name = ingredient.getIngredient();
+                                String description = "RESTOCK: Auto Added";
+                                int quantity = ingredient.getQuantity();
+                                String units = ingredient.getUnits();
+                                // TODO: add quantity unit to Shoppping List Item
+                                notebookRef.add(new ShoppingListItem(name, description, quantity, units));
+                                break;
+                        }
+                    }
+                });
                 snackbar.show();
 
 
