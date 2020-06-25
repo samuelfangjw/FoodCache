@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -139,7 +138,6 @@ public class CardFragment extends Fragment {
                                 String description = "RESTOCK: Auto Added";
                                 int quantity = ingredient.getQuantity();
                                 String units = ingredient.getUnits();
-                                // TODO: add quantity unit to Shoppping List Item
                                 notebookRef.add(new ShoppingListItem(name, description, quantity, units));
                                 break;
                         }

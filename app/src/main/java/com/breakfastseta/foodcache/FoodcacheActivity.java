@@ -13,6 +13,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,7 +30,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Date;
 import java.util.Objects;
-// TODO: if item not in system, input placeholder that when user opens foodcache, user will be notified to edit expiry date and location
+
 public class FoodcacheActivity extends AppCompatActivity {
 
     private static final String TAG = "FoodcacheActivity";
@@ -77,6 +78,7 @@ public class FoodcacheActivity extends AppCompatActivity {
         super.onStart();
 
         manageNotifications();
+        checkUnclassified();
     }
 
     // Use custom menu as menu for this activity
@@ -167,5 +169,27 @@ public class FoodcacheActivity extends AppCompatActivity {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
 
         alarmManager.cancel(pendingIntent);
+    }
+
+    private void checkUnclassified() {
+        CollectionReference unclassifiedRef = inventoryRef.document("Unclassified").collection("Ingredients");
+        unclassifiedRef.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                String path = document.getReference().getPath();
+                                DialogFragment dialogFragment = new UnclassifiedDialogFragment();
+                                Bundle bundle = new Bundle();
+                                bundle.putString("path", path);
+                                dialogFragment.setArguments(bundle);
+                                dialogFragment.show(getSupportFragmentManager(), "unclassified");
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
     }
 }

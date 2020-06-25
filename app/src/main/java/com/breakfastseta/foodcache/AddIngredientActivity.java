@@ -74,12 +74,9 @@ public class AddIngredientActivity extends AppCompatActivity {
         // Apply the adapter to the spinner
         spinnerUnits.setAdapter(adapterUnits);
 
-        // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.tabs, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
         spinnerTab.setAdapter(adapter);
     }
 
@@ -93,6 +90,7 @@ public class AddIngredientActivity extends AppCompatActivity {
         if (ingredient.trim().isEmpty() || date == null || quantityString.trim().isEmpty()) {
             Toast.makeText(this, "Please fill in all values", Toast.LENGTH_SHORT).show();
         } else {
+            // TODO any item added should be added to database,
             // updating barcode database if barcode not found
             if (barcodeNotFound) {
                 String barcode = editTextBarcode.getText().toString();
@@ -135,10 +133,10 @@ public class AddIngredientActivity extends AppCompatActivity {
                         String s = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
                         try {
                             date = simpleDateFormat.parse(s);
+                            textViewExpiryDate.setText(dateFormat.format(date));
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-                        textViewExpiryDate.setText(dateFormat.format(date));
                     }
                 }, year, month, day);
         picker.show();
