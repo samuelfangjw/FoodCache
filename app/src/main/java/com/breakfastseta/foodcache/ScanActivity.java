@@ -88,7 +88,7 @@ public class ScanActivity extends AppCompatActivity {
     }
 
     private void processImage(Bitmap bitmap) {
-        InputImage image = InputImage.fromBitmap(bitmap, 90);
+        InputImage image = InputImage.fromBitmap(bitmap, 0);
         BarcodeScannerOptions options =
                 new BarcodeScannerOptions.Builder()
                         .setBarcodeFormats(
