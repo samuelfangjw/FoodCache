@@ -1,19 +1,23 @@
 package com.breakfastseta.foodcache;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -35,6 +39,8 @@ public class CardFragment extends Fragment {
     View view;
     RecyclerView recyclerView;
     private ItemAdapter adapter;
+
+    private LinearLayout coordinatorLayout;
 
     String[] tabs;
 
@@ -70,6 +76,8 @@ public class CardFragment extends Fragment {
 
         setUpRecyclerView();
 
+        coordinatorLayout = view.findViewById(R.id.activityFoodCache);
+
         return view;
     }
 
@@ -100,7 +108,28 @@ public class CardFragment extends Fragment {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                final int ingredientPos = viewHolder.getAdapterPosition();
+                final Item ingredient = adapter.getItem(ingredientPos);
+                String tab = adapter.getSnapshots().getSnapshot(ingredientPos).getReference().getPath();
+                String[] newtab = tab.split("/");
+                final String ab = newtab[1].trim();
+
                 adapter.deleteItem(viewHolder.getAdapterPosition());
+
+                Snackbar snackbar = Snackbar
+                        .make(view.findViewById(R.id.cardfragment), "Item was removed from the list.", Snackbar.LENGTH_LONG);
+                snackbar.setAction("UNDO", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        adapter.restoreItem(ingredient, ab);
+                    }
+                }).setDuration(5000);
+
+                snackbar.setActionTextColor(Color.YELLOW);
+                snackbar.show();
+
+
             }
         }).attachToRecyclerView(recyclerView);
 

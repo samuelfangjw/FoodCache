@@ -73,6 +73,8 @@ public class ShoppingListActivity extends AppCompatActivity {
 
                 adapter.deleteItem(viewHolder.getAdapterPosition());
 
+                // For undo feature when swiping to delete. Creates new snackbar with UNDO
+                // restoreItem method added in adapter.
                 Snackbar snackbar = Snackbar
                         .make(coordinatorLayout, "Item was removed from the list.", Snackbar.LENGTH_LONG);
                 snackbar.setAction("UNDO", new View.OnClickListener() {
@@ -81,7 +83,7 @@ public class ShoppingListActivity extends AppCompatActivity {
 
                         adapter.restoreItem(shopItem);
                     }
-                });
+                }).setDuration(5000);
                 snackbar.setActionTextColor(Color.YELLOW);
                 snackbar.show();
             }

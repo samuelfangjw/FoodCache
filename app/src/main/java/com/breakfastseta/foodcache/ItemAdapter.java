@@ -4,6 +4,7 @@ import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,7 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -85,6 +89,19 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
 
     public void deleteItem(int position) {
         getSnapshots().getSnapshot(position).getReference().delete();
+    }
+
+    public void restoreItem(Item item, String tab) {
+        CollectionReference inventoryRef = FirebaseFirestore.getInstance()
+                .collection("Inventory");
+
+        String ingredient = item.getIngredient();
+        int quantity = item.getQuantity();
+        Timestamp dateTimestamp = item.getDateTimestamp();
+        String units = item.getUnits();
+
+        inventoryRef.document(tab).collection("Ingredients")
+                .add(new Item(ingredient, quantity, dateTimestamp, units));
     }
 
     class ItemHolder extends RecyclerView.ViewHolder {
