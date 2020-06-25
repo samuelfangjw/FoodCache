@@ -5,15 +5,17 @@ public class ShoppingListItem {
     private String itemName;
     private String description;
     private int noItems;
+    private String units;
 
     public ShoppingListItem() {
         //empty constructor needed
     }
 
-    public ShoppingListItem(String itemName, String description, int noItems) {
+    public ShoppingListItem(String itemName, String description, int noItems, String units) {
         this.itemName = itemName;
         this.description = description;
         this.noItems = noItems;
+        this.units = units;
     }
 
     public String getItemName() {
@@ -26,5 +28,9 @@ public class ShoppingListItem {
 
     public int getNoItems() {
         return noItems;
+    }
+
+    public String getUnits() {
+        return units;
     }
 }
