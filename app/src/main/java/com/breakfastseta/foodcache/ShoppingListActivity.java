@@ -3,6 +3,7 @@ package com.breakfastseta.foodcache;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -13,17 +14,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.vision.text.Line;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.FirebaseOptions;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import java.sql.Time;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +34,8 @@ public class ShoppingListActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference notebookRef = db.collection("ShoppingList");
     private CoordinatorLayout coordinatorLayout;
+
+    private static final String TAG = "ShoppingListActivity";
 
     private  ShoppingListAdapter adapter;
     @Override
@@ -110,24 +114,49 @@ public class ShoppingListActivity extends AppCompatActivity {
                         public void onDismissed(Snackbar transientBottomBar, int event) {
                             switch(event) {
                                 case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
-                                    CollectionReference inventoryRef = FirebaseFirestore.getInstance()
-                                            .collection("Inventory");
+                                    FirebaseFirestore bd = FirebaseFirestore.getInstance();
+                                    final CollectionReference inventoryRef = db.collection("Inventory");
+                                    CollectionReference barcodeRef = db.collection("Barcodes");
 
-                                    // TODO: barcode see if in system
-                                    String ingredient = shopItem.getItemName();
-                                    int quantity = shopItem.getNoItems();
-                                    Date date = new Date();
-                                    Timestamp dateTimestamp = new Timestamp(date);
-                                    // TODO: if item not in system, input placeholder that when user opens foodcache, user will be notified to edit expiry date and location
-                                    String units = "Items";
+                                    final String ingredient = shopItem.getItemName();
+                                    final int quantity = shopItem.getNoItems();
+                                    final String units = shopItem.getUnits();
 
-                                    Map<String, Object> incompleteItem = new HashMap<>();
-                                    incompleteItem.put("Name", ingredient);
-                                    incompleteItem.put("quantity", quantity);
-                                    incompleteItem.put("units", units);
+                                    Query query = barcodeRef.whereEqualTo("Name", ingredient).limit(1);
+                                    query.get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    QuerySnapshot result = task.getResult();
+                                                    if (result.isEmpty()) {
+                                                        Map<String, Object> incompleteItem = new HashMap<>();
+                                                        incompleteItem.put("Name", ingredient);
+                                                        incompleteItem.put("quantity", quantity);
+                                                        incompleteItem.put("units", units);
 
-                                    inventoryRef.document("Unclassified").collection("Ingredients")
-                                            .add(incompleteItem);
+                                                        inventoryRef.document("Unclassified").collection("Ingredients")
+                                                                .add(incompleteItem);
+                                                    } else {
+                                                        for (QueryDocumentSnapshot document : result) {
+//                                                        Log.d(TAG, document.getId() + " => " + document.getData());
+                                                            Map<String, Object> map = document.getData();
+                                                            long expiryInMillies = (long) map.get("expiryDays");
+                                                            String location = (String) map.get("location");
+
+                                                            // calculating expiry date
+                                                            Timestamp now = new Timestamp(new Date());
+                                                            Date expiry = new Date(now.getSeconds() * 1000 + expiryInMillies);
+                                                            Timestamp dateTimestamp = new Timestamp(expiry);
+
+                                                            inventoryRef.document(location).collection("Ingredients").add(new Item(ingredient, quantity, dateTimestamp, units));
+                                                        }
+                                                    }
+                                                } else {
+                                                    Log.d(TAG, "Error getting documents: ", task.getException());
+                                                }
+                                            }
+                                        });
                                     break;
                             }
                         }

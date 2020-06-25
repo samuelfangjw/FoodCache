@@ -29,7 +29,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Date;
 import java.util.Objects;
-
+// TODO: if item not in system, input placeholder that when user opens foodcache, user will be notified to edit expiry date and location
 public class FoodcacheActivity extends AppCompatActivity {
 
     private static final String TAG = "FoodcacheActivity";

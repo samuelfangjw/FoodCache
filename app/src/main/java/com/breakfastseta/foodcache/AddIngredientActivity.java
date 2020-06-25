@@ -106,6 +106,7 @@ public class AddIngredientActivity extends AppCompatActivity {
                 docData.put("expiryDays", expiryDays);
                 docData.put("quantity", quantity);
                 docData.put("units", units);
+                docData.put("location", tab);
                 barcodeRef.document(barcode).set(docData);
             }
             int quantity = Integer.parseInt(quantityString);
