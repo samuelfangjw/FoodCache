@@ -23,6 +23,9 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,6 +37,7 @@ import java.util.Objects;
 
 public class AddIngredientActivity extends AppCompatActivity {
     private static final int SCAN_REQUEST = 10;
+    private static final String TAG = "AddIngredientActivity";
 
     private EditText editTextIngredient;
     private EditText editTextQuantity;
@@ -43,7 +47,7 @@ public class AddIngredientActivity extends AppCompatActivity {
     private EditText editTextBarcode;
 
     private Date date = null;
-    private boolean barcodeNotFound = false;
+    private String barcode = null;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference barcodeRef = db.collection("Barcodes");
@@ -81,33 +85,66 @@ public class AddIngredientActivity extends AppCompatActivity {
     }
 
     public void addNote(View view) {
-        String ingredient = editTextIngredient.getText().toString();
+        final String ingredient = editTextIngredient.getText().toString();
         String quantityString = editTextQuantity.getText().toString();
-        String tab = spinnerTab.getSelectedItem().toString();
-        String units = spinnerUnits.getSelectedItem().toString();
+        final String tab = spinnerTab.getSelectedItem().toString();
+        final String units = spinnerUnits.getSelectedItem().toString();
 
         // trim removes empty spaces
         if (ingredient.trim().isEmpty() || date == null || quantityString.trim().isEmpty()) {
             Toast.makeText(this, "Please fill in all values", Toast.LENGTH_SHORT).show();
         } else {
-            // TODO any item added should be added to database,
+            final int quantity = Integer.parseInt(quantityString);
+            Date now = new Date();
+            final long expiryDays = date.getTime() - now.getTime();
+
+            final Map<String, Object> docData = new HashMap<>();
+            docData.put("Name", ingredient);
+            docData.put("expiryDays", expiryDays);
+            docData.put("quantity", quantity);
+            docData.put("units", units);
+            docData.put("location", tab);
+
+            Query query = barcodeRef.whereEqualTo("Name", ingredient).limit(1);
+
             // updating barcode database if barcode not found
-            if (barcodeNotFound) {
-                String barcode = editTextBarcode.getText().toString();
-                int quantity = Integer.parseInt(quantityString);
+            if (barcode != null) {
+                query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            QuerySnapshot result = task.getResult();
+                            for (QueryDocumentSnapshot document : result) {
+                                String path = document.getReference().getPath();
+                                db.document(path).delete();
+                            }
+                            barcodeRef.document(barcode).set(docData);
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
 
-                Date now = new Date();
-                long expiryDays = date.getTime() - now.getTime();
-
-                Map<String, Object> docData = new HashMap<>();
-                docData.put("Name", ingredient);
-                docData.put("expiryDays", expiryDays);
-                docData.put("quantity", quantity);
-                docData.put("units", units);
-                docData.put("location", tab);
-                barcodeRef.document(barcode).set(docData);
+            } else { // update document with matching field, else create new document
+                query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            QuerySnapshot result = task.getResult();
+                            if (result.isEmpty()) { // no matching document found
+                                barcodeRef.add(docData);
+                            } else { // matching document found
+                                for (QueryDocumentSnapshot document : result) {
+                                    String path = document.getReference().getPath();
+                                    db.document(path).set(docData);
+                                }
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
             }
-            int quantity = Integer.parseInt(quantityString);
             Timestamp dateTimestamp = new Timestamp(date);
             inventoryRef.document(tab).collection("Ingredients").add(new Item(ingredient, quantity, dateTimestamp, units));
             Toast.makeText(this, "Note Added Successfully", Toast.LENGTH_SHORT).show();
@@ -155,7 +192,7 @@ public class AddIngredientActivity extends AppCompatActivity {
             Log.d("Scan", "" + resultCode);
             if (resultCode == RESULT_OK) {
                 assert data != null;
-                String barcode = data.getStringExtra("Barcode");
+                barcode = data.getStringExtra("Barcode");
                 editTextBarcode.setText(barcode);
                 checkBarcode(barcode);
             }
@@ -194,7 +231,6 @@ public class AddIngredientActivity extends AppCompatActivity {
                                                            spinnerUnits.setSelection(spinnerPosition);
                                                        }
                                                    } else {
-                                                       barcodeNotFound = true;
                                                        Toast.makeText(AddIngredientActivity.this, "No Matching Product Found", Toast.LENGTH_SHORT).show();
                                                        Log.d("AddIngredient", "Document does not exist!");
                                                    }
@@ -209,6 +245,7 @@ public class AddIngredientActivity extends AppCompatActivity {
     //for debugging purposes. will remove
     public void debugBarcode(View view) {
         String s = editTextBarcode.getText().toString();
+        barcode = s;
         checkBarcode(s);
     }
 }

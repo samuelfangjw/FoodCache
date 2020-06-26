@@ -54,14 +54,17 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tab_spinner"
         android:hint="@string/barcode"
-        android:inputType="number" />
+        android:inputType="number"
+        android:visibility="invisible"/>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/add_item"
         android:onClick="debugBarcode"
-        android:text="Debug" />
+        android:text="@string/debug"
+        android:visibility="invisible"
+        />
 
     <Button
         android:id="@+id/add_item"

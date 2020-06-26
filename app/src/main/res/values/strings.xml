@@ -21,6 +21,7 @@
     <string name="description">Description</string>
     <string name="barcode">Barcode</string>
     <string name="foodcache">FoodCache</string>
+    <string name="debug">Debug</string>
 
     <string-array name="tabs">
         <item>Pantry</item>
