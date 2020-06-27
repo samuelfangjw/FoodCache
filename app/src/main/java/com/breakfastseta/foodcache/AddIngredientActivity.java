@@ -107,7 +107,7 @@ public class AddIngredientActivity extends AppCompatActivity {
 
             Query query = barcodeRef.whereEqualTo("Name", ingredient).limit(1);
 
-            // updating barcode database if barcode not found
+            // updating barcode database if barcode found
             if (barcode != null) {
                 query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -147,7 +147,7 @@ public class AddIngredientActivity extends AppCompatActivity {
             }
             Timestamp dateTimestamp = new Timestamp(date);
             inventoryRef.document(tab).collection("Ingredients").add(new Item(ingredient, quantity, dateTimestamp, units));
-            Toast.makeText(this, "Note Added Successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Item Added Successfully", Toast.LENGTH_SHORT).show();
         }
     }
 

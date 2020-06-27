@@ -31,6 +31,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UnclassifiedDialogFragment extends DialogFragment {
 
@@ -45,6 +47,7 @@ public class UnclassifiedDialogFragment extends DialogFragment {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference inventoryRef = db.collection("Inventory");
+    private CollectionReference barcodeRef = db.collection("Barcodes");
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -106,11 +109,19 @@ public class UnclassifiedDialogFragment extends DialogFragment {
         String units = document.getString("units");
         String tab = spinnerTab.getSelectedItem().toString();
 
+        Date now = new Date();
+        long expiryDays = date.getTime() - now.getTime();
+        final Map<String, Object> docData = new HashMap<>();
+        docData.put("Name", ingredient);
+        docData.put("expiryDays", expiryDays);
+        docData.put("quantity", quantity);
+        docData.put("units", units);
+        docData.put("location", tab);
+
         // trim removes empty spaces
         if (date == null) {
             Toast.makeText(getContext(), "Please fill in all values", Toast.LENGTH_SHORT).show();
         } else {
-            // updating barcode database if barcode not found
             Timestamp dateTimestamp = new Timestamp(date);
             inventoryRef.document(tab).collection("Ingredients")
                     .add(new Item(ingredient,(int) quantity, dateTimestamp, units))
@@ -118,6 +129,7 @@ public class UnclassifiedDialogFragment extends DialogFragment {
                         @Override
                         public void onSuccess(DocumentReference documentReference) {
                             db.document(path).delete();
+                            barcodeRef.add(docData);
                         }
                     });
         }

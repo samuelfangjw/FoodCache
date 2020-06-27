@@ -31,5 +31,7 @@
     <string-array name="units">
         <item>Items</item>
         <item>g</item>
+        <item>kg</item>
+        <item>ml</item>
     </string-array>
 </resources>

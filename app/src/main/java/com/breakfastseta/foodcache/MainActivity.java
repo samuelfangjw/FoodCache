@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setAvailableProviders(providers)
+                        .setLogo(R.drawable.ic_foodcache)
                         .build(),
                 RC_SIGN_IN);
     }

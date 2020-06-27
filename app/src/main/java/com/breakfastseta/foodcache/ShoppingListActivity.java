@@ -99,13 +99,13 @@ public class ShoppingListActivity extends AppCompatActivity {
                     snackbar.setActionTextColor(Color.YELLOW);
                     snackbar.show();
                 } else {
+                    // TODO bug: when swiping right on multiple items quickly, only last item is added to foodcache (snackbar did not timeout)
                     // right swipe adds to foodCache
                     Snackbar snackbar = Snackbar
                             .make(coordinatorLayout, "Item was moved to FoodCache!", Snackbar.LENGTH_LONG);
                     snackbar.setAction("UNDO", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
                             adapter.restoreItem(shopItem);
                         }
                     }).setDuration(5000).setActionTextColor(Color.YELLOW)
@@ -139,7 +139,6 @@ public class ShoppingListActivity extends AppCompatActivity {
                                                                 .add(incompleteItem);
                                                     } else {
                                                         for (QueryDocumentSnapshot document : result) {
-//                                                        Log.d(TAG, document.getId() + " => " + document.getData());
                                                             Map<String, Object> map = document.getData();
                                                             long expiryInMillies = (long) map.get("expiryDays");
                                                             String location = (String) map.get("location");
