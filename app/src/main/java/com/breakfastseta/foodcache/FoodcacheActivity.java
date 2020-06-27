@@ -151,7 +151,8 @@ public class FoodcacheActivity extends AppCompatActivity {
             }
 
             Log.d(TAG, "manageNotifications " + timediff);
-            startAlarm(timediff);
+//            startAlarm(timediff);
+            startAlarm(3000);
         }
     }
 

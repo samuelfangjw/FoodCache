@@ -18,7 +18,7 @@
             android:parentActivityName=".ShoppingListActivity" />
         <activity
             android:name=".FoodcacheActivity"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop" />
         <activity android:name=".ShoppingListActivity"
             android:launchMode="singleTop"/>
         <activity
