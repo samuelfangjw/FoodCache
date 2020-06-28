@@ -41,6 +41,8 @@ public class CardFragment extends Fragment {
 
     private LinearLayout coordinatorLayout;
 
+    private Snackbar snackbar = null;
+
     String[] tabs;
 
     public CardFragment() {
@@ -116,7 +118,7 @@ public class CardFragment extends Fragment {
                 adapter.deleteItem(viewHolder.getAdapterPosition());
 
 
-                final Snackbar snackbar = Snackbar
+                snackbar = Snackbar
                         .make(view.findViewById(R.id.cardfragment), "Item was removed from the list.", Snackbar.LENGTH_LONG);
                 snackbar.setAction("UNDO", new View.OnClickListener() {
                     @Override
@@ -124,13 +126,16 @@ public class CardFragment extends Fragment {
 
                         adapter.restoreItem(ingredient, ab);
                     }
-                }).setDuration(5000).setActionTextColor(Color.YELLOW)
+                }).setDuration(Snackbar.LENGTH_SHORT).setActionTextColor(Color.YELLOW)
                 .addCallback(new Snackbar.Callback() {
                     @Override
                     public void onDismissed(Snackbar transientBottomBar, int event) {
                         switch(event) {
                             // when snackbar finishes showing
+                            case Snackbar.Callback.DISMISS_EVENT_MANUAL:
+                            case Snackbar.Callback.DISMISS_EVENT_SWIPE:
                             case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
+                            case Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE:
                                 CollectionReference notebookRef = FirebaseFirestore.getInstance()
                                         .collection("ShoppingList");
 
@@ -171,6 +176,16 @@ public class CardFragment extends Fragment {
         if (adapter != null) {
             adapter.startListening();
         }
+    }
+
+    @Override
+    public void onPause() {
+        if (snackbar != null) {
+            if (snackbar.isShown()) {
+                snackbar.dismiss();
+            }
+        }
+        super.onPause();
     }
 
     // Stops listening for changes on activity stop

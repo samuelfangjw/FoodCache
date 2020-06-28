@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -36,8 +37,10 @@ public class ShoppingListActivity extends AppCompatActivity {
     private CoordinatorLayout coordinatorLayout;
 
     private static final String TAG = "ShoppingListActivity";
+    private Snackbar snackbar;
 
-    private  ShoppingListAdapter adapter;
+    private ShoppingListAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,8 +90,9 @@ public class ShoppingListActivity extends AppCompatActivity {
                 // restoreItem method added in adapter.
                 if (direction == ItemTouchHelper.LEFT) {
                     // left swipe removes shopping list item and deletes it
-                    Snackbar snackbar = Snackbar
+                    snackbar = Snackbar
                             .make(coordinatorLayout, "Item was deleted from Shopping List!", Snackbar.LENGTH_LONG);
+
                     snackbar.setAction("UNDO", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -101,8 +105,9 @@ public class ShoppingListActivity extends AppCompatActivity {
                 } else {
                     // TODO bug: when swiping right on multiple items quickly, only last item is added to foodcache (snackbar did not timeout)
                     // right swipe adds to foodCache
-                    Snackbar snackbar = Snackbar
+                    snackbar = Snackbar
                             .make(coordinatorLayout, "Item was moved to FoodCache!", Snackbar.LENGTH_LONG);
+
                     snackbar.setAction("UNDO", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -113,7 +118,10 @@ public class ShoppingListActivity extends AppCompatActivity {
                         @Override
                         public void onDismissed(Snackbar transientBottomBar, int event) {
                             switch(event) {
+                                case Snackbar.Callback.DISMISS_EVENT_MANUAL:
+                                case Snackbar.Callback.DISMISS_EVENT_SWIPE:
                                 case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
+                                case Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE:
                                     FirebaseFirestore bd = FirebaseFirestore.getInstance();
                                     final CollectionReference inventoryRef = db.collection("Inventory");
                                     CollectionReference barcodeRef = db.collection("Barcodes");
@@ -183,6 +191,16 @@ public class ShoppingListActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         adapter.startListening();
+    }
+
+    @Override
+    public void onPause() {
+        if (snackbar != null) {
+            if (snackbar.isShown()) {
+                snackbar.dismiss();
+            }
+        }
+        super.onPause();
     }
 
     @Override
