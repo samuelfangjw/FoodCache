@@ -150,12 +150,14 @@ public class FoodcacheActivity extends AppCompatActivity {
                 timediff = timediff * 1000;
             }
 
-            Log.d(TAG, "manageNotifications " + timediff);
-            startAlarm(timediff);
+            long timeInMillies = (now.getSeconds() * 1000) + timediff;
+
+            startAlarm(timeInMillies);
         }
     }
 
     private void startAlarm(long time) {
+        Log.d(TAG, "manageNotifications: time " + time);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, AlertReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
@@ -164,6 +166,7 @@ public class FoodcacheActivity extends AppCompatActivity {
     }
 
     private void stopAlarm() {
+        Log.d(TAG, "manageNotifications: Stop Alarm");
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, AlertReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
