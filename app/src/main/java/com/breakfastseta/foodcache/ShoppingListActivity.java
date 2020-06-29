@@ -103,7 +103,6 @@ public class ShoppingListActivity extends AppCompatActivity {
                     snackbar.setActionTextColor(Color.YELLOW);
                     snackbar.show();
                 } else {
-                    // TODO bug: when swiping right on multiple items quickly, only last item is added to foodcache (snackbar did not timeout)
                     // right swipe adds to foodCache
                     snackbar = Snackbar
                             .make(coordinatorLayout, "Item was moved to FoodCache!", Snackbar.LENGTH_LONG);

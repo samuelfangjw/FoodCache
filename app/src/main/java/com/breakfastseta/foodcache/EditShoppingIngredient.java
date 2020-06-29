@@ -8,13 +8,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -25,7 +23,7 @@ public class EditShoppingIngredient extends AppCompatActivity {
 
     private EditText editShopName;
     private EditText editShopDescription;
-    private NumberPicker editShopQuantity;
+    private EditText editShopQuantity;
     private Spinner editShopUnits;
 
     ArrayAdapter<CharSequence> adapterUnits;
@@ -40,11 +38,8 @@ public class EditShoppingIngredient extends AppCompatActivity {
 
         editShopName = findViewById(R.id.edit_shopitem_edit_name);
         editShopDescription = findViewById(R.id.edit_shopitem_edit_description);
-        editShopQuantity = findViewById(R.id.edit_number_picker_quantity);
+        editShopQuantity = findViewById(R.id.edit_shopitem_quantity);
         editShopUnits = findViewById(R.id.spinner_edit_shoppingunits);
-
-        editShopQuantity.setMinValue(1);
-        editShopQuantity.setMaxValue(20);
 
         // Create an ArrayAdapter using the string array and a default spinner layout
         adapterUnits = ArrayAdapter.createFromResource(this,
@@ -84,7 +79,8 @@ public class EditShoppingIngredient extends AppCompatActivity {
         //Setting TextView's
         editShopName.setText(shoppingIngredientName);
         editShopDescription.setText(shoppingIngredientDescription);
-        editShopQuantity.setValue((int) shoppingIngredientQuantity);
+        String quantity = "" + shoppingIngredientQuantity;
+        editShopQuantity.setText(quantity);
         //Setting Spinner
         if (shoppingIngredientUnits != null) {
             int spinnerPosition = adapterUnits.getPosition(shoppingIngredientUnits);
@@ -95,7 +91,7 @@ public class EditShoppingIngredient extends AppCompatActivity {
     public void saveEditedIngredient(View view) {
         String newShopIngredientName = editShopName.getText().toString();
         String newShopIngredientDescription = editShopDescription.getText().toString();
-        int newShopIngredientQuantity = editShopQuantity.getValue();
+        int newShopIngredientQuantity = Integer.parseInt(editShopQuantity.getText().toString());
         String newShopIngredientUnits = editShopUnits.getSelectedItem().toString();
 
         if (newShopIngredientName.trim().isEmpty()) {

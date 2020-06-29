@@ -9,7 +9,7 @@
 
     <EditText
         android:id="@+id/edit_ingredient"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:inputType="text"
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/edit_ingredient"
         android:text="@string/quantity"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <EditText
         android:id="@+id/edit_quantity"
@@ -45,15 +45,17 @@
         android:id="@+id/text_view_expiry_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/edit_quantity"
+        android:layout_below="@id/edit_ingredient"
+        android:layout_alignParentRight="true"
         android:text="@string/expiry_date"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <TextView
         android:id="@+id/edit_expiry_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/text_view_expiry_date"
+        android:layout_alignParentRight="true"
         android:onClick="pickDate"
         android:text="@string/expiry_date"
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
@@ -63,8 +65,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/edit_expiry_date"
+        android:layout_alignParentRight="true"
         android:text="@string/days_left"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <Button
         android:id="@+id/edit_save_button"

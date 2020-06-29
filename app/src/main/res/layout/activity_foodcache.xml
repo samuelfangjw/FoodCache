@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/activityFoodCache"
+
     tools:context=".FoodcacheActivity">
 
     <com.google.android.material.tabs.TabLayout

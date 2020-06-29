@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -21,7 +20,7 @@ public class AddShopIngredientActivity extends AppCompatActivity {
 
     private EditText editTextName;
     private EditText editTextDescription;
-    private NumberPicker numberPickerQuantity;
+    private EditText editTextQuantity;
     private Spinner editUnits;
 
     ArrayAdapter<CharSequence> adapterUnits;
@@ -36,11 +35,8 @@ public class AddShopIngredientActivity extends AppCompatActivity {
 
         editTextName = findViewById(R.id.edit_shopitem_name);
         editTextDescription = findViewById(R.id.edit_shopitem_description);
-        numberPickerQuantity = findViewById(R.id.number_picker_quantity);
+        editTextQuantity = findViewById(R.id.edit_shopitem_quantity);
         editUnits = findViewById(R.id.spinner_edit_shoppingunits);
-
-        numberPickerQuantity.setMinValue(1);
-        numberPickerQuantity.setMaxValue(20);
 
         // Create an ArrayAdapter using the string array and a default spinner layout
         adapterUnits = ArrayAdapter.createFromResource(this,
@@ -76,7 +72,7 @@ public class AddShopIngredientActivity extends AppCompatActivity {
     private void saveNote() {
         String name = editTextName.getText().toString();
         String description = editTextDescription.getText().toString();
-        int quantity = numberPickerQuantity.getValue();
+        int quantity = Integer.parseInt(editTextQuantity.getText().toString());
         String units = editUnits.getSelectedItem().toString();
 
         if (name.trim().isEmpty()) {
