@@ -3,6 +3,7 @@
     package="com.breakfastseta.foodcache">
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".App"
@@ -12,15 +13,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EditShoppingIngredient"></activity>
+        <activity
+            android:name=".EditProfileActivity"
+            android:parentActivityName=".ProfileActivity" />
+        <activity android:name=".EditShoppingIngredient" />
         <activity
             android:name=".AddShopIngredientActivity"
             android:parentActivityName=".ShoppingListActivity" />
         <activity
             android:name=".FoodcacheActivity"
             android:launchMode="singleTop" />
-        <activity android:name=".ShoppingListActivity"
-            android:launchMode="singleTop"/>
+        <activity
+            android:name=".ShoppingListActivity"
+            android:launchMode="singleTop" />
         <activity
             android:name=".ScanActivity"
             android:parentActivityName=".AddIngredientActivity" />
@@ -41,8 +46,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".AlertReceiver"/>
-
+        <receiver android:name=".AlertReceiver" />
     </application>
 
 </manifest>

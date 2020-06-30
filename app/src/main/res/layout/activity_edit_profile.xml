@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="8dp"
-    android:orientation="vertical"
-    tools:context=".ProfileActivity">
+    tools:context=".EditProfileActivity"
+    android:orientation="vertical">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_picture"
@@ -15,40 +14,33 @@
         android:contentDescription="@string/profile_picture"
         android:src="@drawable/ic_profile_pic"
         app:civ_border_width="2dp"
-        app:civ_border_color="#FF000000" />
+        app:civ_border_color="#FF000000"
+        android:onClick="changeProfileImage"/>
 
-    <TextView
-        android:id="@+id/name"
+    <EditText
+        android:id="@+id/name_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/name" />
-
-    <TextView
-        android:id="@+id/email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/email" />
+        android:inputType="textNoSuggestions"
+        android:hint="@string/name" />
 
     <Button
-        android:id="@+id/edit_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="editProfile"
-        android:visibility="gone"
-        android:text="@string/edit_profile" />
+        android:onClick="saveProfile"
+        android:text="Save" />
 
     <Button
-        android:id="@+id/sign_out_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="signOut"
-        android:text="@string/sign_out" />
+        android:onClick="changeProfileImage"
+        android:text="Take Picture" />
 
     <Button
         android:id="@+id/delete_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="delete"
-        android:text="@string/delete_account" />
+        android:onClick="changeProfileImageFromGallery"
+        android:text="From Gallery" />
 
 </LinearLayout>

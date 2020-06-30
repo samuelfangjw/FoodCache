@@ -22,6 +22,9 @@
     <string name="barcode">Barcode</string>
     <string name="foodcache">FoodCache</string>
     <string name="debug">Debug</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="email">Email</string>
+    <string name="enter_password">Enter Password</string>
 
     <string-array name="tabs">
         <item>Pantry</item>
