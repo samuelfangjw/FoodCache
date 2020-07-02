@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -42,7 +44,12 @@ public class ShoppingListAdapter extends FirestoreRecyclerAdapter<ShoppingListIt
     }
 
     public void restoreItem(ShoppingListItem item) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = user.getUid();
+
         CollectionReference notebookRef = FirebaseFirestore.getInstance()
+                .collection("Users")
+                .document(uid)
                 .collection("ShoppingList");
 
         String name = item.getItemName();

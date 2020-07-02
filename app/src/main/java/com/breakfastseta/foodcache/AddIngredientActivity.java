@@ -20,6 +20,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -50,8 +52,10 @@ public class AddIngredientActivity extends AppCompatActivity {
     private String barcode = null;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference barcodeRef = db.collection("Barcodes");
-    private CollectionReference inventoryRef = db.collection("Inventory");
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    String uid = user.getUid();
+    private CollectionReference inventoryRef = db.collection("Users").document(uid).collection("Inventory");
+    private CollectionReference barcodeRef = db.collection("Users").document(uid).collection("Barcodes");
 
     ArrayAdapter<CharSequence> adapterUnits;
 
@@ -182,7 +186,6 @@ public class AddIngredientActivity extends AppCompatActivity {
     public void scanItem(View view) {
         Intent intent = new Intent(this, ScanActivity.class);
         startActivityForResult(intent, SCAN_REQUEST);
-
     }
 
     @Override

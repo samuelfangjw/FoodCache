@@ -22,6 +22,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -43,7 +45,10 @@ public class FoodcacheActivity extends AppCompatActivity {
     int count = 0;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference inventoryRef = db.collection("Inventory");
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    String uid = user.getUid();
+    private CollectionReference inventoryRef = db.collection("Users").document(uid).collection("Inventory");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

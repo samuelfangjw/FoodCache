@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -20,6 +19,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -33,7 +34,9 @@ import java.util.Map;
 
 public class ShoppingListActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference notebookRef = db.collection("ShoppingList");
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    String uid = user.getUid();
+    private CollectionReference notebookRef = db.collection("Users").document(uid).collection("ShoppingList");
     private CoordinatorLayout coordinatorLayout;
 
     private static final String TAG = "ShoppingListActivity";
@@ -53,6 +56,8 @@ public class ShoppingListActivity extends AppCompatActivity {
                 startActivity(new Intent(ShoppingListActivity.this, AddShopIngredientActivity.class));
             }
         });
+
+        setTitle("Shopping List");
 
         setUpRecyclerView();
         coordinatorLayout = findViewById(R.id.activityShoppingList);
@@ -121,9 +126,8 @@ public class ShoppingListActivity extends AppCompatActivity {
                                 case Snackbar.Callback.DISMISS_EVENT_SWIPE:
                                 case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
                                 case Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE:
-                                    FirebaseFirestore bd = FirebaseFirestore.getInstance();
-                                    final CollectionReference inventoryRef = db.collection("Inventory");
-                                    CollectionReference barcodeRef = db.collection("Barcodes");
+                                    final CollectionReference inventoryRef = db.collection("Users").document(uid).collection("Inventory");
+                                    CollectionReference barcodeRef = db.collection("Users").document(uid).collection("Barcodes");
 
                                     final String ingredient = shopItem.getItemName();
                                     final int quantity = shopItem.getNoItems();

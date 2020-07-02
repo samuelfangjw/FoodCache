@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -33,7 +35,9 @@ public class CardFragment extends Fragment {
     private Integer counter;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference inventoryRef = db.collection("Inventory");
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    String uid = user.getUid();
+    private CollectionReference inventoryRef = db.collection("Users").document(uid).collection("Inventory");
 
     View view;
     RecyclerView recyclerView;
@@ -113,7 +117,7 @@ public class CardFragment extends Fragment {
                 final Item ingredient = adapter.getItem(ingredientPos);
                 String tab = adapter.getSnapshots().getSnapshot(ingredientPos).getReference().getPath();
                 String[] newtab = tab.split("/");
-                final String ab = newtab[1].trim();
+                final String ab = newtab[3].trim();
 
                 adapter.deleteItem(viewHolder.getAdapterPosition());
 
@@ -137,6 +141,8 @@ public class CardFragment extends Fragment {
                             case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
                             case Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE:
                                 CollectionReference notebookRef = FirebaseFirestore.getInstance()
+                                        .collection("Users")
+                                        .document(uid)
                                         .collection("ShoppingList");
 
                                 String name = ingredient.getIngredient();

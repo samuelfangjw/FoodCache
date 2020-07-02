@@ -1,8 +1,5 @@
 package com.breakfastseta.foodcache;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +10,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -79,7 +81,13 @@ public class AddShopIngredientActivity extends AppCompatActivity {
             Toast.makeText(this, "Please insert Shopping Item name", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = user.getUid();
+
         CollectionReference notebookRef = FirebaseFirestore.getInstance()
+                .collection("Users")
+                .document(uid)
                 .collection("ShoppingList");
         notebookRef.add(new ShoppingListItem(name, description, quantity, units));
         Toast.makeText(this, "Shopping Item added", Toast.LENGTH_SHORT).show();

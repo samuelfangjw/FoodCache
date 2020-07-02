@@ -22,6 +22,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -46,8 +48,10 @@ public class UnclassifiedDialogFragment extends DialogFragment {
     DocumentSnapshot document;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference inventoryRef = db.collection("Inventory");
-    private CollectionReference barcodeRef = db.collection("Barcodes");
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    String uid = user.getUid();
+    private CollectionReference inventoryRef = db.collection("Users").document(uid).collection("Inventory");
+    private CollectionReference barcodeRef = db.collection("Users").document(uid).collection("Barcodes");
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
