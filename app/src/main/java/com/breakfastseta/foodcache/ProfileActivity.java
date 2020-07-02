@@ -1,6 +1,9 @@
 package com.breakfastseta.foodcache;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
@@ -20,17 +24,22 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
 
     private static final String TAG = "ProfileActivity";
+    private static final int RESULT_CODE = 10;
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     
     ImageView profilePicture;
     TextView nameTextView;
     TextView emailTextView;
+
+    byte[] picture = null;
+    String name = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,14 +62,22 @@ public class ProfileActivity extends AppCompatActivity {
                 editButton.setVisibility(View.VISIBLE);
             }
         }
+
+        if (user != null) {
+            updateUserProfile();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        if (user != null) {
-            updateUserProfile();
+        if (picture != null) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(picture, 0, picture.length);
+            profilePicture.setImageBitmap(bitmap);
+        }
+        if (name != null) {
+            nameTextView.setText(name);
         }
     }
 
@@ -106,7 +123,25 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void editProfile(View view) {
+        Bitmap bitmap = ((BitmapDrawable) profilePicture.getDrawable()).getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] image = baos.toByteArray();
+        String name = nameTextView.getText().toString();
+
         Intent intent = new Intent(this, EditProfileActivity.class);
-        startActivity(intent);
+        intent.putExtra("picture", image);
+        intent.putExtra("name", name);
+        startActivityForResult(intent, RESULT_CODE);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            picture = data.getByteArrayExtra("picture");
+            name = data.getStringExtra("name");
+        }
+    }
+
 }

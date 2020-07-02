@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -18,7 +19,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,6 +44,8 @@ public class EditProfileActivity extends AppCompatActivity {
     ImageView profilePicture;
     EditText nameEditText;
 
+    Bitmap bitmap = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,22 +57,12 @@ public class EditProfileActivity extends AppCompatActivity {
         nameEditText = findViewById(R.id.name_edit);
 
         if (user != null) {
-            updateUserProfile();
-        }
-    }
-
-    private void updateUserProfile() {
-        Uri profilePhoto = user.getPhotoUrl();
-        String name = user.getDisplayName();
-
-        if (name != null && nameEditText != null) {
+            Bundle extras = getIntent().getExtras();
+            byte[] b = extras.getByteArray("picture");
+            Bitmap bmp = BitmapFactory.decodeByteArray(b, 0, b.length);
+            String name = extras.getString("name");
             nameEditText.setText(name);
-        }
-
-        if (profilePhoto != null && profilePicture != null) {
-            Glide.with(this)
-                    .load(profilePhoto)
-                    .into(profilePicture);
+            profilePicture.setImageBitmap(bmp);
         }
     }
 
@@ -128,16 +120,15 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == TAKE_IMAGE_CODE) {
             if (resultCode == RESULT_OK) {
-                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                bitmap = (Bitmap) data.getExtras().get("data");
                 profilePicture.setImageBitmap(bitmap);
-                uploadPicture(bitmap);
             }
         } else if (requestCode == GALLERY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Uri selectedImage = data.getData();
                 try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
-                    uploadPicture(bitmap);
+                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+                    profilePicture.setImageBitmap(bitmap);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -147,10 +138,7 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
-    private void uploadPicture(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-
+    private void uploadPicture(ByteArrayOutputStream baos) {
         String uid = user.getUid();
         final StorageReference reference = FirebaseStorage.getInstance().getReference()
                 .child("profile_images")
@@ -192,8 +180,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(EditProfileActivity.this, "Profile Picture Updated Successfully", Toast.LENGTH_SHORT).show();
-                        updateUserProfile();
+                        Toast.makeText(EditProfileActivity.this, "Profile Updated Successfully", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -229,6 +216,17 @@ public class EditProfileActivity extends AppCompatActivity {
 
     public void saveProfile(View view) {
         String name = nameEditText.getText().toString();
+        Intent intent = new Intent();
+        intent.putExtra("name", name);
+
+        if (bitmap != null) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            uploadPicture(baos);
+
+            byte[] b = baos.toByteArray();
+            intent.putExtra("picture", b);
+        }
 
         UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
                 .setDisplayName(name)
@@ -236,6 +234,8 @@ public class EditProfileActivity extends AppCompatActivity {
 
         user.updateProfile(request);
 
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
 }
