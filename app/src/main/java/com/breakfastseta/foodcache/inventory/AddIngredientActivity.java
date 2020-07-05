@@ -1,4 +1,4 @@
-package com.breakfastseta.foodcache;
+package com.breakfastseta.foodcache.inventory;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.breakfastseta.foodcache.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;

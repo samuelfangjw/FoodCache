@@ -1,4 +1,4 @@
-package com.breakfastseta.foodcache;
+package com.breakfastseta.foodcache.profile;
 
 import android.Manifest;
 import android.content.Intent;
@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.breakfastseta.foodcache.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;

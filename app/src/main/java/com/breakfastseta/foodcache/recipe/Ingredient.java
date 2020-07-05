@@ -1,4 +1,4 @@
-package com.breakfastseta.foodcache;
+package com.breakfastseta.foodcache.recipe;
 
 public class Ingredient {
     private String name;

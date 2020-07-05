@@ -1,4 +1,4 @@
-package com.breakfastseta.foodcache;
+package com.breakfastseta.foodcache.inventory;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -16,6 +16,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.breakfastseta.foodcache.AlertReceiver;
+import com.breakfastseta.foodcache.R;
+import com.breakfastseta.foodcache.recipe.RecipeActivity;
+import com.breakfastseta.foodcache.shoppinglist.ShoppingListActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;

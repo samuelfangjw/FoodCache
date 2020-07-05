@@ -1,4 +1,4 @@
-package com.breakfastseta.foodcache;
+package com.breakfastseta.foodcache.shoppinglist;
 
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.breakfastseta.foodcache.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;

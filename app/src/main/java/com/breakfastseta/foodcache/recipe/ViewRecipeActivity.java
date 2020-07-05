@@ -1,10 +1,12 @@
-package com.breakfastseta.foodcache;
+package com.breakfastseta.foodcache.recipe;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class ViewRecipe extends AppCompatActivity {
+import com.breakfastseta.foodcache.R;
+
+public class ViewRecipeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

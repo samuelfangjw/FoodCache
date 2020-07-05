@@ -1,4 +1,4 @@
-package com.breakfastseta.foodcache;
+package com.breakfastseta.foodcache.inventory;
 
 import com.google.firebase.Timestamp;
 

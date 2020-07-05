@@ -1,9 +1,11 @@
-package com.breakfastseta.foodcache;
+package com.breakfastseta.foodcache.recipe;
 
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.breakfastseta.foodcache.R;
 
 import java.util.ArrayList;
 

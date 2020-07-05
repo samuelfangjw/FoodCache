@@ -18,31 +18,31 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AddRecipeActivity"></activity>
-        <activity android:name=".ViewRecipe" />
-        <activity android:name=".RecipeActivity" />
+        <activity android:name=".recipe.AddRecipeActivity"></activity>
+        <activity android:name=".recipe.ViewRecipeActivity" />
+        <activity android:name=".recipe.RecipeActivity" />
         <activity
-            android:name=".EditProfileActivity"
-            android:parentActivityName=".ProfileActivity" />
-        <activity android:name=".EditShoppingIngredient" />
+            android:name=".profile.EditProfileActivity"
+            android:parentActivityName=".profile.ProfileActivity" />
+        <activity android:name=".shoppinglist.EditShoppingIngredient" />
         <activity
-            android:name=".AddShopIngredientActivity"
-            android:parentActivityName=".ShoppingListActivity" />
+            android:name=".shoppinglist.AddShopIngredientActivity"
+            android:parentActivityName=".shoppinglist.ShoppingListActivity" />
         <activity
-            android:name=".FoodcacheActivity"
+            android:name=".inventory.FoodcacheActivity"
             android:launchMode="singleTop" />
         <activity
-            android:name=".ShoppingListActivity"
+            android:name=".shoppinglist.ShoppingListActivity"
             android:launchMode="singleTop" />
         <activity
-            android:name=".EditItem"
-            android:parentActivityName=".FoodcacheActivity" />
+            android:name=".inventory.EditItem"
+            android:parentActivityName=".inventory.FoodcacheActivity" />
         <activity
-            android:name=".ProfileActivity"
-            android:parentActivityName=".FoodcacheActivity" />
+            android:name=".profile.ProfileActivity"
+            android:parentActivityName=".inventory.FoodcacheActivity" />
         <activity
-            android:name=".AddIngredientActivity"
-            android:parentActivityName=".FoodcacheActivity" />
+            android:name=".inventory.AddIngredientActivity"
+            android:parentActivityName=".inventory.FoodcacheActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

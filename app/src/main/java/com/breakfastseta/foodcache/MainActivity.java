@@ -7,6 +7,7 @@ import android.widget.Toast;
 import androidx.annotation.MainThread;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.breakfastseta.foodcache.inventory.FoodcacheActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;

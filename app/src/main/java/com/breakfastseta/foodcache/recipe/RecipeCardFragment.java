@@ -1,4 +1,4 @@
-package com.breakfastseta.foodcache;
+package com.breakfastseta.foodcache.recipe;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.breakfastseta.foodcache.R;
+import com.breakfastseta.foodcache.inventory.Item;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -108,7 +110,7 @@ public class RecipeCardFragment extends Fragment {
 
                 // Starting EditItem activity
                 //TODO edit intent to correct path
-                Intent intent = new Intent(getContext(), ViewRecipe.class);
+                Intent intent = new Intent(getContext(), ViewRecipeActivity.class);
                 intent.putExtra("path", path);
                 startActivity(intent);
             }

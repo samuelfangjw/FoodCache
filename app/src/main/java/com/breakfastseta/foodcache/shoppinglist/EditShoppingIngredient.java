@@ -1,7 +1,4 @@
-package com.breakfastseta.foodcache;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+package com.breakfastseta.foodcache.shoppinglist;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +8,10 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.breakfastseta.foodcache.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;

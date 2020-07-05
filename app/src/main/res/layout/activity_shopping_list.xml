@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/activityShoppingList"
-    tools:context=".ShoppingListActivity">
+    tools:context=".shoppinglist.ShoppingListActivity">
 
 
     <androidx.recyclerview.widget.RecyclerView

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/activityRecipe"
-    tools:context=".RecipeActivity">
+    tools:context=".recipe.RecipeActivity">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs"

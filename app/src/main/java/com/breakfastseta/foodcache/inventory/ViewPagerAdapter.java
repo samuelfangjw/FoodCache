@@ -1,4 +1,4 @@
-package com.breakfastseta.foodcache;
+package com.breakfastseta.foodcache.inventory;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

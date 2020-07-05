@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".UnclassifiedDialogFragment">
+    tools:context=".inventory.UnclassifiedDialogFragment">
 
     <TextView
         android:id="@+id/unclassified_ingredient_name"
