@@ -5,18 +5,18 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-// For Foodcache Card
-public class ViewPagerAdapter extends FragmentStateAdapter {
+//For Recipe Card
+public class RecipeViewPagerAdapter extends FragmentStateAdapter {
     private static final int CARD_ITEM_SIZE = 2;
 
-    public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
+    public RecipeViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        return CardFragment.newInstance(position);
+        return RecipeCardFragment.newInstance(position);
     }
 
     @Override

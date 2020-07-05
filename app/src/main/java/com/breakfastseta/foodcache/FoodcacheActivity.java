@@ -99,7 +99,8 @@ public class FoodcacheActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.profile:
-                startActivity(new Intent(FoodcacheActivity.this, ProfileActivity.class));
+                // TODO change back to profileactivity
+                startActivity(new Intent(FoodcacheActivity.this, RecipeActivity.class));
                 return true;
             case R.id.shopping_list:
                 startActivity(new Intent(FoodcacheActivity.this, ShoppingListActivity.class));

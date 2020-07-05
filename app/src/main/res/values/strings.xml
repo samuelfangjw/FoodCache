@@ -31,6 +31,11 @@
         <item>Fridge</item>
     </string-array>
 
+    <string-array name="cuisines">
+        <item>Asian</item>
+        <item>Western</item>
+    </string-array>
+
     <string-array name="units">
         <item>Items</item>
         <item>g</item>
