@@ -40,7 +40,7 @@ public class AddRecipeActivity extends AppCompatActivity
     String author;
     String cuisine;
     ArrayList<Ingredient> ingredients;
-    String steps;
+    ArrayList<String> steps;
 
     // Fragments
     AddRecipeFragmentOne fragmentOne;
@@ -60,6 +60,8 @@ public class AddRecipeActivity extends AppCompatActivity
         fragmentThree = new AddRecipeFragmentThree();
 
         showFragmentOne();
+
+        setTitle("Add Recipe");
     }
 
     @Override
@@ -79,7 +81,7 @@ public class AddRecipeActivity extends AppCompatActivity
     }
 
     @Override
-    public void nextFragmentThree(String steps) {
+    public void nextFragmentThree(ArrayList<String> steps) {
         this.steps = steps;
         saveRecipe();
     }
@@ -146,11 +148,11 @@ public class AddRecipeActivity extends AppCompatActivity
         if (picture != null) {
             uploadImage();
         } else {
-            uploadProfile();
+            uploadRecipe();
         }
     }
 
-    private void uploadProfile() {
+    private void uploadRecipe() {
         CollectionReference recipeRef = db.collection("Users").document(uid).collection("RecipeCache");
         Recipe recipe = new Recipe(name, author, ingredients, steps, image_path.toString());
         recipeRef.document(cuisine).collection("Recipes").add(recipe);
@@ -160,7 +162,7 @@ public class AddRecipeActivity extends AppCompatActivity
     private void uploadImage() {
         Date now = new Date();
         long time = now.getTime();
-        String imageName = "" + time;
+        String imageName = uid + time;
 
         final StorageReference reference = FirebaseStorage.getInstance().getReference()
                 .child("recipe_images")
@@ -185,7 +187,7 @@ public class AddRecipeActivity extends AppCompatActivity
         reference.getDownloadUrl()
                 .addOnSuccessListener(uri -> {
                     image_path = uri;
-                    uploadProfile();
+                    uploadRecipe();
                 });
     }
 

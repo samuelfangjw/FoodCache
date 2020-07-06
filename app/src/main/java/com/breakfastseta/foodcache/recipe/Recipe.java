@@ -6,14 +6,14 @@ public class Recipe {
     private String name;
     private String author;
     private ArrayList<Ingredient> ingredients;
-    private String steps;
+    private ArrayList<String> steps;
     private String photo = null;
 
     public Recipe() {
         //empty constructor required for Firestore
     }
 
-    public Recipe(String name, String author, ArrayList<Ingredient> ingredients, String steps, String photo) {
+    public Recipe(String name, String author, ArrayList<Ingredient> ingredients, ArrayList<String> steps, String photo) {
         this.name = name;
         this.author = author;
         this.ingredients = ingredients;
@@ -29,7 +29,7 @@ public class Recipe {
         return ingredients;
     }
 
-    public String getSteps() {
+    public ArrayList<String> getSteps() {
         return steps;
     }
 

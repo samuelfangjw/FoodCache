@@ -3,26 +3,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".recipe.AddRecipeFragmentThree"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".recipe.AddRecipeFragmentThree">
 
-    <EditText
-        android:id="@+id/step"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvFragmentThree"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"
-        android:hint="Step" />
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/button_add"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/add_step" />
+        <EditText
+            android:id="@+id/step"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Step"
+            android:inputType="text" />
 
-    <Button
-        android:id="@+id/button_save"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/save_recipe" />
+        <Button
+            android:id="@+id/button_add"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_step" />
+
+        <Button
+            android:id="@+id/button_save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/save_recipe" />
+
+    </LinearLayout>
 
 </LinearLayout>

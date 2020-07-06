@@ -1,45 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".recipe.AddRecipeFragmentTwo">
+    tools:context=".recipe.AddRecipeFragmentTwo"
+    android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/edit_text_name"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvFragmentTwo"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:hint="@string/name"
-        android:inputType="text" />
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
-    <EditText
-        android:id="@+id/edit_text_quantity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/edit_text_name"
-        android:hint="@string/quantity"
-        android:inputType="number" />
-
-    <Spinner
-        android:id="@+id/spinner_units"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/edit_text_quantity" />
-
-    <Button
-        android:id="@+id/add_item_button"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/spinner_units"
-        android:text="@string/add_ingredient"/>
+        android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/button_next"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/add_item_button"
-        android:text="@string/next"/>
+        <EditText
+            android:id="@+id/edit_text_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:hint="@string/name"
+            android:inputType="text" />
 
-</RelativeLayout>
+        <EditText
+            android:id="@+id/edit_text_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edit_text_name"
+            android:hint="@string/quantity"
+            android:inputType="number" />
+
+        <Spinner
+            android:id="@+id/spinner_units"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edit_text_quantity" />
+
+        <Button
+            android:id="@+id/add_item_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/spinner_units"
+            android:text="@string/add_ingredient" />
+
+        <Button
+            android:id="@+id/button_next"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/add_item_button"
+            android:text="@string/next" />
+
+    </RelativeLayout>
+</LinearLayout>

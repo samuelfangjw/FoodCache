@@ -14,6 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.breakfastseta.foodcache.R;
 
@@ -23,13 +25,15 @@ public class AddRecipeFragmentTwo extends Fragment {
 
     private AddRecipeFragmentTwo.FragmentTwoListener listener;
 
-    ArrayList<Ingredient> arr = new ArrayList<>();
+    private FragmentTwoAdapter adapter;
+    private ArrayList<Ingredient> arr = new ArrayList<>();
 
-    EditText editText_name;
-    EditText editText_quantity;
-    Spinner spinner_units;
-    Button button_add;
-    Button button_next;
+    private RecyclerView recyclerView;
+    private EditText editText_name;
+    private EditText editText_quantity;
+    private Spinner spinner_units;
+    private Button button_add;
+    private Button button_next;
 
     public AddRecipeFragmentTwo() {
         // Required empty public constructor
@@ -63,11 +67,19 @@ public class AddRecipeFragmentTwo extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        recyclerView = (RecyclerView) view.findViewById(R.id.rvFragmentTwo);
         editText_name = (EditText) view.findViewById(R.id.edit_text_name);
         editText_quantity = (EditText) view.findViewById(R.id.edit_text_quantity);
         spinner_units = (Spinner) view.findViewById(R.id.spinner_units);
         button_add = (Button) view.findViewById(R.id.add_item_button);
         button_next = (Button) view.findViewById(R.id.button_next);
+
+        // Create adapter passing in the sample user data
+        adapter = new FragmentTwoAdapter(arr);
+        // Attach the adapter to the recyclerview to populate items
+        recyclerView.setAdapter(adapter);
+        // Set layout manager to position the items
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         ArrayAdapter<CharSequence> adapterUnits;
         adapterUnits = ArrayAdapter.createFromResource(getContext(),
@@ -92,10 +104,15 @@ public class AddRecipeFragmentTwo extends Fragment {
         if (name.trim().isEmpty() || quantity.trim().isEmpty()) {
             Toast.makeText(getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
         } else {
+            int pos = adapter.getItemCount();
             Ingredient ingredient = new Ingredient(name, Integer.parseInt(quantity), units);
             arr.add(ingredient);
             editText_name.setText("");
             editText_quantity.setText("");
+
+            // Notifiying recyclerview adapter
+            adapter.notifyItemInserted(pos);
+            recyclerView.scrollToPosition(pos);
         }
     }
 
