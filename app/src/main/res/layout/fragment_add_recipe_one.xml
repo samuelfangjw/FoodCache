@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".recipe.AddRecipeFragmentOne" >
+
+    <ImageView
+        android:id="@+id/recipe_image"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/recipe_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/recipe_image"
+        android:text="Recipe"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+    <EditText
+        android:id="@+id/edit_text_recipe_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/recipe_image"
+        android:inputType="text"
+        android:hint="@string/recipe_name" />
+
+    <EditText
+        android:id="@+id/edit_text_author"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_text_recipe_name"
+        android:inputType="text"
+        android:hint="Author" />
+
+    <Spinner
+        android:id="@+id/cuisine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_text_author"/>
+
+    <Button
+        android:id="@+id/add_recipe_photo_button"
+        android:layout_width="match_parent"
+        android:layout_below="@id/cuisine"
+        android:layout_height="wrap_content"
+        android:text="Edit Picture"/>
+
+    <Button
+        android:id="@+id/next_button_one"
+        android:layout_width="match_parent"
+        android:layout_below="@id/add_recipe_photo_button"
+        android:layout_height="wrap_content"
+        android:text="@string/next"/>
+
+</RelativeLayout>

@@ -18,6 +18,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.breakfastseta.foodcache.AlertReceiver;
 import com.breakfastseta.foodcache.R;
+import com.breakfastseta.foodcache.profile.ProfileActivity;
 import com.breakfastseta.foodcache.recipe.RecipeActivity;
 import com.breakfastseta.foodcache.shoppinglist.ShoppingListActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -103,11 +104,13 @@ public class FoodcacheActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.profile:
-                // TODO change back to profileactivity
-                startActivity(new Intent(FoodcacheActivity.this, RecipeActivity.class));
+                startActivity(new Intent(FoodcacheActivity.this, ProfileActivity.class));
                 return true;
             case R.id.shopping_list:
                 startActivity(new Intent(FoodcacheActivity.this, ShoppingListActivity.class));
+                return true;
+            case R.id.recipes:
+                startActivity(new Intent(FoodcacheActivity.this, RecipeActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -33,13 +33,15 @@ public class RecipeAdapter extends FirestoreRecyclerAdapter<Recipe, RecipeAdapte
     @Override
     protected void onBindViewHolder(@NonNull final RecipeHolder holder, int position, @NonNull Recipe model) {
         String name = model.getName();
-        Uri image_path = model.getPhoto();
+        String image_url = model.getPhoto();
+
 
         //Set Views
         holder.textViewName.setText(name);
 
-        if (image_path != null) {
+        if (image_url != null) {
             //TODO explore glide placeholders and fallback for image
+            Uri image_path = Uri.parse(model.getPhoto());
             Glide.with(holder.itemView.getContext())
                     .load(image_path)
                     .into(holder.imageView);

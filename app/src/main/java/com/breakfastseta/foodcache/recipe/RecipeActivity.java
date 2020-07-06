@@ -1,12 +1,15 @@
 package com.breakfastseta.foodcache.recipe;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.breakfastseta.foodcache.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,20 +47,14 @@ public class RecipeActivity extends AppCompatActivity {
                     }
                 }).attach();
 
-//        add();
+        FloatingActionButton buttonAddItem = findViewById(R.id.add_item_fab);
+        buttonAddItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(RecipeActivity.this, AddRecipeActivity.class));
+            }
+        });
     }
-
-    // TODO REMOVE THIS TOO
-//    private void add() {
-//        String tab = "Asian";
-//        CollectionReference recipeRef = db.collection("Users").document(uid).collection("RecipeCache");
-//        Ingredient first = new Ingredient("first", 1, "g");
-//        Ingredient second = new Ingredient("second", 2, "kg");
-//        ArrayList<Ingredient> arr = new ArrayList<Ingredient>();
-//        arr.add(first);
-//        arr.add(second);
-//        recipeRef.document(tab).collection("Recipes").add(new Recipe("Name", "Author", arr, "Steps"));
-//    }
 
     private RecipeViewPagerAdapter createCardAdapter() {
         RecipeViewPagerAdapter adapter = new RecipeViewPagerAdapter(this);

@@ -42,4 +42,9 @@
         <item>kg</item>
         <item>ml</item>
     </string-array>
+    <string name="next">Next</string>
+    <string name="recipe_name">Recipe Name</string>
+    <string name="add_ingredient">Add Ingredient</string>
+    <string name="add_step">Add Step</string>
+    <string name="save_recipe">Save Recipe</string>
 </resources>

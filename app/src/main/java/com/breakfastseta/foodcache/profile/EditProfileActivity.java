@@ -85,6 +85,16 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
+    public void changeProfileImageFromGallery(View view) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    STORAGE_REQUEST_CODE);
+        } else {
+            pickFromGallery();
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -116,6 +126,18 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
+    private void pickFromGallery() {
+        //Create an Intent with action as ACTION_PICK
+        Intent intent=new Intent(Intent.ACTION_PICK);
+        // Sets the type as image/*. This ensures only components of type image are selected
+        intent.setType("image/*");
+        //We pass an extra array with the accepted mime types. This will ensure only components with these MIME types as targeted.
+        String[] mimeTypes = {"image/jpeg", "image/png"};
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+        // Launching the Intent
+        startActivityForResult(intent, GALLERY_REQUEST_CODE);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -137,6 +159,30 @@ public class EditProfileActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Error Please Try Again", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void saveProfile(View view) {
+        String name = nameEditText.getText().toString();
+        Intent intent = new Intent();
+        intent.putExtra("name", name);
+
+        if (bitmap != null) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            uploadPicture(baos);
+
+            byte[] b = baos.toByteArray();
+            intent.putExtra("picture", b);
+        }
+
+        UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
+                .setDisplayName(name)
+                .build();
+
+        user.updateProfile(request);
+
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     private void uploadPicture(ByteArrayOutputStream baos) {
@@ -193,50 +239,8 @@ public class EditProfileActivity extends AppCompatActivity {
 
     }
 
-    public void changeProfileImageFromGallery(View view) {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    STORAGE_REQUEST_CODE);
-        } else {
-            pickFromGallery();
-        }
-    }
 
-    private void pickFromGallery() {
-        //Create an Intent with action as ACTION_PICK
-        Intent intent=new Intent(Intent.ACTION_PICK);
-        // Sets the type as image/*. This ensures only components of type image are selected
-        intent.setType("image/*");
-        //We pass an extra array with the accepted mime types. This will ensure only components with these MIME types as targeted.
-        String[] mimeTypes = {"image/jpeg", "image/png"};
-        intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
-        // Launching the Intent
-        startActivityForResult(intent,GALLERY_REQUEST_CODE);
-    }
 
-    public void saveProfile(View view) {
-        String name = nameEditText.getText().toString();
-        Intent intent = new Intent();
-        intent.putExtra("name", name);
 
-        if (bitmap != null) {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            uploadPicture(baos);
-
-            byte[] b = baos.toByteArray();
-            intent.putExtra("picture", b);
-        }
-
-        UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
-                .setDisplayName(name)
-                .build();
-
-        user.updateProfile(request);
-
-        setResult(RESULT_OK, intent);
-        finish();
-    }
 
 }

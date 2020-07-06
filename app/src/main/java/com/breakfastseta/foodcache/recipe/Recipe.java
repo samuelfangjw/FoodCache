@@ -1,7 +1,5 @@
 package com.breakfastseta.foodcache.recipe;
 
-import android.net.Uri;
-
 import java.util.ArrayList;
 
 public class Recipe {
@@ -9,17 +7,18 @@ public class Recipe {
     private String author;
     private ArrayList<Ingredient> ingredients;
     private String steps;
-    private Uri photo = null;
+    private String photo = null;
 
     public Recipe() {
         //empty constructor required for Firestore
     }
 
-    public Recipe(String name, String author, ArrayList<Ingredient> ingredients, String steps) {
+    public Recipe(String name, String author, ArrayList<Ingredient> ingredients, String steps, String photo) {
         this.name = name;
         this.author = author;
         this.ingredients = ingredients;
         this.steps = steps;
+        this.photo = photo;
     }
 
     public String getAuthor() {
@@ -34,12 +33,8 @@ public class Recipe {
         return steps;
     }
 
-    public Uri getPhoto() {
+    public String getPhoto() {
         return photo;
-    }
-
-    public void setPhoto(Uri photo) {
-        this.photo = photo;
     }
 
     public String getName() {
