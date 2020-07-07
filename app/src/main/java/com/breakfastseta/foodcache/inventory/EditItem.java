@@ -27,7 +27,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 public class EditItem extends AppCompatActivity {
 
@@ -102,11 +101,16 @@ public class EditItem extends AppCompatActivity {
 
         //Calculating Days Left
         Date now = new Date();
-        long diffInMillies = Math.abs(expiry.getTime() - now.getTime());
-        int diff = (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+
+        int diff = (int) Math.ceil((double) (expiry.getTime() - now.getTime()) / 86400000) + 1;
+        String daysLeft;
+        if (diff <= 0) {
+            daysLeft = "EXPIRED";
+        } else {
+            daysLeft = "Days Left: " + diff;
+        }
 
         //Formatting Strings
-        String daysLeft = "Days Left: " + diff;
         String quantityString = "" + quantity;
 
         //Setting Spinner
@@ -177,9 +181,13 @@ public class EditItem extends AppCompatActivity {
 
                         // set days left
                         Date now = new Date();
-                        long diffInMillies = Math.abs(expiry.getTime() - now.getTime());
-                        int diff = (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
-                        String daysLeft = "Days Left: " + diff;
+                        int diff = (int) Math.ceil((double) (expiry.getTime() - now.getTime()) / 86400000) + 1;
+                        String daysLeft;
+                        if (diff <= 0) {
+                            daysLeft = "EXPIRED";
+                        } else {
+                            daysLeft = "Days Left: " + diff;
+                        }
                         textViewDaysLeft.setText(daysLeft);
                     }
                 }, year, month, day);

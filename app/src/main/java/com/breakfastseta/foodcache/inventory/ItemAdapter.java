@@ -1,5 +1,6 @@
 package com.breakfastseta.foodcache.inventory;
 
+import android.graphics.Color;
 import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.breakfastseta.foodcache.R;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -46,7 +48,7 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
 
         //Calculating Days Left
         Date now = new Date();
-        long diffInMillies = expiry.getTime() - now.getTime();
+        long diffInMillies = expiry.getTime() - now.getTime() + 86400000;
         if (diffInMillies < 0) {
             diffInMillies = 0;
         }
@@ -63,6 +65,7 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
 
             @Override
             public void onFinish() {
+                holder.itemCardView.setCardBackgroundColor(Color.RED);
                 holder.textViewDaysLeft.setText("EXPIRED");
             }
         };
@@ -114,6 +117,7 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
     }
 
     class ItemHolder extends RecyclerView.ViewHolder {
+        MaterialCardView itemCardView;
         TextView textViewIngredient;
         TextView textViewQuantity;
         TextView textViewExpiryDate;
@@ -121,6 +125,7 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
 
         public ItemHolder(@NonNull View itemView) {
             super(itemView);
+            itemCardView = itemView.findViewById(R.id.itemCardView);
             textViewIngredient = itemView.findViewById(R.id.ingredient);
             textViewQuantity = itemView.findViewById(R.id.quantity);
             textViewExpiryDate = itemView.findViewById(R.id.expiry_date);
