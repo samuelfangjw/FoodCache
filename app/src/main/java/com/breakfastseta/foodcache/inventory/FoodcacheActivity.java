@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -64,16 +63,12 @@ public class FoodcacheActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tabs);
 
         FloatingActionButton buttonAddItem = findViewById(R.id.add_item_fab);
-        buttonAddItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(FoodcacheActivity.this, AddIngredientActivity.class));
-            }
-        });
+        buttonAddItem.setOnClickListener(v -> startActivity(new Intent(FoodcacheActivity.this, AddIngredientActivity.class)));
 
         tabs = getResources().getStringArray(R.array.tabs);
 
         viewPager.setAdapter(createCardAdapter());
+        viewPager.setUserInputEnabled(false);
         new TabLayoutMediator(tabLayout, viewPager,
                 new TabLayoutMediator.TabConfigurationStrategy() {
                     @Override

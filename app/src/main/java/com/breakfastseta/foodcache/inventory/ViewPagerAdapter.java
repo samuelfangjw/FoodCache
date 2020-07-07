@@ -23,4 +23,5 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     public int getItemCount() {
         return CARD_ITEM_SIZE;
     }
+    
 }
