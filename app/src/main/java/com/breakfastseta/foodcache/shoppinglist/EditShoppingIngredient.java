@@ -74,7 +74,7 @@ public class EditShoppingIngredient extends AppCompatActivity {
     private void setTextView(DocumentSnapshot document) {
         String shoppingIngredientName = document.getString("itemName");
         String shoppingIngredientDescription = document.getString("description");
-        long shoppingIngredientQuantity = document.getLong("noItems");
+        double shoppingIngredientQuantity = document.getDouble("noItems");
         String shoppingIngredientUnits = document.getString("units");
 
         //Setting TextView's
@@ -92,17 +92,17 @@ public class EditShoppingIngredient extends AppCompatActivity {
     public void saveEditedIngredient(View view) {
         String newShopIngredientName = editShopName.getText().toString();
         String newShopIngredientDescription = editShopDescription.getText().toString();
-        int newShopIngredientQuantity = Integer.parseInt(editShopQuantity.getText().toString());
+        String newShopIngredientQuantity = editShopQuantity.getText().toString();
         String newShopIngredientUnits = editShopUnits.getSelectedItem().toString();
 
-        if (newShopIngredientName.trim().isEmpty()) {
-            Toast.makeText(this, "Please insert Shopping Item name", Toast.LENGTH_SHORT).show();
+        if (newShopIngredientName.trim().isEmpty() || newShopIngredientQuantity.trim().isEmpty()) {
+            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             return;
         }
         DocumentReference docRef = db.document(path);
         docRef.update("itemName", newShopIngredientName);
         docRef.update("description", newShopIngredientDescription);
-        docRef.update("noItems", newShopIngredientQuantity);
+        docRef.update("noItems", Double.parseDouble(newShopIngredientQuantity));
         docRef.update("units", newShopIngredientUnits);
 
         finish();

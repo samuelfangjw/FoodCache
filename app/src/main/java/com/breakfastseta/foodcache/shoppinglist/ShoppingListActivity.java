@@ -132,7 +132,7 @@ public class ShoppingListActivity extends AppCompatActivity {
                                     CollectionReference barcodeRef = db.collection("Users").document(uid).collection("Barcodes");
 
                                     final String ingredient = shopItem.getItemName();
-                                    final int quantity = shopItem.getNoItems();
+                                    final double quantity = shopItem.getNoItems();
                                     final String units = shopItem.getUnits();
 
                                     Query query = barcodeRef.whereEqualTo("Name", ingredient).limit(1);

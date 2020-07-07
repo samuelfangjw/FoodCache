@@ -105,7 +105,7 @@ public class AddRecipeFragmentTwo extends Fragment {
             Toast.makeText(getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
         } else {
             int pos = adapter.getItemCount();
-            Ingredient ingredient = new Ingredient(name, Integer.parseInt(quantity), units);
+            Ingredient ingredient = new Ingredient(name, Double.parseDouble(quantity), units);
             arr.add(ingredient);
             editText_name.setText("");
             editText_quantity.setText("");

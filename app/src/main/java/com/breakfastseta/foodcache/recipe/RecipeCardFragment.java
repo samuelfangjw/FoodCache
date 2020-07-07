@@ -108,8 +108,6 @@ public class RecipeCardFragment extends Fragment {
                 String id = documentSnapshot.getId(); //id stored in firebase database
                 String path = documentSnapshot.getReference().getPath();
 
-                // Starting EditItem activity
-                //TODO edit intent to correct path
                 Intent intent = new Intent(getContext(), ViewRecipeActivity.class);
                 intent.putExtra("path", path);
                 startActivity(intent);

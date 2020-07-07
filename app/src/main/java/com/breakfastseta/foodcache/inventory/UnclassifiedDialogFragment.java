@@ -110,7 +110,7 @@ public class UnclassifiedDialogFragment extends DialogFragment {
 
     private void addItem(DocumentSnapshot document) {
         String ingredient = document.getString("Name");
-        long quantity = document.getLong("quantity");
+        double quantity = document.getDouble("quantity");
         String units = document.getString("units");
         String tab = spinnerTab.getSelectedItem().toString();
 
@@ -129,7 +129,7 @@ public class UnclassifiedDialogFragment extends DialogFragment {
         } else {
             Timestamp dateTimestamp = new Timestamp(date);
             inventoryRef.document(tab).collection("Ingredients")
-                    .add(new Item(ingredient,(int) quantity, dateTimestamp, units))
+                    .add(new Item(ingredient, quantity, dateTimestamp, units))
                     .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                         @Override
                         public void onSuccess(DocumentReference documentReference) {

@@ -4,14 +4,14 @@ public class ShoppingListItem {
 
     private String itemName;
     private String description;
-    private int noItems;
+    private double noItems;
     private String units;
 
     public ShoppingListItem() {
         //empty constructor needed
     }
 
-    public ShoppingListItem(String itemName, String description, int noItems, String units) {
+    public ShoppingListItem(String itemName, String description, double noItems, String units) {
         this.itemName = itemName;
         this.description = description;
         this.noItems = noItems;
@@ -26,7 +26,7 @@ public class ShoppingListItem {
         return description;
     }
 
-    public int getNoItems() {
+    public double getNoItems() {
         return noItems;
     }
 

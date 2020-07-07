@@ -4,7 +4,7 @@ import com.google.firebase.Timestamp;
 
 public class Item {
     private String ingredient;
-    private int quantity;
+    private double quantity;
     private Timestamp dateTimestamp;
     private String units;
 
@@ -12,7 +12,7 @@ public class Item {
         //empty constructor required for Firestore
     }
 
-    public Item(String ingredient, int quantity, Timestamp dateTimestamp, String units) {
+    public Item(String ingredient, double quantity, Timestamp dateTimestamp, String units) {
         this.ingredient = ingredient;
         this.quantity = quantity;
         this.dateTimestamp = dateTimestamp;
@@ -23,7 +23,7 @@ public class Item {
         return ingredient;
     }
 
-    public int getQuantity() {
+    public double getQuantity() {
         return quantity;
     }
 

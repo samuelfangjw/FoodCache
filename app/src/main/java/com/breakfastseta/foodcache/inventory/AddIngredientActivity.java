@@ -100,7 +100,7 @@ public class AddIngredientActivity extends AppCompatActivity {
         if (ingredient.trim().isEmpty() || date == null || quantityString.trim().isEmpty()) {
             Toast.makeText(this, "Please fill in all values", Toast.LENGTH_SHORT).show();
         } else {
-            final int quantity = Integer.parseInt(quantityString);
+            final double quantity = Double.parseDouble(quantityString);
             Date now = new Date();
             final long expiryDays = date.getTime() - now.getTime();
 
@@ -222,7 +222,7 @@ public class AddIngredientActivity extends AppCompatActivity {
                                                        Log.d("AddIngredient", "Document exists!");
                                                        String name = document.getString("Name");
                                                        long expiry = document.getLong("expiryDays");
-                                                       long quantity = document.getLong("quantity");
+                                                       double quantity = document.getDouble("quantity");
                                                        String units = document.getString("units");
 
                                                        // Calculating date

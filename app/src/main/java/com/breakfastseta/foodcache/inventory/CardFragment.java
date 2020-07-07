@@ -149,7 +149,7 @@ public class CardFragment extends Fragment {
 
                                 String name = ingredient.getIngredient();
                                 String description = "RESTOCK: Auto Added";
-                                int quantity = ingredient.getQuantity();
+                                double quantity = ingredient.getQuantity();
                                 String units = ingredient.getUnits();
                                 notebookRef.add(new ShoppingListItem(name, description, quantity, units));
                                 break;

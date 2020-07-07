@@ -108,7 +108,7 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
                 .collection("Inventory");
 
         String ingredient = item.getIngredient();
-        int quantity = item.getQuantity();
+        double quantity = item.getQuantity();
         Timestamp dateTimestamp = item.getDateTimestamp();
         String units = item.getUnits();
 

@@ -61,6 +61,7 @@ public class AddShopIngredientActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.save_note:
+                //TODO possible duplicate
                 saveNote();
                 return true;
             default:
@@ -75,11 +76,11 @@ public class AddShopIngredientActivity extends AppCompatActivity {
     private void saveNote() {
         String name = editTextName.getText().toString();
         String description = editTextDescription.getText().toString();
-        int quantity = Integer.parseInt(editTextQuantity.getText().toString());
+        String quantity = editTextQuantity.getText().toString();
         String units = editUnits.getSelectedItem().toString();
 
-        if (name.trim().isEmpty()) {
-            Toast.makeText(this, "Please insert Shopping Item name", Toast.LENGTH_SHORT).show();
+        if (name.trim().isEmpty() || quantity.trim().isEmpty()) {
+            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -90,7 +91,7 @@ public class AddShopIngredientActivity extends AppCompatActivity {
                 .collection("Users")
                 .document(uid)
                 .collection("ShoppingList");
-        notebookRef.add(new ShoppingListItem(name, description, quantity, units));
+        notebookRef.add(new ShoppingListItem(name, description, Double.parseDouble(quantity), units));
         Toast.makeText(this, "Shopping Item added", Toast.LENGTH_SHORT).show();
         finish();
     }

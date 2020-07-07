@@ -2,20 +2,20 @@ package com.breakfastseta.foodcache.recipe;
 
 public class Ingredient {
     private String name;
-    private int quantity;
+    private double quantity;
     private String units;
 
     public Ingredient() {
         //empty constructor required for Firestore
     }
 
-    public Ingredient(String name, int quantity, String units) {
+    public Ingredient(String name, double quantity, String units) {
         this.name = name;
         this.quantity = quantity;
         this.units = units;
     }
 
-    public int getQuantity() {
+    public double getQuantity() {
         return quantity;
     }
 

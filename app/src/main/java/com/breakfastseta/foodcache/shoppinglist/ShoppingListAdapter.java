@@ -55,7 +55,7 @@ public class ShoppingListAdapter extends FirestoreRecyclerAdapter<ShoppingListIt
 
         String name = item.getItemName();
         String description = item.getDescription();
-        int quantity = item.getNoItems();
+        double quantity = item.getNoItems();
         String units = item.getUnits();
 
         notebookRef.add(new ShoppingListItem(name, description, quantity, units));

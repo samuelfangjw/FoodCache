@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/edit_text_name"
             android:hint="@string/quantity"
-            android:inputType="number" />
+            android:inputType="numberDecimal" />
 
         <Spinner
             android:id="@+id/spinner_units"

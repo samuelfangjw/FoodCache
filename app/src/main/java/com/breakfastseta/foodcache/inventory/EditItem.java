@@ -89,7 +89,7 @@ public class EditItem extends AppCompatActivity {
     // set TextView's using data from document snapshot
     private void setTextView(DocumentSnapshot document) {
         String ingredient = document.getString("ingredient");
-        Long quantity = document.getLong("quantity");
+        double quantity = document.getDouble("quantity");
         Timestamp timestamp = document.getTimestamp("dateTimestamp");
         String units = document.getString("units");
 
@@ -137,7 +137,7 @@ public class EditItem extends AppCompatActivity {
         if (ingredient.trim().isEmpty() || dateString.trim().isEmpty() || quantityString.trim().isEmpty()) {
             Toast.makeText(this, "Please fill in all values", Toast.LENGTH_SHORT).show();
         } else {
-            int quantity = Integer.parseInt(quantityString);
+            double quantity = Double.parseDouble(quantityString);
             Timestamp dateTimestamp = new Timestamp(expiry);
 
             DocumentReference docRef = db.document(path);
