@@ -8,12 +8,14 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.breakfastseta.foodcache.R;
+import com.breakfastseta.foodcache.Util;
 import com.breakfastseta.foodcache.inventory.Item;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -51,6 +53,11 @@ public class ShoppingListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping_list);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        setTitle("Shopping List");
+        Util.createToolbar(this, toolbar);
+
         FloatingActionButton buttonAddShopItem = findViewById(R.id.button_add_note);
         buttonAddShopItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,7 +66,7 @@ public class ShoppingListActivity extends AppCompatActivity {
             }
         });
 
-        setTitle("Shopping List");
+
 
         setUpRecyclerView();
         coordinatorLayout = findViewById(R.id.activityShoppingList);

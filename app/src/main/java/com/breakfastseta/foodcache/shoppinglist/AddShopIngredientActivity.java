@@ -1,8 +1,6 @@
 package com.breakfastseta.foodcache.shoppinglist;
 
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -10,8 +8,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.breakfastseta.foodcache.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,8 +31,11 @@ public class AddShopIngredientActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_shoppingitem);
 
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
-        setTitle("Add Shopping List Item");
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        setTitle("Add Item");
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_black);
 
         editTextName = findViewById(R.id.edit_shopitem_name);
         editTextDescription = findViewById(R.id.edit_shopitem_description);
@@ -48,25 +49,6 @@ public class AddShopIngredientActivity extends AppCompatActivity {
         adapterUnits.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         editUnits.setAdapter(adapterUnits);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.shopping_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.save_note:
-                //TODO possible duplicate
-                saveNote();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     public void saveShopIngredient(View view) {
@@ -94,5 +76,16 @@ public class AddShopIngredientActivity extends AppCompatActivity {
         notebookRef.add(new ShoppingListItem(name, description, Double.parseDouble(quantity), units));
         Toast.makeText(this, "Shopping Item added", Toast.LENGTH_SHORT).show();
         finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                super.onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

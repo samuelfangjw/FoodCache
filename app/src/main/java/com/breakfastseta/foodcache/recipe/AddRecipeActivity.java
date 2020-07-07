@@ -3,10 +3,12 @@ package com.breakfastseta.foodcache.recipe;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.breakfastseta.foodcache.R;
@@ -56,6 +58,11 @@ public class AddRecipeActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_recipe);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_black);
+
         fragmentOne = new AddRecipeFragmentOne();
         fragmentTwo = new AddRecipeFragmentTwo();
         fragmentThree = new AddRecipeFragmentThree();
@@ -91,6 +98,8 @@ public class AddRecipeActivity extends AppCompatActivity
     private void showFragmentOne() {
         current = 1;
 
+        setTitle("Add Recipe");
+
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         if (fragmentOne.isAdded()) { // if the fragment is already in container
             ft.show(fragmentOne);
@@ -110,6 +119,8 @@ public class AddRecipeActivity extends AppCompatActivity
     private void showFragmentTwo() {
         current = 2;
 
+        setTitle("Add Ingredients");
+
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         if (fragmentTwo.isAdded()) { // if the fragment is already in container
             ft.show(fragmentTwo);
@@ -128,6 +139,8 @@ public class AddRecipeActivity extends AppCompatActivity
 
     private void showFragmentThree() {
         current = 3;
+
+        setTitle("Add Recipe Steps");
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         if (fragmentThree.isAdded()) { // if the fragment is already in container
@@ -190,6 +203,17 @@ public class AddRecipeActivity extends AppCompatActivity
                     image_path = uri;
                     uploadRecipe();
                 });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                super.onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

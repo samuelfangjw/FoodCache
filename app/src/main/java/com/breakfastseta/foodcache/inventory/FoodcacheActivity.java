@@ -6,20 +6,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.breakfastseta.foodcache.AlertReceiver;
 import com.breakfastseta.foodcache.R;
-import com.breakfastseta.foodcache.profile.ProfileActivity;
-import com.breakfastseta.foodcache.recipe.RecipeActivity;
-import com.breakfastseta.foodcache.shoppinglist.ShoppingListActivity;
+import com.breakfastseta.foodcache.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -59,6 +55,11 @@ public class FoodcacheActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_foodcache);
 
+        // To Create Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        Util.createToolbar(this, toolbar);
+
         viewPager = findViewById(R.id.view_pager);
         tabLayout = findViewById(R.id.tabs);
 
@@ -84,32 +85,6 @@ public class FoodcacheActivity extends AppCompatActivity {
 
         manageNotifications();
         checkUnclassified();
-    }
-
-    // Use custom menu as menu for this activity
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.inventory_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    // Decide what to do when menu item clicked
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.profile:
-                startActivity(new Intent(FoodcacheActivity.this, ProfileActivity.class));
-                return true;
-            case R.id.shopping_list:
-                startActivity(new Intent(FoodcacheActivity.this, ShoppingListActivity.class));
-                return true;
-            case R.id.recipes:
-                startActivity(new Intent(FoodcacheActivity.this, RecipeActivity.class));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     private ViewPagerAdapter createCardAdapter() {

@@ -3,11 +3,13 @@ package com.breakfastseta.foodcache.recipe;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.breakfastseta.foodcache.R;
 import com.bumptech.glide.Glide;
@@ -24,8 +26,6 @@ public class ViewRecipeActivity extends AppCompatActivity {
     private static final String TAG = "ViewRecipeActivity";
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-//    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//    String uid = user.getUid();
 
     private ImageView imageView;
     private TextView tv_name;
@@ -39,6 +39,11 @@ public class ViewRecipeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_recipe);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_black);
 
         path = getIntent().getStringExtra("path");
 
@@ -84,6 +89,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         tv_name.setText(name);
         tv_author.setText(author);
+        setTitle(name);
 
         StringBuilder ingredients_text = new StringBuilder();
         for(Map<String, Object> i : ingredients) {
@@ -101,5 +107,16 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         tv_ingredients.setText(ingredients_text.toString());
         tv_steps.setText(steps_text.toString());
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                super.onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

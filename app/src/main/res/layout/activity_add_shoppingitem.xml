@@ -4,15 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
     tools:context=".shoppinglist.AddShopIngredientActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/primaryColor" />
 
     <EditText
         android:id="@+id/edit_shopitem_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
         android:hint="Item"
-        android:inputType="text"/>
+        android:inputType="text"
+        android:layout_margin="16dp" />
 
     <EditText
         android:id="@+id/edit_shopitem_description"
@@ -20,22 +28,25 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/edit_shopitem_name"
         android:hint="Description"
-        android:inputType="textMultiLine"/>
+        android:inputType="textMultiLine"
+        android:layout_margin="16dp" />
 
     <EditText
         android:id="@+id/edit_shopitem_quantity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/edit_shopitem_description"
+        android:hint="Quantity"
         android:inputType="numberDecimal"
-        android:hint="Quantity"/>
+        android:layout_margin="16dp" />
 
     <Spinner
         android:id="@+id/spinner_edit_shoppingunits"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/edit_shopitem_quantity"
         android:layout_alignBottom="@id/edit_shopitem_quantity"
+        android:layout_toRightOf="@id/edit_shopitem_quantity"
+        android:layout_margin="16dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
     <Button
@@ -45,6 +56,7 @@
         android:layout_below="@id/edit_shopitem_quantity"
         android:layout_alignParentRight="true"
         android:onClick="saveShopIngredient"
+        android:layout_margin="16dp"
         android:text="Save" />
 
 </RelativeLayout>
