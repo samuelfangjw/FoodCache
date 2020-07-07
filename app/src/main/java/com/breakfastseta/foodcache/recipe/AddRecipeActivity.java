@@ -77,7 +77,7 @@ public class AddRecipeActivity extends AppCompatActivity
 
     @Override
     public void nextFragmentTwo(ArrayList<Ingredient> arr) {
-        this.ingredients = ingredients;
+        this.ingredients = arr;
         showFragmentThree();
     }
 
