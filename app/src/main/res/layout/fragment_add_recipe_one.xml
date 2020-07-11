@@ -44,10 +44,26 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/edit_text_author"/>
 
+    <TextView
+        android:id="@+id/tv_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cuisine"
+        android:text="@string/private_string"/>
+
+    <Switch
+        android:id="@+id/public_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cuisine"
+        android:layout_toRightOf="@+id/tv_switch"
+        android:textOff="@string/private_string"
+        android:textOn="@string/public_string"/>
+
     <Button
         android:id="@+id/add_recipe_photo_button"
         android:layout_width="match_parent"
-        android:layout_below="@id/cuisine"
+        android:layout_below="@id/public_switch"
         android:layout_height="wrap_content"
         android:text="Edit Picture"/>
 

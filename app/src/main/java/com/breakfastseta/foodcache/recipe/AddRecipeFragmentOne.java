@@ -17,9 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +52,8 @@ public class AddRecipeFragmentOne extends Fragment {
     Button nextButton;
     Button addPhoto;
     Spinner cuisine;
+    Switch switchPublic;
+    TextView tv_switch;
 
     Bitmap bitmap;
 
@@ -94,6 +98,19 @@ public class AddRecipeFragmentOne extends Fragment {
         nextButton = (Button) view.findViewById(R.id.next_button_one);
         addPhoto = (Button) view.findViewById(R.id.add_recipe_photo_button);
         cuisine = (Spinner) view.findViewById(R.id.cuisine);
+        switchPublic = (Switch) view.findViewById(R.id.public_switch);
+        tv_switch = (TextView) view.findViewById(R.id.tv_switch);
+
+        switchPublic.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    tv_switch.setText(switchPublic.getTextOn().toString());
+                } else {
+                    tv_switch.setText(switchPublic.getTextOff().toString());
+                }
+            }
+        });
 
         ArrayAdapter<CharSequence> adapterUnits;
         adapterUnits = ArrayAdapter.createFromResource(getContext(),
@@ -132,7 +149,7 @@ public class AddRecipeFragmentOne extends Fragment {
             if (name.isEmpty() || author.isEmpty()) {
                 Toast.makeText(getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
             } else {
-                listener.nextFragmentOne(name , author, b, tab);
+                listener.nextFragmentOne(name , author, b, tab, switchPublic.isChecked());
             }
         });
 
@@ -147,7 +164,7 @@ public class AddRecipeFragmentOne extends Fragment {
     }
 
     public interface FragmentOneListener {
-        void nextFragmentOne(String name, String author, byte[] picture, String cuisine);
+        void nextFragmentOne(String name, String author, byte[] picture, String cuisine, boolean isPublic);
     }
 
     public void editPhoto() {

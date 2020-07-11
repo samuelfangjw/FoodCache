@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.breakfastseta.foodcache.inventory.FoodcacheActivity;
 import com.breakfastseta.foodcache.profile.ProfileActivity;
+import com.breakfastseta.foodcache.recipe.DiscoverRecipeActivity;
 import com.breakfastseta.foodcache.recipe.RecipeActivity;
 import com.breakfastseta.foodcache.shoppinglist.ShoppingListActivity;
 import com.mikepenz.materialdrawer.Drawer;
@@ -60,6 +61,7 @@ public class Util {
         PrimaryDrawerItem itemShoppingList = new PrimaryDrawerItem().withIdentifier(2).withName("ShoppingList");
         PrimaryDrawerItem itemRecipe = new PrimaryDrawerItem().withIdentifier(3).withName("RecipeCache");
         PrimaryDrawerItem itemProfile = new PrimaryDrawerItem().withIdentifier(4).withName("Profile");
+        PrimaryDrawerItem itemDiscover = new PrimaryDrawerItem().withIdentifier(5).withName("Discover Recipe");
 
         Drawer result = new DrawerBuilder()
                 .withActivity((Activity) context)
@@ -69,7 +71,8 @@ public class Util {
                         itemShoppingList,
                         itemRecipe,
                         itemProfile,
-                        new DividerDrawerItem()
+                        new DividerDrawerItem(),
+                        itemDiscover
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -86,6 +89,9 @@ public class Util {
                                 return true;
                             case 3:
                                 context.startActivity(new Intent(context, ProfileActivity.class));
+                                return true;
+                            case 5:
+                                context.startActivity(new Intent(context, DiscoverRecipeActivity.class));
                                 return true;
                         }
                         return false;

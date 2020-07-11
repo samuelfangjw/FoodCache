@@ -14,9 +14,6 @@ import com.breakfastseta.foodcache.Util;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RecipeActivity extends AppCompatActivity {
 
@@ -24,10 +21,6 @@ public class RecipeActivity extends AppCompatActivity {
     ViewPager2 viewPager;
 
     String[] tabs;
-
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    String uid = user.getUid();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

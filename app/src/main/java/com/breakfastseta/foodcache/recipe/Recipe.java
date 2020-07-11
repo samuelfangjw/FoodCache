@@ -8,17 +8,19 @@ public class Recipe {
     private ArrayList<Ingredient> ingredients;
     private ArrayList<String> steps;
     private String photo = null;
+    private String cuisine;
 
     public Recipe() {
         //empty constructor required for Firestore
     }
 
-    public Recipe(String name, String author, ArrayList<Ingredient> ingredients, ArrayList<String> steps, String photo) {
+    public Recipe(String name, String author, ArrayList<Ingredient> ingredients, ArrayList<String> steps, String photo, String cuisine) {
         this.name = name;
         this.author = author;
         this.ingredients = ingredients;
         this.steps = steps;
         this.photo = photo;
+        this.cuisine = cuisine;
     }
 
     public String getAuthor() {
@@ -40,4 +42,6 @@ public class Recipe {
     public String getName() {
         return name;
     }
+
+    public String getCuisine() { return cuisine; }
 }

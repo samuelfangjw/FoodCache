@@ -4,7 +4,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,6 +44,8 @@ public class AddRecipeActivity extends AppCompatActivity
     ArrayList<Ingredient> ingredients;
     ArrayList<String> steps;
 
+    boolean isPublic;
+
     // Fragments
     AddRecipeFragmentOne fragmentOne;
     AddRecipeFragmentTwo fragmentTwo;
@@ -73,13 +74,13 @@ public class AddRecipeActivity extends AppCompatActivity
     }
 
     @Override
-    public void nextFragmentOne(String name, String author, byte[] picture, String cuisine) {
+    public void nextFragmentOne(String name, String author, byte[] picture, String cuisine, boolean isPublic) {
         this.name = name;
         this.author = author;
         this.picture = picture;
         this.cuisine = cuisine;
+        this.isPublic = isPublic;
         showFragmentTwo();
-        Toast.makeText(this, name, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -168,8 +169,13 @@ public class AddRecipeActivity extends AppCompatActivity
 
     private void uploadRecipe() {
         CollectionReference recipeRef = db.collection("Users").document(uid).collection("RecipeCache");
-        Recipe recipe = new Recipe(name, author, ingredients, steps, image_path.toString());
+        Recipe recipe = new Recipe(name, author, ingredients, steps, image_path.toString(), cuisine);
         recipeRef.document(cuisine).collection("Recipes").add(recipe);
+
+        if (isPublic) {
+            db.collection("Recipes").add(recipe);
+        }
+
         finish();
     }
 
