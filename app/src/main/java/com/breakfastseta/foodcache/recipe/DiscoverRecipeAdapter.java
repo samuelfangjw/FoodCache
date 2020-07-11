@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 public class DiscoverRecipeAdapter extends RecyclerView.Adapter<DiscoverRecipeAdapter.ViewHolder>{
+    private static final String TAG = "DiscoverRecipeAdapter";
 
     private ArrayList<Recipe> arr;
 
@@ -60,6 +61,13 @@ public class DiscoverRecipeAdapter extends RecyclerView.Adapter<DiscoverRecipeAd
     @Override
     public int getItemCount() {
         return arr.size();
+    }
+
+    public void filterList(ArrayList<Recipe> filteredArr) {
+        if (arr != filteredArr) {
+            arr = filteredArr;
+            notifyDataSetChanged();
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -1,7 +1,10 @@
 package com.breakfastseta.foodcache.recipe;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +32,7 @@ public class DiscoverRecipeActivity extends AppCompatActivity {
     ArrayList<Recipe> arr = new ArrayList<>();
 
     RecyclerView recyclerView;
+    EditText etSearch;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference recipeRef = db.collection("Recipes");
@@ -43,11 +47,43 @@ public class DiscoverRecipeActivity extends AppCompatActivity {
         setTitle("Discover");
         Util.createToolbar(this, toolbar);
 
+        etSearch = findViewById(R.id.edit_text_search);
         recyclerView = findViewById(R.id.recycler_view);
+
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                search(s.toString());
+            }
+        });
 
         getData();
 
 
+    }
+
+    private void search(String text) {
+        if (text.trim().isEmpty()) {
+            adapter.filterList(arr);
+        } else {
+            ArrayList<Recipe> filteredArr = new ArrayList<>();
+            for (Recipe r : arr) {
+                if (r.getName().toLowerCase().contains(text.trim().toLowerCase())) {
+                    filteredArr.add(r);
+                }
+            }
+            adapter.filterList(filteredArr);
+        }
     }
 
     private void getData() {
@@ -90,5 +126,7 @@ public class DiscoverRecipeActivity extends AppCompatActivity {
         // Set layout manager to position the items
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
+
+
 
 }

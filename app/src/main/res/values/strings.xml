@@ -49,4 +49,5 @@
     <string name="save_recipe">Save Recipe</string>
     <string name="public_string">Public</string>
     <string name="private_string">Private</string>
+    <string name="search">Search</string>
 </resources>
