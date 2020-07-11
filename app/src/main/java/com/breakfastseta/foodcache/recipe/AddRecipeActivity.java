@@ -11,11 +11,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.breakfastseta.foodcache.R;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -37,6 +40,7 @@ public class AddRecipeActivity extends AppCompatActivity
 
     // Recipe fields
     Uri image_path = null;
+    String imagePathString = null;
     byte[] picture;
     String name;
     String author;
@@ -169,12 +173,20 @@ public class AddRecipeActivity extends AppCompatActivity
 
     private void uploadRecipe() {
         CollectionReference recipeRef = db.collection("Users").document(uid).collection("RecipeCache");
-        Recipe recipe = new Recipe(name, author, ingredients, steps, image_path.toString(), cuisine);
-        recipeRef.document(cuisine).collection("Recipes").add(recipe);
-
-        if (isPublic) {
-            db.collection("Recipes").add(recipe);
+        ArrayList<String> viewers = new ArrayList<>();
+        viewers.add(uid);
+        if (image_path != null) {
+            imagePathString = image_path.toString();
         }
+        Recipe recipe = new Recipe(name, author, ingredients, steps, imagePathString, cuisine, uid, isPublic, viewers);
+
+        db.collection("Recipes").add(recipe).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentReference> task) {
+                String path = task.getResult().getPath();
+                recipeRef.document(cuisine).collection("Recipes").add(new RecipeSnippet(name, imagePathString, path));
+            }
+        });
 
         finish();
     }

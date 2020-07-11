@@ -16,7 +16,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
 
-public class RecipeAdapter extends FirestoreRecyclerAdapter<Recipe, RecipeAdapter.RecipeHolder> {
+public class RecipeAdapter extends FirestoreRecyclerAdapter<RecipeSnippet, RecipeAdapter.RecipeHolder> {
     private static final String TAG = "RecipeAdapter";
 
     private OnItemClickListener listener;
@@ -26,22 +26,21 @@ public class RecipeAdapter extends FirestoreRecyclerAdapter<Recipe, RecipeAdapte
      * FirestoreRecyclerOptions} for configuration options.
      * @param options
      */
-    public RecipeAdapter(@NonNull FirestoreRecyclerOptions<Recipe> options) {
+    public RecipeAdapter(@NonNull FirestoreRecyclerOptions<RecipeSnippet> options) {
         super(options);
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull final RecipeHolder holder, int position, @NonNull Recipe model) {
+    protected void onBindViewHolder(@NonNull final RecipeHolder holder, int position, @NonNull RecipeSnippet model) {
         String name = model.getName();
-        String image_url = model.getPhoto();
-
+        String image_url = model.getImage();
 
         //Set Views
         holder.textViewName.setText(name);
 
         if (image_url != null) {
             //TODO explore glide placeholders and fallback for image
-            Uri image_path = Uri.parse(model.getPhoto());
+            Uri image_path = Uri.parse(image_url);
             Glide.with(holder.itemView.getContext())
                     .load(image_path)
                     .into(holder.imageView);
@@ -55,9 +54,9 @@ public class RecipeAdapter extends FirestoreRecyclerAdapter<Recipe, RecipeAdapte
         return new RecipeHolder(v);
     }
 
-    public void deleteItem(int position) {
-        getSnapshots().getSnapshot(position).getReference().delete();
-    }
+//    public void deleteItem(int position) {
+//        getSnapshots().getSnapshot(position).getReference().delete();
+//    }
 
     class RecipeHolder extends RecyclerView.ViewHolder {
         TextView textViewName;

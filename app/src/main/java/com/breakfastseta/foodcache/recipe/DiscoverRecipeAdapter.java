@@ -19,9 +19,9 @@ import java.util.ArrayList;
 public class DiscoverRecipeAdapter extends RecyclerView.Adapter<DiscoverRecipeAdapter.ViewHolder>{
     private static final String TAG = "DiscoverRecipeAdapter";
 
-    private ArrayList<Recipe> arr;
+    private ArrayList<DiscoverSnippet> arr;
 
-    public DiscoverRecipeAdapter(ArrayList<Recipe> arr) {
+    public DiscoverRecipeAdapter(ArrayList<DiscoverSnippet> arr) {
         this.arr = arr;
     }
 
@@ -42,13 +42,13 @@ public class DiscoverRecipeAdapter extends RecyclerView.Adapter<DiscoverRecipeAd
     @Override
     public void onBindViewHolder(@NonNull DiscoverRecipeAdapter.ViewHolder holder, int position) {
         // Get the data model based on position
-        Recipe recipe = arr.get(position);
+        DiscoverSnippet snippet = arr.get(position);
 
         // Set item views based on your views and data model
         ImageView imageView = holder.imageView;
         TextView textView = holder.textView;
-        textView.setText(recipe.getName());
-        String image_url = recipe.getPhoto();
+        textView.setText(snippet.getName());
+        String image_url = snippet.getImage();
         if (image_url != null) {
             //TODO explore glide placeholders and fallback for image
             Uri image_path = Uri.parse(image_url);
@@ -63,7 +63,7 @@ public class DiscoverRecipeAdapter extends RecyclerView.Adapter<DiscoverRecipeAd
         return arr.size();
     }
 
-    public void filterList(ArrayList<Recipe> filteredArr) {
+    public void filterList(ArrayList<DiscoverSnippet> filteredArr) {
         if (arr != filteredArr) {
             arr = filteredArr;
             notifyDataSetChanged();

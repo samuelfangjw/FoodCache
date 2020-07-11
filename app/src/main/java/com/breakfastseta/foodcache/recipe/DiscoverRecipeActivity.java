@@ -22,14 +22,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class DiscoverRecipeActivity extends AppCompatActivity {
 
     private static final String TAG = "DiscoverRecipeActivity";
 
     DiscoverRecipeAdapter adapter;
-    ArrayList<Recipe> arr = new ArrayList<>();
+    ArrayList<DiscoverSnippet> arr = new ArrayList<>();
 
     RecyclerView recyclerView;
     EditText etSearch;
@@ -76,10 +75,10 @@ public class DiscoverRecipeActivity extends AppCompatActivity {
         if (text.trim().isEmpty()) {
             adapter.filterList(arr);
         } else {
-            ArrayList<Recipe> filteredArr = new ArrayList<>();
-            for (Recipe r : arr) {
-                if (r.getName().toLowerCase().contains(text.trim().toLowerCase())) {
-                    filteredArr.add(r);
+            ArrayList<DiscoverSnippet> filteredArr = new ArrayList<>();
+            for (DiscoverSnippet snippet : arr) {
+                if (snippet.getName().toLowerCase().contains(text.trim().toLowerCase())) {
+                    filteredArr.add(snippet);
                 }
             }
             adapter.filterList(filteredArr);
@@ -87,7 +86,8 @@ public class DiscoverRecipeActivity extends AppCompatActivity {
     }
 
     private void getData() {
-        recipeRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        recipeRef.whereEqualTo("isPublic", true).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -103,20 +103,11 @@ public class DiscoverRecipeActivity extends AppCompatActivity {
     private void createRecyclerView(QuerySnapshot snapshots) {
         for (DocumentSnapshot document : snapshots) {
             String imagePath = document.getString("photo");
-            String author = document.getString("author");
             String name = document.getString("name");
             String cuisine = document.getString("cuisine");
-            ArrayList<Map<String, Object>> ingredients = (ArrayList<Map<String, Object>>) document.get("ingredients");
-            ArrayList<String> steps = (ArrayList<String>) document.get("steps");
-            ArrayList<Ingredient> ingredientsArr = new ArrayList<>();
+            String path = document.getReference().getPath();
 
-            for (Map<String, Object> i : ingredients) {
-                String ingredient_name = (String) i.get("name");
-                String ingredient_units = (String) i.get("units");
-                double ingredient_quantity = (double) i.get("quantity");
-                ingredientsArr.add(new Ingredient(ingredient_name, ingredient_quantity, ingredient_units));
-            }
-            arr.add(new Recipe(name, author, ingredientsArr, steps, imagePath, cuisine));
+            arr.add(new DiscoverSnippet(name, imagePath, path, cuisine));
         }
 
         // Create adapter passing in the sample user data
@@ -126,7 +117,5 @@ public class DiscoverRecipeActivity extends AppCompatActivity {
         // Set layout manager to position the items
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
-
-
 
 }

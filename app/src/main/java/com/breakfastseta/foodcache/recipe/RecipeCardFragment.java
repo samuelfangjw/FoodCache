@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.breakfastseta.foodcache.R;
-import com.breakfastseta.foodcache.inventory.Item;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,11 +22,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link RecipeCardFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class RecipeCardFragment extends Fragment {
 
     private static final String ARG_COUNT = "param1";
@@ -92,8 +86,8 @@ public class RecipeCardFragment extends Fragment {
         CollectionReference collectionRef = recipeRef.document(tabs[counter]).collection("Recipes");
         Query query = collectionRef.orderBy("name", Query.Direction.ASCENDING);
 
-        FirestoreRecyclerOptions<Recipe> options = new FirestoreRecyclerOptions.Builder<Recipe>()
-                .setQuery(query, Recipe.class)
+        FirestoreRecyclerOptions<RecipeSnippet> options = new FirestoreRecyclerOptions.Builder<RecipeSnippet>()
+                .setQuery(query, RecipeSnippet.class)
                 .build();
 
         adapter = new RecipeAdapter(options);
@@ -104,9 +98,7 @@ public class RecipeCardFragment extends Fragment {
         adapter.setOnItemClickListener(new RecipeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
-                Item item = documentSnapshot.toObject(Item.class);
-                String id = documentSnapshot.getId(); //id stored in firebase database
-                String path = documentSnapshot.getReference().getPath();
+                String path = (String) documentSnapshot.get("path");
 
                 Intent intent = new Intent(getContext(), ViewRecipeActivity.class);
                 intent.putExtra("path", path);
