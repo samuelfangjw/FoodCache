@@ -20,6 +20,7 @@ public class DiscoverRecipeAdapter extends RecyclerView.Adapter<DiscoverRecipeAd
     private static final String TAG = "DiscoverRecipeAdapter";
 
     private ArrayList<DiscoverSnippet> arr;
+    private OnItemClickListener listener;
 
     public DiscoverRecipeAdapter(ArrayList<DiscoverSnippet> arr) {
         this.arr = arr;
@@ -56,6 +57,8 @@ public class DiscoverRecipeAdapter extends RecyclerView.Adapter<DiscoverRecipeAd
                     .load(image_path)
                     .into(imageView);
         }
+
+        holder.path = snippet.getPath();
     }
 
     @Override
@@ -73,6 +76,7 @@ public class DiscoverRecipeAdapter extends RecyclerView.Adapter<DiscoverRecipeAd
     public class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView imageView;
         public TextView textView;
+        public String path;
 
         public ViewHolder(View itemView) {
 
@@ -81,6 +85,23 @@ public class DiscoverRecipeAdapter extends RecyclerView.Adapter<DiscoverRecipeAd
             imageView = (ImageView) itemView.findViewById(R.id.recipe_image);
             textView = (TextView) itemView.findViewById(R.id.recipe_name);
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition(); // to differentiate cards
+                    // check if position exists
+                    if (position != RecyclerView.NO_POSITION && listener != null) {
+                        listener.onItemClick(path, position);
+                    }
+                }
+            });
         }
     }
-}
+
+    public interface OnItemClickListener {
+        void onItemClick(String path, int position);
+    }
+
+    public void setOnItemClickListener(DiscoverRecipeAdapter.OnItemClickListener listener) {
+        this.listener = listener;
+    }}

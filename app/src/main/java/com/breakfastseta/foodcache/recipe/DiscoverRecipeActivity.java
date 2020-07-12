@@ -1,5 +1,6 @@
 package com.breakfastseta.foodcache.recipe;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -178,6 +179,15 @@ public class DiscoverRecipeActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         setSpinnerListener();
+
+        adapter.setOnItemClickListener(new DiscoverRecipeAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(String path, int position) {
+                Intent intent = new Intent(DiscoverRecipeActivity.this, ViewRecipeActivity.class);
+                intent.putExtra("path", path);
+                startActivity(intent);
+            }
+        });
     }
 
 }

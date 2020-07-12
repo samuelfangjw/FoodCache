@@ -190,7 +190,7 @@ public class Util {
         }
     }
 
-    // Crop square image, taken from https://stackoverflow.com/questions/26263660/crop-image-to-square-android
+    // Crop square image, adapted from https://stackoverflow.com/questions/26263660/crop-image-to-square-android
     public static Bitmap cropToSquare(Bitmap bitmap){
         int width  = bitmap.getWidth();
         int height = bitmap.getHeight();
