@@ -18,6 +18,7 @@ import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
+import java.text.DecimalFormat;
 
 
 public class Util {
@@ -99,5 +100,40 @@ public class Util {
                 })
                 .build();
         return result;
+    }
+    // TODO Data validation for quantity (if int should not be able to type in double)
+    // Helper class for formatting quantity based on units
+    public static String formatQuantity(double quantity, String unit) {
+        DecimalFormat intFormat = new DecimalFormat("#");
+        DecimalFormat oneDPFormat = new DecimalFormat("0.0");
+
+        switch (unit) {
+            case "g":
+            case "ml":
+                return intFormat.format(quantity) + " " + unit;
+            case "kg":
+                return oneDPFormat.format(quantity) + " " + unit;
+            case "Items":
+                return intFormat.format(quantity);
+            default:
+                return "" + quantity + " " + unit;
+        }
+    }
+
+    // Helper class for formatting quantity based on units
+    public static String formatQuantityNumber(double quantity, String unit) {
+        DecimalFormat intFormat = new DecimalFormat("#");
+        DecimalFormat oneDPFormat = new DecimalFormat("0.0");
+
+        switch (unit) {
+            case "g":
+            case "ml":
+            case "Items":
+                return intFormat.format(quantity);
+            case "kg":
+                return oneDPFormat.format(quantity);
+            default:
+                return "" + quantity;
+        }
     }
 }

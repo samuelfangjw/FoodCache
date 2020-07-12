@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.breakfastseta.foodcache.R;
+import com.breakfastseta.foodcache.Util;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,10 +27,11 @@ public class ShoppingListAdapter extends FirestoreRecyclerAdapter<ShoppingListIt
 
     @Override
     protected void onBindViewHolder(@NonNull ShoppingListHolder holder, int position, @NonNull ShoppingListItem model) {
+        String units = model.getUnits();
         holder.textViewTitle.setText(model.getItemName());
         holder.textViewDescription.setText(model.getDescription());
-        holder.textViewQuantity.setText(String.valueOf(model.getNoItems()));
-        holder.textViewUnits.setText(model.getUnits());
+        holder.textViewQuantity.setText(Util.formatQuantityNumber(model.getNoItems(), units));
+        holder.textViewUnits.setText(units);
     }
 
     @NonNull

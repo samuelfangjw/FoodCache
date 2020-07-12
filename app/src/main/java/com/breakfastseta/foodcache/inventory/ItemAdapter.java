@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.breakfastseta.foodcache.R;
+import com.breakfastseta.foodcache.Util;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.card.MaterialCardView;
@@ -73,17 +74,15 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
 
         //Getting Units
         String units = model.getUnits();
-        if (units.equals("Items")) {
-            units = "";
-        }
+        double quantity = model.getQuantity();
 
         //Formatting Strings
-        String quantity = "Quantity: " + String.valueOf(model.getQuantity()) + units;
         String expiryDate = "Expiry Date: " + expiryString;
+        String quantityString = Util.formatQuantity(quantity, units);
 
         //Set TextViews
         holder.textViewIngredient.setText(model.getIngredient());
-        holder.textViewQuantity.setText(quantity);
+        holder.textViewQuantity.setText(quantityString);
         holder.textViewExpiryDate.setText(expiryDate);
     }
 
