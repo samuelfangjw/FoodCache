@@ -47,6 +47,7 @@ public class AddRecipeActivity extends AppCompatActivity
     String cuisine;
     ArrayList<Ingredient> ingredients;
     ArrayList<String> steps;
+    String description;
 
     boolean isPublic;
 
@@ -78,12 +79,13 @@ public class AddRecipeActivity extends AppCompatActivity
     }
 
     @Override
-    public void nextFragmentOne(String name, String author, byte[] picture, String cuisine, boolean isPublic) {
+    public void nextFragmentOne(String name, String author, byte[] picture, String cuisine, boolean isPublic, String description) {
         this.name = name;
         this.author = author;
         this.picture = picture;
         this.cuisine = cuisine;
         this.isPublic = isPublic;
+        this.description = description;
         showFragmentTwo();
     }
 
@@ -178,7 +180,7 @@ public class AddRecipeActivity extends AppCompatActivity
         if (image_path != null) {
             imagePathString = image_path.toString();
         }
-        Recipe recipe = new Recipe(name, author, ingredients, steps, imagePathString, cuisine, uid, isPublic, viewers);
+        Recipe recipe = new Recipe(name, author, ingredients, steps, imagePathString, cuisine, uid, isPublic, viewers, description);
 
         db.collection("Recipes").add(recipe).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
             @Override

@@ -12,24 +12,14 @@ public class Recipe {
     private String owner;
     private boolean isPublic;
     private ArrayList<String> viewers;
+    private String description;
 
     public Recipe() {
         //empty constructor required for Firestore
     }
 
     public Recipe(String name, String author, ArrayList<Ingredient> ingredients,
-                  ArrayList<String> steps, String photo, String cuisine, String owner) {
-        this.name = name;
-        this.author = author;
-        this.ingredients = ingredients;
-        this.steps = steps;
-        this.photo = photo;
-        this.cuisine = cuisine;
-        this.owner = owner;
-    }
-
-    public Recipe(String name, String author, ArrayList<Ingredient> ingredients,
-                  ArrayList<String> steps, String photo, String cuisine, String owner, boolean isPublic, ArrayList<String> viewers) {
+                  ArrayList<String> steps, String photo, String cuisine, String owner, boolean isPublic, ArrayList<String> viewers, String description) {
         this.name = name;
         this.author = author;
         this.ingredients = ingredients;
@@ -39,6 +29,7 @@ public class Recipe {
         this.owner = owner;
         this.isPublic = isPublic;
         this.viewers = viewers;
+        this.description = description;
     }
 
     public String getAuthor() {
@@ -74,4 +65,6 @@ public class Recipe {
     public ArrayList<String> getViewers() {
         return viewers;
     }
+
+    public String getDescription() { return description; }
 }

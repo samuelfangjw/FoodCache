@@ -32,6 +32,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
     private TextView tv_author;
     private TextView tv_ingredients;
     private TextView tv_steps;
+    private TextView tv_description;
 
     String path;
 
@@ -52,6 +53,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
         tv_author = (TextView) findViewById(R.id.author);
         tv_ingredients = (TextView) findViewById(R.id.ingredient);
         tv_steps = (TextView) findViewById(R.id.steps);
+        tv_description = (TextView) findViewById(R.id.description);
 
         assert path != null;
         DocumentReference docRef = db.document(path);
@@ -79,6 +81,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
         String name = document.getString("name");
         ArrayList<Map<String, Object>> ingredients = (ArrayList<Map<String, Object>>) document.get("ingredients");
         ArrayList<String> steps = (ArrayList<String>) document.get("steps");
+        String description = document.getString("description");
 
         if (imagePath != null) {
             Uri image_path = Uri.parse(imagePath);
@@ -89,6 +92,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         tv_name.setText(name);
         tv_author.setText(author);
+        tv_description.setText(description);
         setTitle(name);
 
         StringBuilder ingredients_text = new StringBuilder();

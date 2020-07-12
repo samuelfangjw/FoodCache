@@ -54,6 +54,7 @@ public class AddRecipeFragmentOne extends Fragment {
     Spinner cuisine;
     Switch switchPublic;
     TextView tv_switch;
+    EditText editText_description;
 
     Bitmap bitmap;
 
@@ -100,6 +101,7 @@ public class AddRecipeFragmentOne extends Fragment {
         cuisine = (Spinner) view.findViewById(R.id.cuisine);
         switchPublic = (Switch) view.findViewById(R.id.public_switch);
         tv_switch = (TextView) view.findViewById(R.id.tv_switch);
+        editText_description = (EditText) view.findViewById(R.id.description);
 
         switchPublic.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -146,10 +148,11 @@ public class AddRecipeFragmentOne extends Fragment {
             String name = editText_name.getText().toString();
             String author = editText_author.getText().toString();
             String tab = cuisine.getSelectedItem().toString();
-            if (name.isEmpty() || author.isEmpty()) {
+            String description = editText_description.getText().toString();
+            if (name.isEmpty() || author.isEmpty() || description.isEmpty()) {
                 Toast.makeText(getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
             } else {
-                listener.nextFragmentOne(name , author, b, tab, switchPublic.isChecked());
+                listener.nextFragmentOne(name , author, b, tab, switchPublic.isChecked(), description);
             }
         });
 
@@ -164,7 +167,7 @@ public class AddRecipeFragmentOne extends Fragment {
     }
 
     public interface FragmentOneListener {
-        void nextFragmentOne(String name, String author, byte[] picture, String cuisine, boolean isPublic);
+        void nextFragmentOne(String name, String author, byte[] picture, String cuisine, boolean isPublic, String description);
     }
 
     public void editPhoto() {
