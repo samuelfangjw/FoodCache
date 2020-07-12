@@ -77,7 +77,7 @@ public class Util {
         PrimaryDrawerItem itemShoppingList = new PrimaryDrawerItem().withIdentifier(2).withName("ShoppingList");
         PrimaryDrawerItem itemRecipe = new PrimaryDrawerItem().withIdentifier(3).withName("RecipeCache");
         PrimaryDrawerItem itemProfile = new PrimaryDrawerItem().withIdentifier(4).withName("Profile");
-        PrimaryDrawerItem itemDiscover = new PrimaryDrawerItem().withIdentifier(5).withName("Discover Recipe");
+        PrimaryDrawerItem itemDiscover = new PrimaryDrawerItem().withIdentifier(5).withName("Discover Recipes");
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         Uri profilePhoto = user.getPhotoUrl();
