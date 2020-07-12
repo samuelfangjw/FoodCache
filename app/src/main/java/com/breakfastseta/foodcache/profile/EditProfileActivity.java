@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.breakfastseta.foodcache.R;
+import com.breakfastseta.foodcache.Util;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -144,6 +145,7 @@ public class EditProfileActivity extends AppCompatActivity {
         if (requestCode == TAKE_IMAGE_CODE) {
             if (resultCode == RESULT_OK) {
                 bitmap = (Bitmap) data.getExtras().get("data");
+                bitmap = Util.cropToSquare(bitmap);
                 profilePicture.setImageBitmap(bitmap);
             }
         } else if (requestCode == GALLERY_REQUEST_CODE) {
@@ -151,6 +153,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 Uri selectedImage = data.getData();
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+                    bitmap = Util.cropToSquare(bitmap);
                     profilePicture.setImageBitmap(bitmap);
                 } catch (IOException e) {
                     e.printStackTrace();

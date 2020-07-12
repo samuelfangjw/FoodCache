@@ -9,4 +9,8 @@
     <color name="primaryTextColor">#000000</color>
     <color name="secondaryTextColor">#ffffff</color>
     <color name="background">#FAFAFA</color>
+
+    <color name="material_drawer_selected">#ffc046</color>
+    <color name="material_drawer_selected_text">#000000</color>
+
 </resources>

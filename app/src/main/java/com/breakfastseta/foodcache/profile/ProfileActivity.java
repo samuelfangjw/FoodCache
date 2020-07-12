@@ -131,6 +131,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     public void editProfile(View view) {
         Bitmap bitmap = ((BitmapDrawable) profilePicture.getDrawable()).getBitmap();
+        bitmap = Util.cropToSquare(bitmap);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] image = baos.toByteArray();
