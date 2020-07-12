@@ -4,9 +4,15 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,6 +28,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class DiscoverRecipeActivity extends AppCompatActivity {
 
@@ -29,9 +36,15 @@ public class DiscoverRecipeActivity extends AppCompatActivity {
 
     DiscoverRecipeAdapter adapter;
     ArrayList<DiscoverSnippet> arr = new ArrayList<>();
+    ArrayList<DiscoverSnippet> filteredArr = new ArrayList<>();
+    ArrayList<DiscoverSnippet> searchArr = new ArrayList<>();
+    ArrayList<String> cuisines;
+
+    ArrayAdapter<String> arrayAdapter;
 
     RecyclerView recyclerView;
     EditText etSearch;
+    Spinner spinner;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference recipeRef = db.collection("Recipes");
@@ -48,6 +61,22 @@ public class DiscoverRecipeActivity extends AppCompatActivity {
 
         etSearch = findViewById(R.id.edit_text_search);
         recyclerView = findViewById(R.id.recycler_view);
+        spinner = findViewById(R.id.spinner_cuisine);
+
+        cuisines = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.cuisines)));
+        cuisines.add(0, "All");
+
+        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, cuisines) {
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                view.setVisibility(View.GONE);
+                return view;
+            }
+        };
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(arrayAdapter);
 
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -68,21 +97,49 @@ public class DiscoverRecipeActivity extends AppCompatActivity {
 
         getData();
 
-
     }
 
-    private void search(String text) {
-        if (text.trim().isEmpty()) {
-            adapter.filterList(arr);
+    private void setSpinnerListener() {
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                filter(cuisines.get(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void filter(String s) {
+        filteredArr = new ArrayList<>();
+        if (s.equals("All")) {
+            filteredArr.addAll(arr);
         } else {
-            ArrayList<DiscoverSnippet> filteredArr = new ArrayList<>();
             for (DiscoverSnippet snippet : arr) {
-                if (snippet.getName().toLowerCase().contains(text.trim().toLowerCase())) {
+                if (snippet.getCuisine().equals(s)) {
                     filteredArr.add(snippet);
                 }
             }
-            adapter.filterList(filteredArr);
         }
+
+        search(etSearch.getText().toString());
+    }
+
+    private void search(String text) {
+        searchArr = new ArrayList<>();
+        if (text.trim().isEmpty()) {
+            searchArr.addAll(filteredArr);
+        } else {
+            for (DiscoverSnippet snippet : filteredArr) {
+                if (snippet.getName().toLowerCase().contains(text.trim().toLowerCase())) {
+                    searchArr.add(snippet);
+                }
+            }
+        }
+        adapter.filterList(searchArr);
     }
 
     private void getData() {
@@ -110,12 +167,17 @@ public class DiscoverRecipeActivity extends AppCompatActivity {
             arr.add(new DiscoverSnippet(name, imagePath, path, cuisine));
         }
 
+        filteredArr.addAll(arr);
+        searchArr.addAll(arr);
+
         // Create adapter passing in the sample user data
-        adapter = new DiscoverRecipeAdapter(arr);
+        adapter = new DiscoverRecipeAdapter(searchArr);
         // Attach the adapter to the recyclerview to populate items
         recyclerView.setAdapter(adapter);
         // Set layout manager to position the items
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        setSpinnerListener();
     }
 
 }

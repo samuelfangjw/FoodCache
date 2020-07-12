@@ -3,21 +3,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".recipe.DiscoverRecipeActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".recipe.DiscoverRecipeActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        android:background="@color/primaryColor"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="@color/primaryColor">
+
+        <Spinner
+            android:id="@+id/spinner_cuisine"
+            android:layout_width="24dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_filter"
+            android:layout_marginEnd="10dp"
+            android:layout_gravity="end" />
+
+    </androidx.appcompat.widget.Toolbar>
 
     <EditText
         android:id="@+id/edit_text_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"
-        android:hint="@string/search"/>
+        android:hint="@string/search"
+        android:inputType="text" />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
