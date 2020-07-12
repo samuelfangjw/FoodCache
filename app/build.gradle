@@ -67,4 +67,7 @@ dependencies {
 
     //Material Drawer https://github.com/mikepenz/MaterialDrawer/tree/v6.1.2
     implementation "com.mikepenz:materialdrawer:6.1.2"
+
+    //RecyclerViewSwipeDecorator https://github.com/xabaras/RecyclerViewSwipeDecorator
+    implementation 'it.xabaras.android:recyclerview-swipedecorator:1.2.3'
 }
