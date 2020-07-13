@@ -22,6 +22,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.tobiasschuerg.prefixsuffix.PrefixSuffixEditText;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,7 +34,7 @@ public class EditItem extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private EditText editTextIngredient;
-    private EditText editTextQuantity;
+    private PrefixSuffixEditText editTextQuantity;
     private TextView textViewExpiry;
     private TextView textViewDaysLeft;
     private String units;
@@ -107,6 +108,9 @@ public class EditItem extends AppCompatActivity {
 
         //Formatting Strings
         String quantityString = Util.formatQuantityNumber(quantity, units);
+
+        //Adding EditText suffix
+        editTextQuantity.setSuffix(" " + units);
 
         //Setting TextView's
         editTextIngredient.setText(ingredient);

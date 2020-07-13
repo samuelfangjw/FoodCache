@@ -70,4 +70,7 @@ dependencies {
 
     //RecyclerViewSwipeDecorator https://github.com/xabaras/RecyclerViewSwipeDecorator
     implementation 'it.xabaras.android:recyclerview-swipedecorator:1.2.3'
+
+    //android-prefix-suffix-edit-text https://github.com/tobiasschuerg/android-prefix-suffix-edit-text
+    implementation 'com.github.tobiasschuerg:android-prefix-suffix-edit-text:1.3.1'
 }
