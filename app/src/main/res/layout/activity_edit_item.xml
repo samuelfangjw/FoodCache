@@ -42,14 +42,23 @@
         android:text="@string/quantity"
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-    <Spinner
-        android:id="@+id/spinner_edit_units"
+    <ImageButton
+        android:id="@+id/plus_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/edit_quantity"
-        android:layout_toEndOf="@id/edit_quantity"
-        android:padding="16dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        android:layout_below="@+id/edit_quantity"
+        android:src="@drawable/ic_add_circle"
+        android:backgroundTint="@color/fui_transparent"
+        android:onClick="addQuantity" />
+
+    <ImageButton
+        android:id="@+id/minus_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/plus_button"
+        android:src="@drawable/ic_remove_circle"
+        android:backgroundTint="@color/fui_transparent"
+        android:onClick="minusQuantity" />
 
     <TextView
         android:id="@+id/text_view_expiry_date"

@@ -37,6 +37,7 @@ import java.text.DecimalFormat;
 public class Util {
 
     private static int selectedItem = 1;
+    private static final String TAG = "Util";
 
     /*
     To create toolbar, add the following to activity:
@@ -178,6 +179,10 @@ public class Util {
         DecimalFormat intFormat = new DecimalFormat("#");
         DecimalFormat oneDPFormat = new DecimalFormat("0.0");
 
+        if (quantity < 0) {
+            quantity = 0;
+        }
+
         switch (unit) {
             case "g":
             case "ml":
@@ -203,5 +208,33 @@ public class Util {
         Bitmap cropImg = Bitmap.createBitmap(bitmap, cropW, cropH, newWidth, newHeight);
 
         return cropImg;
+    }
+
+    // Helper class to add based on units
+    public static String addQuantity(double quantity, String units) {
+        switch (units) {
+            case "kg":
+                return formatQuantityNumber(quantity + 0.1, units);
+            case "g":
+            case "ml":
+                return formatQuantityNumber(quantity + 50, units);
+            case "Items":
+            default:
+                return formatQuantityNumber(quantity + 1, units);
+        }
+    }
+
+    // Helper class to subtract based on units
+    public static String subtractQuantity(double quantity, String units) {
+        switch (units) {
+            case "kg":
+                return formatQuantityNumber(quantity - 0.1, units);
+            case "g":
+            case "ml":
+                return formatQuantityNumber(quantity - 50, units);
+            case "Items":
+            default:
+                return formatQuantityNumber(quantity - 1, units);
+        }
     }
 }
