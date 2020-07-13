@@ -11,10 +11,11 @@ import android.widget.ImageView;
 
 import androidx.appcompat.widget.Toolbar;
 
+import com.breakfastseta.foodcache.discover.DiscoverRecipeActivity;
 import com.breakfastseta.foodcache.inventory.FoodcacheActivity;
 import com.breakfastseta.foodcache.profile.ProfileActivity;
-import com.breakfastseta.foodcache.recipe.DiscoverRecipeActivity;
 import com.breakfastseta.foodcache.recipe.RecipeActivity;
+import com.breakfastseta.foodcache.recommend.RecommendActivity;
 import com.breakfastseta.foodcache.shoppinglist.ShoppingListActivity;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
@@ -79,6 +80,8 @@ public class Util {
         PrimaryDrawerItem itemRecipe = new PrimaryDrawerItem().withIdentifier(3).withName("RecipeCache");
         PrimaryDrawerItem itemProfile = new PrimaryDrawerItem().withIdentifier(4).withName("Profile");
         PrimaryDrawerItem itemDiscover = new PrimaryDrawerItem().withIdentifier(5).withName("Discover Recipes");
+        PrimaryDrawerItem itemRecommend = new PrimaryDrawerItem().withIdentifier(6).withName("Find a Recipe");
+
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         Uri profilePhoto = user.getPhotoUrl();
@@ -122,7 +125,8 @@ public class Util {
                         itemProfile,
                         new DividerDrawerItem(),
                         itemRecipe,
-                        itemDiscover
+                        itemDiscover,
+                        itemRecommend
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -147,6 +151,10 @@ public class Util {
                             case 6:
                                 context.startActivity(new Intent(context, DiscoverRecipeActivity.class));
                                 selectedItem = 5;
+                                return true;
+                            case 7:
+                                context.startActivity(new Intent(context, RecommendActivity.class));
+                                selectedItem = 6;
                                 return true;
                         }
                         return false;
