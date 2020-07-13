@@ -98,8 +98,8 @@ public class CardFragment extends Fragment {
     }
 
     private void setUpRecyclerView() {
-        CollectionReference collectionRef = inventoryRef.document(tabs[counter]).collection("Ingredients");
-        Query query = collectionRef.orderBy("dateTimestamp", Query.Direction.ASCENDING);
+        Query query = inventoryRef.whereEqualTo("location", tabs[counter]).orderBy("dateTimestamp", Query.Direction.ASCENDING);
+//        Query query = inventoryRef.orderBy("dateTimestamp", Query.Direction.ASCENDING);
 
         FirestoreRecyclerOptions<Item> options = new FirestoreRecyclerOptions.Builder<Item>()
                 .setQuery(query, Item.class)
@@ -121,12 +121,9 @@ public class CardFragment extends Fragment {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 final int ingredientPos = viewHolder.getAdapterPosition();
                 final Item ingredient = adapter.getItem(ingredientPos);
-                String tab = adapter.getSnapshots().getSnapshot(ingredientPos).getReference().getPath();
-                String[] newtab = tab.split("/");
-                final String ab = newtab[3].trim();
+                final String ab = ingredient.getLocation();
 
                 adapter.deleteItem(viewHolder.getAdapterPosition());
-
 
                 snackbar = Snackbar
                         .make(view.findViewById(R.id.cardfragment), "Item was removed from the list.", Snackbar.LENGTH_LONG);
@@ -161,8 +158,6 @@ public class CardFragment extends Fragment {
                     }
                 });
                 snackbar.show();
-
-
             }
 
             @Override

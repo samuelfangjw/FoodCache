@@ -140,6 +140,7 @@ public class ShoppingListActivity extends AppCompatActivity {
                                 case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
                                 case Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE:
                                     final CollectionReference inventoryRef = db.collection("Users").document(uid).collection("Inventory");
+                                    final CollectionReference unclassifiedRef = db.collection("Users").document(uid).collection("Unclassified");
                                     CollectionReference barcodeRef = db.collection("Users").document(uid).collection("Barcodes");
 
                                     final String ingredient = shopItem.getItemName();
@@ -159,8 +160,7 @@ public class ShoppingListActivity extends AppCompatActivity {
                                                         incompleteItem.put("quantity", quantity);
                                                         incompleteItem.put("units", units);
 
-                                                        inventoryRef.document("Unclassified").collection("Ingredients")
-                                                                .add(incompleteItem);
+                                                        unclassifiedRef.add(incompleteItem);
                                                     } else {
                                                         for (QueryDocumentSnapshot document : result) {
                                                             Map<String, Object> map = document.getData();
@@ -172,7 +172,7 @@ public class ShoppingListActivity extends AppCompatActivity {
                                                             Date expiry = new Date(now.getSeconds() * 1000 + expiryInMillies);
                                                             Timestamp dateTimestamp = new Timestamp(expiry);
 
-                                                            inventoryRef.document(location).collection("Ingredients").add(new Item(ingredient, quantity, dateTimestamp, units));
+                                                            inventoryRef.add(new Item(ingredient, quantity, dateTimestamp, units, location));
                                                         }
                                                     }
                                                 } else {

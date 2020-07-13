@@ -42,12 +42,12 @@ public class FoodcacheActivity extends AppCompatActivity {
 
     String[] tabs;
     long shortest = Long.MAX_VALUE;
-    int count = 0;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String uid = user.getUid();
     private CollectionReference inventoryRef = db.collection("Users").document(uid).collection("Inventory");
+    private CollectionReference unclassifiedRef = db.collection("Users").document(uid).collection("Unclassified");
 
 
     @Override
@@ -97,46 +97,40 @@ public class FoodcacheActivity extends AppCompatActivity {
 
         final Timestamp now = new Timestamp(new Date());
 
-        for (String s : tabs) {
-            CollectionReference collectionRef = inventoryRef.document(s).collection("Ingredients");
-            Query query = collectionRef.orderBy("dateTimestamp", Query.Direction.ASCENDING)
-                    .whereGreaterThan("dateTimestamp", now).limit(1);
-            query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-                            Timestamp timestamp = (Timestamp) document.getData().get("dateTimestamp");
-                            long seconds = timestamp.getSeconds();
-                            shortest = Math.min(shortest, seconds);
-                            callbackHelper();
-                        }
-                    } else {
-                        Log.d("TAG", "Error getting documents: ", task.getException());
+        Query query = inventoryRef.orderBy("dateTimestamp", Query.Direction.ASCENDING)
+                .whereGreaterThan("dateTimestamp", now).limit(1);
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                        Timestamp timestamp = (Timestamp) document.getData().get("dateTimestamp");
+                        long seconds = timestamp.getSeconds();
+                        shortest = Math.min(shortest, seconds);
+                        alarmHelper();
                     }
+                } else {
+                    Log.d("TAG", "Error getting documents: ", task.getException());
                 }
-            });
-        }
+            }
+        });
     }
 
-    private void callbackHelper() {
-        count++;
-        if (count >= tabs.length) {
-            final Timestamp now = new Timestamp(new Date());
-            long timediff = (shortest - now.getSeconds() - 259200);
+    private void alarmHelper() {
+        final Timestamp now = new Timestamp(new Date());
+        long timediff = (shortest - now.getSeconds() - 259200);
 
-            Log.d(TAG, "manageNotifications " + timediff);
+        Log.d(TAG, "manageNotifications " + timediff);
 
-            if (timediff < 86400) {
-                timediff = 86400 * 1000;
-            } else {
-                timediff = timediff * 1000;
-            }
-
-            long timeInMillies = (now.getSeconds() * 1000) + timediff;
-
-            startAlarm(timeInMillies);
+        if (timediff < 86400) {
+            timediff = 86400 * 1000;
+        } else {
+            timediff = timediff * 1000;
         }
+
+        long timeInMillies = (now.getSeconds() * 1000) + timediff;
+
+        startAlarm(timeInMillies);
     }
 
     private void startAlarm(long time) {
@@ -158,7 +152,6 @@ public class FoodcacheActivity extends AppCompatActivity {
     }
 
     private void checkUnclassified() {
-        CollectionReference unclassifiedRef = inventoryRef.document("Unclassified").collection("Ingredients");
         unclassifiedRef.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

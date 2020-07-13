@@ -7,16 +7,18 @@ public class Item {
     private double quantity;
     private Timestamp dateTimestamp;
     private String units;
+    private String location;
 
     public Item() {
         //empty constructor required for Firestore
     }
 
-    public Item(String ingredient, double quantity, Timestamp dateTimestamp, String units) {
+    public Item(String ingredient, double quantity, Timestamp dateTimestamp, String units, String location) {
         this.ingredient = ingredient;
         this.quantity = quantity;
         this.dateTimestamp = dateTimestamp;
         this.units = units;
+        this.location = location;
     }
 
     public String getIngredient() {
@@ -33,5 +35,9 @@ public class Item {
 
     public String getUnits() {
         return units;
+    }
+
+    public String getLocation() {
+        return location;
     }
 }

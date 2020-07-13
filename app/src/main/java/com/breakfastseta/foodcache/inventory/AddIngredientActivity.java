@@ -155,7 +155,7 @@ public class AddIngredientActivity extends AppCompatActivity {
                 });
             }
             Timestamp dateTimestamp = new Timestamp(date);
-            inventoryRef.document(tab).collection("Ingredients").add(new Item(ingredient, quantity, dateTimestamp, units));
+            inventoryRef.add(new Item(ingredient, quantity, dateTimestamp, units, tab));
             Toast.makeText(this, "Item Added Successfully", Toast.LENGTH_SHORT).show();
         }
     }

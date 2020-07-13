@@ -128,8 +128,8 @@ public class UnclassifiedDialogFragment extends DialogFragment {
             Toast.makeText(getContext(), "Please fill in all values", Toast.LENGTH_SHORT).show();
         } else {
             Timestamp dateTimestamp = new Timestamp(date);
-            inventoryRef.document(tab).collection("Ingredients")
-                    .add(new Item(ingredient, quantity, dateTimestamp, units))
+            inventoryRef
+                    .add(new Item(ingredient, quantity, dateTimestamp, units, tab))
                     .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                         @Override
                         public void onSuccess(DocumentReference documentReference) {

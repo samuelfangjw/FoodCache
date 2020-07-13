@@ -111,8 +111,7 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
         Timestamp dateTimestamp = item.getDateTimestamp();
         String units = item.getUnits();
 
-        inventoryRef.document(tab).collection("Ingredients")
-                .add(new Item(ingredient, quantity, dateTimestamp, units));
+        inventoryRef.add(new Item(ingredient, quantity, dateTimestamp, units, tab));
     }
 
     class ItemHolder extends RecyclerView.ViewHolder {
