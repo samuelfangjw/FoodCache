@@ -14,6 +14,7 @@ import com.breakfastseta.foodcache.Util;
 import com.breakfastseta.foodcache.recipe.Ingredient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -22,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 public class RecommendActivity extends AppCompatActivity implements ParametersFragment.ParametersListener, DisplayFragment.DisplayListener {
@@ -33,12 +35,15 @@ public class RecommendActivity extends AppCompatActivity implements ParametersFr
     DisplayFragment displayFragment;
 
     ArrayList<RecommendSnippet> arrRecipes = new ArrayList<>();
-    ArrayList<Ingredient> arrIngredient = new ArrayList<>();
+    ArrayList<IngredientSnippet> arrIngredient = new ArrayList<>();
+    ArrayList<RecommendSnippet> arrResults;
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference recipeRef = db.collection("Recipes");
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String uid = user.getUid();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference recipeRef = db.collection("Recipes");
+    private CollectionReference inventoryRef = db.collection("Users").document(uid).collection("Inventory");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +95,7 @@ public class RecommendActivity extends AppCompatActivity implements ParametersFr
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_frame, displayFragment);
         ft.commit();
+
     }
 
     private void startAlgorithm() {
@@ -156,14 +162,30 @@ public class RecommendActivity extends AppCompatActivity implements ParametersFr
     }
 
     private void getIngredients() {
-        // TODO redo ingredients management
-        // update arrIngredients
-        runAlgorithm();
+        inventoryRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                QuerySnapshot snapshots = task.getResult();
+
+                long now = (new Date()).getTime() / 1000;
+
+                for (DocumentSnapshot document : snapshots) {
+                    Timestamp timestamp = document.getTimestamp("dateTimestamp");
+                    String name = document.getString("ingredient");
+                    double quantity = document.getDouble("quantity");
+                    String units = document.getString("units");
+                    long timeLeft = timestamp.getSeconds() - now + 86400;
+
+                    arrIngredient.add(new IngredientSnippet(name, quantity, units, timeLeft));
+                }
+
+                runAlgorithm();
+            }
+        });
     }
 
     private void runAlgorithm() {
-        // TODO algorithm
-        ArrayList<RecommendSnippet> arrResults;
+        arrResults = Algorithm.runAlgorithm(arrRecipes, arrIngredient);
         nextAlgorithm();
     }
 

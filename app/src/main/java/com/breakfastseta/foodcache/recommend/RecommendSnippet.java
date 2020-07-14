@@ -11,6 +11,7 @@ public class RecommendSnippet {
     private String path;
     private String cuisine;
     private ArrayList<Ingredient> ingredients;
+    private double recipeScore;
 
     public RecommendSnippet(String name, String image, String path, String cuisine, ArrayList<Ingredient> ingredients) {
         this.name = name;
@@ -38,5 +39,13 @@ public class RecommendSnippet {
 
     public ArrayList<Ingredient> getIngredients() {
         return ingredients;
+    }
+
+    public double getRecipeScore() {
+        return recipeScore;
+    }
+
+    public void setRecipeScore(double recipeScore) {
+        this.recipeScore = recipeScore;
     }
 }

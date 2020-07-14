@@ -1,23 +1,27 @@
 package com.breakfastseta.foodcache.recommend;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.breakfastseta.foodcache.R;
+import com.breakfastseta.foodcache.recipe.ViewRecipeActivity;
 
 public class DisplayFragment extends Fragment {
 
-    Button button;
+    private RecyclerView recyclerView;
 
     private DisplayListener listener;
+    private DisplayRecipeAdapter adapter;
 
     public DisplayFragment() {
         // Required empty public constructor
@@ -51,14 +55,20 @@ public class DisplayFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        button = (Button) view.findViewById(R.id.button);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
 
+        adapter = new DisplayRecipeAdapter(((RecommendActivity) getActivity()).arrResults);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Pass Variables to activity
-        button.setOnClickListener(v -> {
-                listener.nextDisplay();
+        adapter.setOnItemClickListener(new DisplayRecipeAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(String path) {
+                Intent intent = new Intent(getContext(), ViewRecipeActivity.class);
+                intent.putExtra("path", path);
+                startActivity(intent);
+            }
         });
-
     }
 
     public interface DisplayListener {
