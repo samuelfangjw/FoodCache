@@ -1,8 +1,10 @@
 package com.breakfastseta.foodcache.recipe;
 
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,6 +17,8 @@ import com.breakfastseta.foodcache.R;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -34,6 +38,10 @@ public class ViewRecipeActivity extends AppCompatActivity {
     private TextView tv_steps;
     private TextView tv_description;
 
+    Toolbar toolbar;
+    AppBarLayout appbarLayout;
+    CollapsingToolbarLayout collapsingToolbarLayout;
+
     String path;
 
     @Override
@@ -41,10 +49,11 @@ public class ViewRecipeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_recipe);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_black);
+        setTitle("");
 
         path = getIntent().getStringExtra("path");
 
@@ -54,6 +63,24 @@ public class ViewRecipeActivity extends AppCompatActivity {
         tv_ingredients = (TextView) findViewById(R.id.ingredient);
         tv_steps = (TextView) findViewById(R.id.steps);
         tv_description = (TextView) findViewById(R.id.description);
+
+        appbarLayout = (AppBarLayout) findViewById(R.id.appbarlayout);
+        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsingtoolbarlayout);
+
+        appbarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+
+                if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
+                    toolbar.setBackgroundColor(getColor(R.color.primaryColor));
+                    collapsingToolbarLayout.setCollapsedTitleTextColor(Color.BLACK);
+                } else {
+                    toolbar.setBackgroundColor(Color.TRANSPARENT);
+                    collapsingToolbarLayout.setExpandedTitleColor(Color.WHITE);
+                }
+            }
+        });
 
         assert path != null;
         DocumentReference docRef = db.document(path);
@@ -75,6 +102,12 @@ public class ViewRecipeActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.view_recipe_menu, menu);
+        return true;
+    }
+
     private void setTextView(DocumentSnapshot document) {
         String imagePath = document.getString("photo");
         String author = document.getString("author");
@@ -82,6 +115,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
         ArrayList<Map<String, Object>> ingredients = (ArrayList<Map<String, Object>>) document.get("ingredients");
         ArrayList<String> steps = (ArrayList<String>) document.get("steps");
         String description = document.getString("description");
+
+        getSupportActionBar().setTitle(name);
 
         if (imagePath != null) {
             Uri image_path = Uri.parse(imagePath);
@@ -111,6 +146,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         tv_ingredients.setText(ingredients_text.toString());
         tv_steps.setText(steps_text.toString());
+
     }
 
     @Override
@@ -123,4 +159,5 @@ public class ViewRecipeActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
 }

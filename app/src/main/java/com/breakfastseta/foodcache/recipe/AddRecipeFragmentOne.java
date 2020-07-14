@@ -31,6 +31,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.breakfastseta.foodcache.R;
+import com.breakfastseta.foodcache.Util;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.ByteArrayOutputStream;
@@ -141,6 +142,7 @@ public class AddRecipeFragmentOne extends Fragment {
         nextButton.setOnClickListener(v -> {
             byte[] b = null;
             if (bitmap != null) {
+                bitmap = Util.cropToSquare(bitmap);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                 b = baos.toByteArray();
