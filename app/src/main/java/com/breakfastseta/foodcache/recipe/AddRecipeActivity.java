@@ -27,7 +27,6 @@ import com.google.firebase.storage.UploadTask;
 import java.util.ArrayList;
 import java.util.Date;
 
-//TODO adding recipes without image doesn't work
 public class AddRecipeActivity extends AppCompatActivity
         implements AddRecipeFragmentOne.FragmentOneListener,
         AddRecipeFragmentTwo.FragmentTwoListener,
