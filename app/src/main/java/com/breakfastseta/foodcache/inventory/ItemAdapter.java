@@ -66,7 +66,7 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
 
             @Override
             public void onFinish() {
-                holder.itemCardView.setCardBackgroundColor(Color.RED);
+                holder.itemCardView.setCardBackgroundColor(Color.parseColor("#E53935"));
                 holder.textViewDaysLeft.setText("EXPIRED");
             }
         };

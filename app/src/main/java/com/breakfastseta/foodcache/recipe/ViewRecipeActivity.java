@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.breakfastseta.foodcache.R;
+import com.breakfastseta.foodcache.Util;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -43,10 +46,11 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
     private ImageView imageView;
     private TextView tv_author;
-    private TextView tv_ingredients;
     private TextView tv_steps;
     private TextView tv_description;
     private TextView tv_cuisine;
+    private TableLayout tableLayout;
+
 
     Toolbar toolbar;
     AppBarLayout appbarLayout;
@@ -73,10 +77,10 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         imageView = (ImageView) findViewById(R.id.recipe_image);
         tv_author = (TextView) findViewById(R.id.author);
-        tv_ingredients = (TextView) findViewById(R.id.ingredient);
         tv_steps = (TextView) findViewById(R.id.steps);
         tv_description = (TextView) findViewById(R.id.description);
         tv_cuisine = (TextView) findViewById(R.id.cuisine);
+        tableLayout = (TableLayout) findViewById(R.id.table_layout);
 
         appbarLayout = (AppBarLayout) findViewById(R.id.appbarlayout);
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsingtoolbarlayout);
@@ -150,18 +154,33 @@ public class ViewRecipeActivity extends AppCompatActivity {
         }
 
         getSupportActionBar().setTitle(name);
-        tv_author.setText(author);
-        tv_cuisine.setText(cuisine);
+        String cuisineString = "Cuisine: " + cuisine;
+        String authorString = "Author: " + author;
+        Log.d(TAG, "setTextView: " + cuisineString);
+        tv_author.setText(authorString);
+        tv_cuisine.setText(cuisineString);
         tv_description.setText(description);
-        setTitle(name);
 
-        StringBuilder ingredients_text = new StringBuilder();
         for(Map<String, Object> i : ingredients) {
             String ingredient_name = (String) i.get("name");
             String ingredient_units = (String) i.get("units");
             double ingredient_quantity = (double) i.get("quantity");
-            String ingredient = ingredient_name + " " + ingredient_quantity + " " + ingredient_units;
-            ingredients_text.append(ingredient).append("\n");
+
+            TableRow row = new TableRow(this);
+            TextView tv1 = new TextView(this);
+            TextView tv2 = new TextView(this);
+            TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
+            params.setMargins(8,8,8,8);
+            tv1.setLayoutParams(params);
+            tv2.setLayoutParams(params);
+
+            tv1.setText(ingredient_name);
+            String tv2Text = Util.formatQuantity(ingredient_quantity, ingredient_units);
+            tv2.setText(tv2Text);
+            row.addView(tv1);
+            row.addView(tv2);
+
+            tableLayout.addView(row);
         }
 
         StringBuilder steps_text = new StringBuilder();
@@ -169,7 +188,6 @@ public class ViewRecipeActivity extends AppCompatActivity {
             steps_text.append(s).append("\n");
         }
 
-        tv_ingredients.setText(ingredients_text.toString());
         tv_steps.setText(steps_text.toString());
 
     }
