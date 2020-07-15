@@ -17,6 +17,7 @@ import com.breakfastseta.foodcache.profile.ProfileActivity;
 import com.breakfastseta.foodcache.recipe.RecipeActivity;
 import com.breakfastseta.foodcache.recommend.RecommendActivity;
 import com.breakfastseta.foodcache.shoppinglist.ShoppingListActivity;
+import com.breakfastseta.foodcache.social.SocialMainActivity;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -81,6 +82,7 @@ public class Util {
         PrimaryDrawerItem itemProfile = new PrimaryDrawerItem().withIdentifier(4).withName("Profile");
         PrimaryDrawerItem itemDiscover = new PrimaryDrawerItem().withIdentifier(5).withName("Discover Recipes");
         PrimaryDrawerItem itemRecommend = new PrimaryDrawerItem().withIdentifier(6).withName("Find a Recipe");
+        PrimaryDrawerItem itemSocial = new PrimaryDrawerItem().withIdentifier(10).withName("Social");
 
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -126,7 +128,8 @@ public class Util {
                         new DividerDrawerItem(),
                         itemRecipe,
                         itemDiscover,
-                        itemRecommend
+                        itemRecommend,
+                        itemSocial
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -155,6 +158,10 @@ public class Util {
                             case 7:
                                 context.startActivity(new Intent(context, RecommendActivity.class));
                                 selectedItem = 6;
+                                return true;
+                            case 8:
+                                context.startActivity(new Intent(context, SocialMainActivity.class));
+                                selectedItem = 10;
                                 return true;
                         }
                         return false;
