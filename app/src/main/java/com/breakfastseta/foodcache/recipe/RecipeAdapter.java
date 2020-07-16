@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -44,6 +45,9 @@ public class RecipeAdapter extends FirestoreRecyclerAdapter<RecipeSnippet, Recip
             Glide.with(holder.itemView.getContext())
                     .load(image_path)
                     .into(holder.imageView);
+        } else {
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
+            holder.imageView.setLayoutParams(params);
         }
     }
 

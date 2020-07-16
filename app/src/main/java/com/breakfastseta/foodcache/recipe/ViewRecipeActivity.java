@@ -1,5 +1,6 @@
 package com.breakfastseta.foodcache.recipe;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -33,6 +35,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -62,6 +65,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
     String imagePath;
     String name;
     String cuisine;
+    ArrayList<String> steps;
+    ArrayList<Map<String, Object>> ingredients;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,8 +147,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
         String author = documentSnapshot.getString("author");
         name = documentSnapshot.getString("name");
         cuisine = documentSnapshot.getString("cuisine");
-        ArrayList<Map<String, Object>> ingredients = (ArrayList<Map<String, Object>>) documentSnapshot.get("ingredients");
-        ArrayList<String> steps = (ArrayList<String>) documentSnapshot.get("steps");
+        ingredients = (ArrayList<Map<String, Object>>) documentSnapshot.get("ingredients");
+        steps = (ArrayList<String>) documentSnapshot.get("steps");
         String description = documentSnapshot.getString("description");
 
         if (imagePath != null) {
@@ -184,8 +189,13 @@ public class ViewRecipeActivity extends AppCompatActivity {
         }
 
         StringBuilder steps_text = new StringBuilder();
-        for (String s : steps) {
-            steps_text.append(s).append("\n");
+        int count = steps.size();
+        for (int i = 0; i < count; i++) {
+            if (i == count - 1) {
+                steps_text.append(steps.get(i));
+            } else {
+                steps_text.append(steps.get(i)).append("\n");
+            }
         }
 
         tv_steps.setText(steps_text.toString());
@@ -219,4 +229,12 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
     }
 
+    public void cook(View view) {
+        Intent intent = new Intent(ViewRecipeActivity.this, CookRecipeActivity.class);
+        Bundle args = new Bundle();
+        args.putSerializable("steps",(Serializable) steps);
+        args.putSerializable("ingredients",(Serializable) ingredients);
+        intent.putExtra("bundle", args);
+        startActivity(intent);
+    }
 }

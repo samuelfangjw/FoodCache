@@ -18,9 +18,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
+import com.breakfastseta.foodcache.Inventory;
 import com.breakfastseta.foodcache.R;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -127,12 +127,21 @@ public class UnclassifiedDialogFragment extends DialogFragment {
         if (date == null) {
             Toast.makeText(getContext(), "Please fill in all values", Toast.LENGTH_SHORT).show();
         } else {
+            // Removing time part from date
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            date = cal.getTime();
+
             Timestamp dateTimestamp = new Timestamp(date);
-            inventoryRef
-                    .add(new Item(ingredient, quantity, dateTimestamp, units, tab))
-                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            Inventory.create()
+                    .addIngredient(new Item(ingredient, quantity, dateTimestamp, units, tab))
+                    .setListener(new Inventory.OnFinishListener() {
                         @Override
-                        public void onSuccess(DocumentReference documentReference) {
+                        public void onFinish() {
                             db.document(path).delete();
                             barcodeRef.add(docData);
                         }

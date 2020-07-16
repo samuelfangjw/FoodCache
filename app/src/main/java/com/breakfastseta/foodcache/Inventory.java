@@ -1,0 +1,133 @@
+package com.breakfastseta.foodcache;
+
+import androidx.annotation.NonNull;
+
+import com.breakfastseta.foodcache.inventory.Item;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
+
+public class Inventory {
+    private static final String TAG = "Inventory";
+
+    private OnFinishListener listener;
+
+    private static FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private static String uid = user.getUid();
+    private static FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private static CollectionReference inventoryRef = db.collection("Users").document(uid).collection("Inventory");
+
+    Inventory() {
+        // empty constructor
+    }
+
+    public static Inventory create() {
+     return new Inventory();
+    }
+
+    public Inventory addIngredient(Item ingredient) {
+        //Check if ingredient with same units exists
+        String name = ingredient.getIngredient();
+        String units = ingredient.getUnits();
+        String location = ingredient.getLocation();
+
+        Query query = inventoryRef
+                .whereEqualTo("ingredient", name)
+                .whereEqualTo("units", units)
+                .whereEqualTo("location", location)
+                .limit(1);
+
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                QuerySnapshot snapshot = task.getResult();
+                if (snapshot.isEmpty()) {
+                    // add item
+                    inventoryRef.add(ingredient).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentReference> task) {
+                            callback();
+                        }
+                    });
+                } else {
+                    for (DocumentSnapshot document: snapshot) {
+                        DocumentReference docRef = document.getReference();
+                        Double quantity = document.getDouble("quantity");
+                        Map<String, Double> expiryMap = (Map<String, Double>) document.get("expiryMap");
+
+                        double quantityToAdd = ingredient.getQuantity();
+
+                        quantity += quantityToAdd;
+                        String key = ingredient.getDateTimestamp().toString();
+                        if (expiryMap.containsKey(key)) {
+                            double value = expiryMap.get(key);
+                            value += quantityToAdd;
+                            expiryMap.put(key, value);
+                        } else {
+                            expiryMap.put(key, quantityToAdd);
+                        }
+
+                        // recalculate expiry
+                        TreeMap<Date, Double> tree = new TreeMap<>();
+                        for (String s : expiryMap.keySet()) {
+                            tree.put(Inventory.stringToTimestamp(s).toDate(), expiryMap.get(s));
+                        }
+                        Timestamp dateTimestamp = new Timestamp(tree.firstKey());
+
+                        Map<String, Object> updateMap = new HashMap<>();
+                        updateMap.put("quantity", quantity);
+                        updateMap.put("expiryMap", expiryMap);
+                        updateMap.put("dateTimestamp", dateTimestamp);
+
+                        docRef.update(updateMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                callback();
+                            }
+                        });
+                    }
+                }
+            }
+        });
+
+        return this;
+    }
+
+    public static Timestamp stringToTimestamp(String string) {
+        String[] arr = string.split(" ");
+        String secondsString = arr[0].replaceAll("[^0-9]", "");
+        String nanosecondsString = arr[1].replaceAll("[^0-9]", "");
+
+        long seconds = Long.parseLong(secondsString);
+        int nanoseconds = Integer.parseInt(nanosecondsString);
+
+        return new Timestamp(seconds, nanoseconds);
+    }
+
+    private void callback() {
+        if(listener != null){
+            listener.onFinish();
+        }
+    }
+
+    public interface OnFinishListener {
+        void onFinish();
+    }
+
+    public void setListener(OnFinishListener value){
+        this.listener = value;
+    }
+}

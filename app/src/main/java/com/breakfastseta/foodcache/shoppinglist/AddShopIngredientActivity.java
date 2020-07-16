@@ -73,7 +73,7 @@ public class AddShopIngredientActivity extends AppCompatActivity {
                 .collection("Users")
                 .document(uid)
                 .collection("ShoppingList");
-        notebookRef.add(new ShoppingListItem(name, description, Double.parseDouble(quantity), units));
+        notebookRef.add(new ShoppingListItem(name.trim(), description, Double.parseDouble(quantity), units));
         Toast.makeText(this, "Shopping Item added", Toast.LENGTH_SHORT).show();
         finish();
     }

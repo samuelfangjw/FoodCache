@@ -108,7 +108,7 @@ public class EditShoppingIngredient extends AppCompatActivity {
             return;
         }
         DocumentReference docRef = db.document(path);
-        docRef.update("itemName", newShopIngredientName);
+        docRef.update("itemName", newShopIngredientName.trim());
         docRef.update("description", newShopIngredientDescription);
         docRef.update("noItems", Double.parseDouble(newShopIngredientQuantity));
         docRef.update("units", newShopIngredientUnits);

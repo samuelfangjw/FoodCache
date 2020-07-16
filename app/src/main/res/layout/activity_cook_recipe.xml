@@ -3,23 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".inventory.EditItem">
+    tools:context=".recipe.CookRecipeActivity"
+    android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/primaryColor" />
-
-    <EditText
-        android:id="@+id/edit_ingredient"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:layout_margin="8dp"
-        android:text="@string/ingredient"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
@@ -30,16 +21,8 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="addQuantity"
-        android:layout_margin="8dp"
-        android:text="Add Quantity" />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="saveEditIngredient"
-        android:layout_margin="8dp"
-        android:text="@string/save_button" />
-
+        android:layout_margin="16dp"
+        android:text="Finish"
+        android:onClick="finishCooking"/>
 
 </LinearLayout>

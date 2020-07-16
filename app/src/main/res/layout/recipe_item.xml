@@ -3,19 +3,23 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginStart="8dp"
     android:layout_marginTop="8dp"
-    android:layout_marginEnd="8dp">
+    android:layout_marginEnd="8dp"
+    app:cardCornerRadius="5dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="8dp">
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/recipe_image"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
+            android:maxHeight="300dp"
+            android:src="@color/primaryColor"
+            android:adjustViewBounds="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
             android:scaleType="centerCrop" />
@@ -27,6 +31,8 @@
             android:layout_alignParentStart="true"
             android:layout_alignBottom="@+id/recipe_image"
             android:text="Recipe"
+            android:layout_margin="16dp"
+            android:textColor="@color/md_white_1000"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
     </RelativeLayout>

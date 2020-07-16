@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.breakfastseta.foodcache.Inventory;
 import com.breakfastseta.foodcache.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -56,7 +57,6 @@ public class AddIngredientActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String uid = user.getUid();
-    private CollectionReference inventoryRef = db.collection("Users").document(uid).collection("Inventory");
     private CollectionReference barcodeRef = db.collection("Users").document(uid).collection("Barcodes");
 
     ArrayAdapter<CharSequence> adapterUnits;
@@ -155,8 +155,12 @@ public class AddIngredientActivity extends AppCompatActivity {
                 });
             }
             Timestamp dateTimestamp = new Timestamp(date);
-            inventoryRef.add(new Item(ingredient, quantity, dateTimestamp, units, tab));
-            Toast.makeText(this, "Item Added Successfully", Toast.LENGTH_SHORT).show();
+            Inventory.create().addIngredient(new Item(ingredient.trim(), quantity, dateTimestamp, units, tab)).setListener(new Inventory.OnFinishListener() {
+                @Override
+                public void onFinish() {
+                    Toast.makeText(AddIngredientActivity.this, "Item Added Successfully", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 

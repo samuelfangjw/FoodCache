@@ -184,6 +184,12 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ready to Cook!"
+                android:onClick="cook"/>
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

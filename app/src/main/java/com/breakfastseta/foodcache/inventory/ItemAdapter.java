@@ -2,6 +2,7 @@ package com.breakfastseta.foodcache.inventory;
 
 import android.graphics.Color;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +11,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.breakfastseta.foodcache.Inventory;
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,9 +25,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
 public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.ItemHolder> {
@@ -31,11 +40,13 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
 
     private OnItemClickListener listener;
 
-    /*
-     * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
-     * FirestoreRecyclerOptions} for configuration options.
-     * @param options
-     */
+    public static double ALL = -1;
+
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    String uid = user.getUid();
+    private CollectionReference inventoryRef = db.collection("Users").document(uid).collection("Inventory");
+
     public ItemAdapter(@NonNull FirestoreRecyclerOptions<Item> options) {
         super(options);
     }
@@ -76,13 +87,31 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
         String units = model.getUnits();
         double quantity = model.getQuantity();
 
-        //Formatting Strings
-        String expiryDate = "Expiry Date: " + expiryString;
-        String quantityString = Util.formatQuantity(quantity, units);
+        //Format expiry date
+        Map<String, Double> map = model.getExpiryMap();
+
+        String expiryDate;
+
+        if (map.size() == 1) {
+            expiryDate = "Expiry Date: " + expiryString;
+        } else {
+            TreeMap<Date, Double> tree = new TreeMap<>();
+            for (String s : map.keySet()) {
+                tree.put(Inventory.stringToTimestamp(s).toDate(), map.get(s));
+            }
+
+            StringBuilder result = new StringBuilder();
+            for (Date d : tree.keySet()) {
+                Double q = tree.get(d);
+                Log.d(TAG, "onBindViewHolder: " + d);
+                result.append(Util.formatQuantity(q, units)).append(" expiring ").append(dateFormat.format(d)).append("\n");
+            }
+            expiryDate = result.toString().trim();
+        }
 
         //Set TextViews
         holder.textViewIngredient.setText(model.getIngredient());
-        holder.textViewQuantity.setText(quantityString);
+        holder.textViewQuantity.setText(Util.formatQuantity(quantity, units));
         holder.textViewExpiryDate.setText(expiryDate);
     }
 
@@ -97,21 +126,74 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
         getSnapshots().getSnapshot(position).getReference().delete();
     }
 
-    public void restoreItem(Item item, String tab) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String uid = user.getUid();
+    public void restoreItem(Item item) {
+        Inventory.create().addIngredient(item);
+    }
 
-        CollectionReference inventoryRef = FirebaseFirestore.getInstance()
-                .collection("Users")
-                .document(uid)
-                .collection("Inventory");
-
-        String ingredient = item.getIngredient();
+    public double deleteExpired(int adapterPosition, Item oldItem) {
+        Item item = oldItem.makeCopy();
         double quantity = item.getQuantity();
-        Timestamp dateTimestamp = item.getDateTimestamp();
-        String units = item.getUnits();
+        double quantityDeleted = 0;
+        Map<String, Double> expiryMap = item.getExpiryMap();
 
-        inventoryRef.add(new Item(ingredient, quantity, dateTimestamp, units, tab));
+        Timestamp now = Timestamp.now();
+
+
+        Map<String, Double> newMap = new HashMap<>();
+
+        for (String s : expiryMap.keySet()) {
+            double quantityToAdd = expiryMap.get(s);
+            if (Inventory.stringToTimestamp(s).getSeconds() < (now.getSeconds() - 86400)) {
+                //expired
+                quantityDeleted += quantityToAdd;
+            } else {
+                //not expired
+                newMap.put(s, quantityToAdd);
+            }
+        }
+
+        getSnapshots().getSnapshot(adapterPosition).getReference().delete();
+
+        quantity -= quantityDeleted;
+
+        if (quantityDeleted == 0) {
+            Inventory.create().addIngredient(item);
+        } else if (!newMap.isEmpty()) {
+            item.setExpiryMap(newMap);
+            item.setQuantity(quantity);
+            item.recalculateExpiry();
+            Inventory.create().addIngredient(item);
+        }
+
+        if (quantity == 0) {
+            return ALL;
+        } else {
+            return quantityDeleted;
+        }
+    }
+
+    public void restoreExpired(Item ingredient) {
+        String name = ingredient.getIngredient();
+        String units = ingredient.getUnits();
+        String location = ingredient.getLocation();
+
+        Query query = inventoryRef
+                .whereEqualTo("ingredient", name)
+                .whereEqualTo("units", units)
+                .whereEqualTo("location", location)
+                .limit(1);
+
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                QuerySnapshot snapshot = task.getResult();
+                for (DocumentSnapshot s : snapshot) {
+                    s.getReference().delete();
+                    Inventory.create().addIngredient(ingredient);
+                }
+            }
+        });
+
     }
 
     class ItemHolder extends RecyclerView.ViewHolder {

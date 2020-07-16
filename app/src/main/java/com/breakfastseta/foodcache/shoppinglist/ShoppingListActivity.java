@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.breakfastseta.foodcache.Inventory;
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
 import com.breakfastseta.foodcache.inventory.Item;
@@ -34,6 +35,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -170,9 +172,19 @@ public class ShoppingListActivity extends AppCompatActivity {
                                                             // calculating expiry date
                                                             Timestamp now = new Timestamp(new Date());
                                                             Date expiry = new Date(now.getSeconds() * 1000 + expiryInMillies);
+
+                                                            // Removing time part from date
+                                                            Calendar cal = Calendar.getInstance();
+                                                            cal.setTime(expiry);
+                                                            cal.set(Calendar.HOUR_OF_DAY, 0);
+                                                            cal.set(Calendar.MINUTE, 0);
+                                                            cal.set(Calendar.SECOND, 0);
+                                                            cal.set(Calendar.MILLISECOND, 0);
+                                                            expiry = cal.getTime();
+
                                                             Timestamp dateTimestamp = new Timestamp(expiry);
 
-                                                            inventoryRef.add(new Item(ingredient, quantity, dateTimestamp, units, location));
+                                                            Inventory.create().addIngredient(new Item(ingredient, quantity, dateTimestamp, units, location));
                                                         }
                                                     }
                                                 } else {

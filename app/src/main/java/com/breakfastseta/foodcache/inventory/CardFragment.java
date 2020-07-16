@@ -30,11 +30,6 @@ import com.google.firebase.firestore.Query;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CardFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class CardFragment extends Fragment {
 
     private static final String ARG_COUNT = "param1";
@@ -99,7 +94,6 @@ public class CardFragment extends Fragment {
 
     private void setUpRecyclerView() {
         Query query = inventoryRef.whereEqualTo("location", tabs[counter]).orderBy("dateTimestamp", Query.Direction.ASCENDING);
-//        Query query = inventoryRef.orderBy("dateTimestamp", Query.Direction.ASCENDING);
 
         FirestoreRecyclerOptions<Item> options = new FirestoreRecyclerOptions.Builder<Item>()
                 .setQuery(query, Item.class)
@@ -121,43 +115,115 @@ public class CardFragment extends Fragment {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 final int ingredientPos = viewHolder.getAdapterPosition();
                 final Item ingredient = adapter.getItem(ingredientPos);
-                final String ab = ingredient.getLocation();
 
-                adapter.deleteItem(viewHolder.getAdapterPosition());
+                if (direction == ItemTouchHelper.LEFT) {
+                    adapter.deleteItem(viewHolder.getAdapterPosition());
 
-                snackbar = Snackbar
-                        .make(view.findViewById(R.id.cardfragment), "Item was removed from the list.", Snackbar.LENGTH_LONG);
-                snackbar.setAction("UNDO", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        adapter.restoreItem(ingredient, ab);
-                    }
-                }).setDuration(Snackbar.LENGTH_SHORT).setActionTextColor(Color.YELLOW)
-                .addCallback(new Snackbar.Callback() {
-                    @Override
-                    public void onDismissed(Snackbar transientBottomBar, int event) {
-                        switch(event) {
-                            // when snackbar finishes showing
-                            case Snackbar.Callback.DISMISS_EVENT_MANUAL:
-                            case Snackbar.Callback.DISMISS_EVENT_SWIPE:
-                            case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
-                            case Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE:
-                                CollectionReference notebookRef = FirebaseFirestore.getInstance()
-                                        .collection("Users")
-                                        .document(uid)
-                                        .collection("ShoppingList");
-
-                                String name = ingredient.getIngredient();
-                                String description = "RESTOCK: Auto Added";
-                                double quantity = ingredient.getQuantity();
-                                String units = ingredient.getUnits();
-                                notebookRef.add(new ShoppingListItem(name, description, quantity, units));
-                                break;
+                    snackbar = Snackbar
+                            .make(view.findViewById(R.id.cardfragment), "Item was removed from the list.", Snackbar.LENGTH_LONG);
+                    snackbar.setAction("UNDO", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            adapter.restoreItem(ingredient);
                         }
+                    }).setDuration(Snackbar.LENGTH_SHORT).setActionTextColor(Color.YELLOW)
+                            .addCallback(new Snackbar.Callback() {
+                                @Override
+                                public void onDismissed(Snackbar transientBottomBar, int event) {
+                                    switch (event) {
+                                        // when snackbar finishes showing
+                                        case Snackbar.Callback.DISMISS_EVENT_MANUAL:
+                                        case Snackbar.Callback.DISMISS_EVENT_SWIPE:
+                                        case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
+                                        case Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE:
+                                            CollectionReference notebookRef = FirebaseFirestore.getInstance()
+                                                    .collection("Users")
+                                                    .document(uid)
+                                                    .collection("ShoppingList");
+
+                                            String name = ingredient.getIngredient();
+                                            String description = "RESTOCK: Auto Added";
+                                            double quantity = ingredient.getQuantity();
+                                            String units = ingredient.getUnits();
+                                            notebookRef.add(new ShoppingListItem(name, description, quantity, units));
+                                            break;
+                                    }
+                                }
+                            });
+                    snackbar.show();
+                } else if (direction == ItemTouchHelper.RIGHT) {
+                    final double quantityDeleted = adapter.deleteExpired(viewHolder.getAdapterPosition(), ingredient);
+
+                    if (quantityDeleted == 0) {
+                        Snackbar.make(view.findViewById(R.id.cardfragment), "Item not Expired", Snackbar.LENGTH_LONG).show();
+                    } else if (quantityDeleted == ItemAdapter.ALL) {
+                        snackbar = Snackbar
+                                .make(view.findViewById(R.id.cardfragment), "Item was removed from the list.", Snackbar.LENGTH_LONG);
+                        snackbar.setAction("UNDO", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                adapter.restoreItem(ingredient);
+                            }
+                        }).setDuration(Snackbar.LENGTH_SHORT).setActionTextColor(Color.YELLOW)
+                                .addCallback(new Snackbar.Callback() {
+                                    @Override
+                                    public void onDismissed(Snackbar transientBottomBar, int event) {
+                                        switch (event) {
+                                            // when snackbar finishes showing
+                                            case Snackbar.Callback.DISMISS_EVENT_MANUAL:
+                                            case Snackbar.Callback.DISMISS_EVENT_SWIPE:
+                                            case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
+                                            case Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE:
+                                                CollectionReference notebookRef = FirebaseFirestore.getInstance()
+                                                        .collection("Users")
+                                                        .document(uid)
+                                                        .collection("ShoppingList");
+
+                                                String name = ingredient.getIngredient();
+                                                String description = "RESTOCK: Auto Added";
+                                                double quantity = ingredient.getQuantity();
+                                                String units = ingredient.getUnits();
+                                                notebookRef.add(new ShoppingListItem(name, description, quantity, units));
+                                                break;
+                                        }
+                                    }
+                                });
+                        snackbar.show();
+                    } else {
+                        snackbar = Snackbar
+                                .make(view.findViewById(R.id.cardfragment), "Expired items were removed", Snackbar.LENGTH_LONG);
+                        snackbar.setAction("UNDO", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                adapter.restoreExpired(ingredient);
+                            }
+                        }).setDuration(Snackbar.LENGTH_SHORT).setActionTextColor(Color.YELLOW)
+                                .addCallback(new Snackbar.Callback() {
+                                    @Override
+                                    public void onDismissed(Snackbar transientBottomBar, int event) {
+                                        switch (event) {
+                                            // when snackbar finishes showing
+                                            case Snackbar.Callback.DISMISS_EVENT_MANUAL:
+                                            case Snackbar.Callback.DISMISS_EVENT_SWIPE:
+                                            case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
+                                            case Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE:
+                                                CollectionReference notebookRef = FirebaseFirestore.getInstance()
+                                                        .collection("Users")
+                                                        .document(uid)
+                                                        .collection("ShoppingList");
+
+                                                String name = ingredient.getIngredient();
+                                                String description = "RESTOCK: Auto Added";
+                                                String units = ingredient.getUnits();
+                                                notebookRef.add(new ShoppingListItem(name, description, quantityDeleted, units));
+                                                break;
+                                        }
+                                    }
+                                });
+                        snackbar.show();
                     }
-                });
-                snackbar.show();
+
+                }
             }
 
             @Override
@@ -166,6 +232,8 @@ public class CardFragment extends Fragment {
                 new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
                         .addBackgroundColor(ContextCompat.getColor(getContext(), R.color.primaryColor))
                         .addActionIcon(R.drawable.ic_delete)
+                        .addSwipeLeftLabel("All")
+                        .addSwipeRightLabel("Expired")
                         .create()
                         .decorate();
 
