@@ -5,9 +5,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.breakfastseta.foodcache.App;
+
 // For Foodcache Card
 public class ViewPagerAdapter extends FragmentStateAdapter {
-    private static final int CARD_ITEM_SIZE = 2;
+    private static int CARD_ITEM_SIZE = App.getTabs().size();
 
     public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);

@@ -27,6 +27,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.util.ArrayList;
+
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class CardFragment extends Fragment {
@@ -46,7 +48,8 @@ public class CardFragment extends Fragment {
 
     private Snackbar snackbar = null;
 
-    String[] tabs;
+//    String[] tabs;
+    ArrayList<String> tabs;
 
     public CardFragment() {
         // Required empty public constructor
@@ -67,7 +70,8 @@ public class CardFragment extends Fragment {
             counter = getArguments().getInt(ARG_COUNT);
         }
 
-        tabs = getResources().getStringArray(R.array.tabs);
+//        tabs = getResources().getStringArray(R.array.tabs);
+        tabs = App.getTabs();
     }
 
     @Override
@@ -91,7 +95,7 @@ public class CardFragment extends Fragment {
     }
 
     private void setUpRecyclerView() {
-        Query query = inventoryRef.whereEqualTo("location", tabs[counter]).orderBy("dateTimestamp", Query.Direction.ASCENDING);
+        Query query = inventoryRef.whereEqualTo("location", tabs.get(counter)).orderBy("dateTimestamp", Query.Direction.ASCENDING);
 
         FirestoreRecyclerOptions<Item> options = new FirestoreRecyclerOptions.Builder<Item>()
                 .setQuery(query, Item.class)

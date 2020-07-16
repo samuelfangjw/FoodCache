@@ -31,6 +31,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
 
@@ -41,7 +42,8 @@ public class FoodcacheActivity extends AppCompatActivity {
     TabLayout tabLayout;
     ViewPager2 viewPager;
 
-    String[] tabs;
+//    String[] tabs;
+    ArrayList<String> tabs;
     long shortest = Long.MAX_VALUE;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -68,7 +70,8 @@ public class FoodcacheActivity extends AppCompatActivity {
         FloatingActionButton buttonAddItem = findViewById(R.id.add_item_fab);
         buttonAddItem.setOnClickListener(v -> startActivity(new Intent(FoodcacheActivity.this, AddIngredientActivity.class)));
 
-        tabs = getResources().getStringArray(R.array.tabs);
+//        tabs = getResources().getStringArray(R.array.tabs);
+        tabs = App.getTabs();
 
         viewPager.setAdapter(createCardAdapter());
         viewPager.setUserInputEnabled(false);
@@ -76,7 +79,7 @@ public class FoodcacheActivity extends AppCompatActivity {
                 new TabLayoutMediator.TabConfigurationStrategy() {
                     @Override
                     public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                        tab.setText(tabs[position]);
+                        tab.setText(tabs.get(position));
                     }
                 }).attach();
     }
