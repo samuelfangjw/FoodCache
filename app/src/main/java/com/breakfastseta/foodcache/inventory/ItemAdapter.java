@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.Inventory;
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
@@ -44,7 +45,7 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    String uid = user.getUid();
+    String uid = App.getFamilyUID();
     private CollectionReference inventoryRef = db.collection("Users").document(uid).collection("Inventory");
 
     public ItemAdapter(@NonNull FirestoreRecyclerOptions<Item> options) {

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.Inventory;
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
@@ -42,10 +43,11 @@ import java.util.Map;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
+//TODO if shopping list/foodcache is empty should show a message
 public class ShoppingListActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    String uid = user.getUid();
+    String uid = App.getFamilyUID();
     private CollectionReference notebookRef = db.collection("Users").document(uid).collection("ShoppingList");
     private CoordinatorLayout coordinatorLayout;
 
@@ -141,8 +143,7 @@ public class ShoppingListActivity extends AppCompatActivity {
                                 case Snackbar.Callback.DISMISS_EVENT_SWIPE:
                                 case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
                                 case Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE:
-                                    final CollectionReference inventoryRef = db.collection("Users").document(uid).collection("Inventory");
-                                    final CollectionReference unclassifiedRef = db.collection("Users").document(uid).collection("Unclassified");
+                                    final CollectionReference unclassifiedRef = db.collection("Users").document(App.getUID()).collection("Unclassified");
                                     CollectionReference barcodeRef = db.collection("Users").document(uid).collection("Barcodes");
 
                                     final String ingredient = shopItem.getItemName();
@@ -206,6 +207,8 @@ public class ShoppingListActivity extends AppCompatActivity {
                         .addBackgroundColor(ContextCompat.getColor(ShoppingListActivity.this, R.color.primaryColor))
                         .addSwipeLeftActionIcon(R.drawable.ic_delete)
                         .addSwipeRightActionIcon(R.drawable.ic_shopping_list)
+                        .addSwipeLeftLabel("Delete")
+                        .addSwipeRightLabel("FoodCache")
                         .create()
                         .decorate();
 

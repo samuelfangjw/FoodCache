@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -48,7 +49,7 @@ public class ShoppingListAdapter extends FirestoreRecyclerAdapter<ShoppingListIt
 
     public void restoreItem(ShoppingListItem item) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String uid = user.getUid();
+        String uid = App.getFamilyUID();
 
         CollectionReference notebookRef = FirebaseFirestore.getInstance()
                 .collection("Users")

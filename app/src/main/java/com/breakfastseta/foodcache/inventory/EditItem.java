@@ -113,7 +113,10 @@ public class EditItem extends AppCompatActivity {
 
 
     public void saveEditIngredient(View view) {
-        getCurrentFocus().clearFocus();
+
+        if (getCurrentFocus() != null) {
+            getCurrentFocus().clearFocus();
+        };
 
         String ingredient = editTextIngredient.getText().toString();
 
@@ -138,8 +141,11 @@ public class EditItem extends AppCompatActivity {
                 tree.put(Inventory.stringToTimestamp(s).toDate(), newExpiryMap.get(s));
             }
 
-            Timestamp dateTimestamp = new Timestamp(tree.firstKey());
-
+            Timestamp dateTimestamp = null;
+            if (!tree.isEmpty()) {
+                dateTimestamp = new Timestamp(tree.firstKey());
+            }
+            
             DocumentReference docRef = db.document(path);
 
             if (quantity == 0.0) {

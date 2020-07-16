@@ -14,6 +14,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.breakfastseta.foodcache.AlertReceiver;
+import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -45,9 +46,10 @@ public class FoodcacheActivity extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    String uid = user.getUid();
+    String uid = App.getFamilyUID();
+    String personalUID = App.getUID();
     private CollectionReference inventoryRef = db.collection("Users").document(uid).collection("Inventory");
-    private CollectionReference unclassifiedRef = db.collection("Users").document(uid).collection("Unclassified");
+    private CollectionReference unclassifiedRef = db.collection("Users").document(personalUID).collection("Unclassified");
 
 
     @Override

@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -67,7 +68,7 @@ public class AddShopIngredientActivity extends AppCompatActivity {
         }
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String uid = user.getUid();
+        String uid = App.getFamilyUID();
 
         CollectionReference notebookRef = FirebaseFirestore.getInstance()
                 .collection("Users")

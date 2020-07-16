@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Starts the main activity after user has been authenticated
     private void startMainActivity() {
+        App.setUID();
         Intent intent = new Intent(this, FoodcacheActivity.class);
         startActivity(intent);
         finish();

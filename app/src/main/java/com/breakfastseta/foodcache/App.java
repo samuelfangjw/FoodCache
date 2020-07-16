@@ -5,7 +5,13 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class App extends Application {
+
+    public static String FamilyUID;
+    public static String UID;
 
     public static final String CHANNEL_1_ID = "expiryAlarm";
 
@@ -14,6 +20,13 @@ public class App extends Application {
         super.onCreate();
 
         createNotificationChannels();
+    }
+
+    public static void setUID() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        UID = user.getUid();
+        //TODO family sharing
+        FamilyUID = UID;
     }
 
     private void createNotificationChannels() {
@@ -28,5 +41,13 @@ public class App extends Application {
             NotificationManager manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(channel1);
         }
+    }
+
+    public static String getFamilyUID() {
+        return FamilyUID;
+    }
+
+    public static String getUID() {
+        return UID;
     }
 }

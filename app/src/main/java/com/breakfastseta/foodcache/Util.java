@@ -129,6 +129,7 @@ public class Util {
                         itemRecipe,
                         itemDiscover,
                         itemRecommend,
+                        new DividerDrawerItem(),
                         itemSocial
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
@@ -159,7 +160,7 @@ public class Util {
                                 context.startActivity(new Intent(context, RecommendActivity.class));
                                 selectedItem = 6;
                                 return true;
-                            case 8:
+                            case 9:
                                 context.startActivity(new Intent(context, SocialMainActivity.class));
                                 selectedItem = 10;
                                 return true;
@@ -225,31 +226,4 @@ public class Util {
         return cropImg;
     }
 
-    // Helper class to add based on units
-    public static String addQuantity(double quantity, String units) {
-        switch (units) {
-            case "kg":
-                return formatQuantityNumber(quantity + 0.1, units);
-            case "g":
-            case "ml":
-                return formatQuantityNumber(quantity + 50, units);
-            case "Items":
-            default:
-                return formatQuantityNumber(quantity + 1, units);
-        }
-    }
-
-    // Helper class to subtract based on units
-    public static String subtractQuantity(double quantity, String units) {
-        switch (units) {
-            case "kg":
-                return formatQuantityNumber(quantity - 0.1, units);
-            case "g":
-            case "ml":
-                return formatQuantityNumber(quantity - 50, units);
-            case "Items":
-            default:
-                return formatQuantityNumber(quantity - 1, units);
-        }
-    }
 }

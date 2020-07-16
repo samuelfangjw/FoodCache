@@ -6,8 +6,6 @@ import com.breakfastseta.foodcache.inventory.Item;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -25,8 +23,7 @@ public class Inventory {
 
     private OnFinishListener listener;
 
-    private static FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    private static String uid = user.getUid();
+    private static String uid = App.getFamilyUID();
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static CollectionReference inventoryRef = db.collection("Users").document(uid).collection("Inventory");
 
@@ -36,6 +33,34 @@ public class Inventory {
 
     public static Inventory create() {
      return new Inventory();
+    }
+
+    // Helper class to add based on units
+    public static String addQuantity(double quantity, String units) {
+        switch (units) {
+            case "kg":
+                return Util.formatQuantityNumber(quantity + 0.1, units);
+            case "g":
+            case "ml":
+                return Util.formatQuantityNumber(quantity + 50, units);
+            case "Items":
+            default:
+                return Util.formatQuantityNumber(quantity + 1, units);
+        }
+    }
+
+    // Helper class to subtract based on units
+    public static String subtractQuantity(double quantity, String units) {
+        switch (units) {
+            case "kg":
+                return Util.formatQuantityNumber(quantity - 0.1, units);
+            case "g":
+            case "ml":
+                return Util.formatQuantityNumber(quantity - 50, units);
+            case "Items":
+            default:
+                return Util.formatQuantityNumber(quantity - 1, units);
+        }
     }
 
     public Inventory addIngredient(Item ingredient) {

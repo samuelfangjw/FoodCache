@@ -17,13 +17,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.Inventory;
 import com.breakfastseta.foodcache.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -55,8 +54,7 @@ public class AddIngredientActivity extends AppCompatActivity {
     private String barcode = null;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    String uid = user.getUid();
+    String uid = App.getFamilyUID();
     private CollectionReference barcodeRef = db.collection("Users").document(uid).collection("Barcodes");
 
     ArrayAdapter<CharSequence> adapterUnits;

@@ -81,7 +81,7 @@ public class EditQuantityAdapter extends
             @Override
             public void onClick(View v) {
                 double current = Double.parseDouble(editQuantity.getText().toString());
-                editQuantity.setText(Util.addQuantity(current, units));
+                editQuantity.setText(Inventory.addQuantity(current, units));
                 double newQuantity = Double.parseDouble(editQuantity.getText().toString());
                 map.put(key, newQuantity);
             }
@@ -91,8 +91,8 @@ public class EditQuantityAdapter extends
             @Override
             public void onClick(View v) {
                 double current = Double.parseDouble(editQuantity.getText().toString());
-                editQuantity.setText(Util.subtractQuantity(current, units));
-                double newQuantity = Double.parseDouble(Util.subtractQuantity(current, units));
+                editQuantity.setText(Inventory.subtractQuantity(current, units));
+                double newQuantity = Double.parseDouble(Inventory.subtractQuantity(current, units));
                 map.put(key, newQuantity);
             }
         });

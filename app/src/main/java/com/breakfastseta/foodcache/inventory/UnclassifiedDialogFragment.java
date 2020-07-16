@@ -18,13 +18,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
+import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.Inventory;
 import com.breakfastseta.foodcache.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -49,9 +48,7 @@ public class UnclassifiedDialogFragment extends DialogFragment {
     DocumentSnapshot document;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    String uid = user.getUid();
-    private CollectionReference inventoryRef = db.collection("Users").document(uid).collection("Inventory");
+    String uid = App.getFamilyUID();
     private CollectionReference barcodeRef = db.collection("Users").document(uid).collection("Barcodes");
 
     @Override
