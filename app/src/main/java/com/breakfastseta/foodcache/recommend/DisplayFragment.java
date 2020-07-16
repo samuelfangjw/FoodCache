@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.breakfastseta.foodcache.R;
-import com.breakfastseta.foodcache.recipe.ViewRecipeActivity;
+import com.breakfastseta.foodcache.recipe.viewrecipe.ViewRecipeActivity;
 
 public class DisplayFragment extends Fragment {
 

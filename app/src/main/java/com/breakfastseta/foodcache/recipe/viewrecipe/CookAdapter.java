@@ -1,4 +1,4 @@
-package com.breakfastseta.foodcache.recipe;
+package com.breakfastseta.foodcache.recipe.viewrecipe;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -29,7 +29,7 @@ public class CookAdapter extends
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
-        View view = inflater.inflate(R.layout.steps, parent, false);
+        View view = inflater.inflate(R.layout.item_steps, parent, false);
 
         // Return a new holder instance
         ViewHolder viewHolder = new ViewHolder(view);

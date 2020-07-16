@@ -1,4 +1,4 @@
-package com.breakfastseta.foodcache.recipe;
+package com.breakfastseta.foodcache.recipe.addrecipe;
 
 import android.Manifest;
 import android.app.AlertDialog;

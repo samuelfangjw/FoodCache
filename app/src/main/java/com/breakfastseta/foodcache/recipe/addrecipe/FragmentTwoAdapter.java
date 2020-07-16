@@ -1,4 +1,4 @@
-package com.breakfastseta.foodcache.recipe;
+package com.breakfastseta.foodcache.recipe.addrecipe;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,15 +10,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.breakfastseta.foodcache.R;
+import com.breakfastseta.foodcache.recipe.Ingredient;
 
 import java.util.ArrayList;
 
-public class FragmentThreeAdapter extends
-        RecyclerView.Adapter<FragmentThreeAdapter.ViewHolder>{
+public class FragmentTwoAdapter extends
+        RecyclerView.Adapter<FragmentTwoAdapter.ViewHolder>{
 
-    private ArrayList<String> arr;
+    private ArrayList<Ingredient> arr;
 
-    public FragmentThreeAdapter(ArrayList<String> arr) {
+    public FragmentTwoAdapter(ArrayList<Ingredient> arr) {
         this.arr = arr;
     }
 
@@ -29,21 +30,21 @@ public class FragmentThreeAdapter extends
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
-        View stepsView = inflater.inflate(R.layout.fragment_three_item, parent, false);
+        View ingredientView = inflater.inflate(R.layout.fragment_two_item, parent, false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(stepsView);
+        ViewHolder viewHolder = new ViewHolder(ingredientView);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // Get the data model based on position
-        String step = arr.get(position);
+        Ingredient ingredient = arr.get(position);
 
         // Set item views based on your views and data model
-        TextView textView = holder.stepsTextView;
-        textView.setText(step);
+        TextView textView = holder.ingredientTextView;
+        textView.setText(ingredient.toString());
     }
 
     @Override
@@ -52,13 +53,13 @@ public class FragmentThreeAdapter extends
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView stepsTextView;
+        public TextView ingredientTextView;
 
         public ViewHolder(View itemView) {
 
             super(itemView);
 
-            stepsTextView = itemView.findViewById(R.id.ingredient);
+            ingredientTextView = (TextView) itemView.findViewById(R.id.ingredient);
         }
     }
 }

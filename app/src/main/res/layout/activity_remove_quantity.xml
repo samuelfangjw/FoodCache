@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".recipe.RemoveQuantityActivity">
+    tools:context=".recipe.viewrecipe.RemoveQuantityActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -12,32 +12,11 @@
         android:layout_height="wrap_content"
         android:background="@color/primaryColor" />
 
-    <ScrollView
-        android:layout_width="match_parent"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TableLayout
-                android:id="@+id/table_layout_matches"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:stretchColumns="1" />
-
-            <TableLayout
-                android:id="@+id/table_layout_no_matches"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:stretchColumns="0" />
-        </LinearLayout>
-
-    </ScrollView>
+        android:layout_weight="1" />
 
     <Button
         android:layout_width="match_parent"

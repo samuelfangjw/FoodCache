@@ -50,5 +50,6 @@
     <string name="public_string">Public</string>
     <string name="private_string">Private</string>
     <string name="search">Search</string>
+    <string name="location">Location</string>
 
 </resources>

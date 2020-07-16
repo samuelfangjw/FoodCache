@@ -1,4 +1,4 @@
-package com.breakfastseta.foodcache.recipe;
+package com.breakfastseta.foodcache.recipe.viewrecipe;
 
 import android.content.Intent;
 import android.os.Bundle;

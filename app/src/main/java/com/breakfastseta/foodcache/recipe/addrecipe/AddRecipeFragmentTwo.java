@@ -1,4 +1,4 @@
-package com.breakfastseta.foodcache.recipe;
+package com.breakfastseta.foodcache.recipe.addrecipe;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.breakfastseta.foodcache.R;
+import com.breakfastseta.foodcache.recipe.Ingredient;
 
 import java.util.ArrayList;
 

@@ -54,7 +54,7 @@ public class RecipeAdapter extends FirestoreRecyclerAdapter<RecipeSnippet, Recip
     @NonNull
     @Override
     public RecipeHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_, parent, false);
         return new RecipeHolder(v);
     }
 

@@ -1,4 +1,4 @@
-package com.breakfastseta.foodcache.recipe;
+package com.breakfastseta.foodcache.recipe.addrecipe;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,6 +11,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.breakfastseta.foodcache.R;
+import com.breakfastseta.foodcache.recipe.Ingredient;
+import com.breakfastseta.foodcache.recipe.Recipe;
+import com.breakfastseta.foodcache.recipe.RecipeSnippet;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;

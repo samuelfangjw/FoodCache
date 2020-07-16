@@ -38,7 +38,7 @@ public class ShoppingListAdapter extends FirestoreRecyclerAdapter<ShoppingListIt
     @NonNull
     @Override
     public ShoppingListHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.shopping_item,
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_shopping,
                 parent, false);
         return new ShoppingListHolder(v);
     }

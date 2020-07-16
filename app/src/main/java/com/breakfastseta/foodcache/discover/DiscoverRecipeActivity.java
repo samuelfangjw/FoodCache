@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
-import com.breakfastseta.foodcache.recipe.ViewRecipeActivity;
+import com.breakfastseta.foodcache.recipe.viewrecipe.ViewRecipeActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;

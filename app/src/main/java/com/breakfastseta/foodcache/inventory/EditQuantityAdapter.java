@@ -51,7 +51,7 @@ public class EditQuantityAdapter extends
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
-        View view = inflater.inflate(R.layout.edit_item_quantity, parent, false);
+        View view = inflater.inflate(R.layout.item_edit_quantity, parent, false);
 
         // Return a new holder instance
         ViewHolder viewHolder = new ViewHolder(view);

@@ -1,4 +1,4 @@
-package com.breakfastseta.foodcache.recipe;
+package com.breakfastseta.foodcache.recipe.viewrecipe;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -22,6 +22,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
+import com.breakfastseta.foodcache.recipe.RecipeSnippet;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

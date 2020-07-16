@@ -1,4 +1,4 @@
-package com.breakfastseta.foodcache.recipe;
+package com.breakfastseta.foodcache.recipe.addrecipe;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,12 +13,12 @@ import com.breakfastseta.foodcache.R;
 
 import java.util.ArrayList;
 
-public class FragmentTwoAdapter extends
-        RecyclerView.Adapter<FragmentTwoAdapter.ViewHolder>{
+public class FragmentThreeAdapter extends
+        RecyclerView.Adapter<FragmentThreeAdapter.ViewHolder>{
 
-    private ArrayList<Ingredient> arr;
+    private ArrayList<String> arr;
 
-    public FragmentTwoAdapter(ArrayList<Ingredient> arr) {
+    public FragmentThreeAdapter(ArrayList<String> arr) {
         this.arr = arr;
     }
 
@@ -29,21 +29,21 @@ public class FragmentTwoAdapter extends
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
-        View ingredientView = inflater.inflate(R.layout.fragment_two_item, parent, false);
+        View stepsView = inflater.inflate(R.layout.fragment_three_item, parent, false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(ingredientView);
+        ViewHolder viewHolder = new ViewHolder(stepsView);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // Get the data model based on position
-        Ingredient ingredient = arr.get(position);
+        String step = arr.get(position);
 
         // Set item views based on your views and data model
-        TextView textView = holder.ingredientTextView;
-        textView.setText(ingredient.toString());
+        TextView textView = holder.stepsTextView;
+        textView.setText(step);
     }
 
     @Override
@@ -52,13 +52,13 @@ public class FragmentTwoAdapter extends
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView ingredientTextView;
+        public TextView stepsTextView;
 
         public ViewHolder(View itemView) {
 
             super(itemView);
 
-            ingredientTextView = (TextView) itemView.findViewById(R.id.ingredient);
+            stepsTextView = itemView.findViewById(R.id.ingredient);
         }
     }
 }

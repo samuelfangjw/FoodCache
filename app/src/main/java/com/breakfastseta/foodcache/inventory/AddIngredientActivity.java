@@ -85,8 +85,7 @@ public class AddIngredientActivity extends AppCompatActivity {
         // Apply the adapter to the spinner
         spinnerUnits.setAdapter(adapterUnits);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.tabs, android.R.layout.simple_spinner_item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, App.getTabs());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTab.setAdapter(adapter);
     }

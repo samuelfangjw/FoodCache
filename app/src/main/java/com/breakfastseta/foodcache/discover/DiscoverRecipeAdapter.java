@@ -33,7 +33,7 @@ public class DiscoverRecipeAdapter extends RecyclerView.Adapter<DiscoverRecipeAd
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
-        View recipeView = inflater.inflate(R.layout.recipe_item, parent, false);
+        View recipeView = inflater.inflate(R.layout.item_, parent, false);
 
         // Return a new holder instance
         DiscoverRecipeAdapter.ViewHolder viewHolder = new DiscoverRecipeAdapter.ViewHolder(recipeView);

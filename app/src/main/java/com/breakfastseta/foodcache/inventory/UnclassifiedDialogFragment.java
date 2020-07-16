@@ -75,8 +75,7 @@ public class UnclassifiedDialogFragment extends DialogFragment {
             }
         });
 
-        ArrayAdapter<CharSequence> adapterUnits = ArrayAdapter.createFromResource(getContext(),
-                R.array.tabs, android.R.layout.simple_spinner_item);
+        ArrayAdapter<String> adapterUnits = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, App.getTabs());
         adapterUnits.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTab.setAdapter(adapterUnits);
 
