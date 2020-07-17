@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/profile_pic_social_blog"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:contentDescription="profile picture"
+            android:scaleType="centerCrop"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/ic_profile_pic" />
+
+        <TextView
+            android:id="@+id/blog_post_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/profile_pic_social_blog"
+            android:text="User Name"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textStyle="bold"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/blog_post_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_margin="8dp" />
+
+        <TextView
+            android:id="@+id/blog_post_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Blog Post Title"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/profile_pic_social_blog"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/blog_post_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:text="@string/description"
+            android:layout_below="@id/blog_post_image"
+            android:layout_marginTop="8dp"/>
+
+        <ImageView
+            android:id="@+id/blog_post_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_below="@id/blog_post_title"
+            android:layout_marginTop="8dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop" />
+
+    </RelativeLayout>
+</com.google.android.material.card.MaterialCardView>

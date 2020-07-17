@@ -2,17 +2,26 @@ package com.breakfastseta.foodcache.social;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+
+import java.util.ArrayList;
 
 public class SocialMainActivity extends AppCompatActivity {
 
@@ -20,6 +29,13 @@ public class SocialMainActivity extends AppCompatActivity {
     private static final String TAG = "SocialActivity";
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+    String uid = App.getFamilyUID();
+
+    private CollectionReference notebookRef = db.collection("SocialUsers").document(uid).collection("UserPosts");
+    private CoordinatorLayout coordinatorLayout;
+
+    private SocialPostAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,5 +54,39 @@ public class SocialMainActivity extends AppCompatActivity {
                 startActivity(new Intent(SocialMainActivity.this, SocialAddPostActivity.class));
             }
         });
+
+        setUpRecyclerView();
+        coordinatorLayout = findViewById(R.id.activitySocialMain);
+    }
+
+    private void setUpRecyclerView() { //store date needed
+        Query query = notebookRef.orderBy("date", Query.Direction.DESCENDING)
+                .orderBy("time", Query.Direction.DESCENDING);
+
+        FirestoreRecyclerOptions<SocialPost> options = new FirestoreRecyclerOptions.Builder<SocialPost>()
+                .setQuery(query, SocialPost.class)
+                .build();
+
+        ArrayList<SocialPost> arrayListSP = new ArrayList<>();
+
+
+        adapter = new SocialPostAdapter(options);
+
+        RecyclerView recyclerView = findViewById(R.id.social_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        adapter.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.stopListening();
     }
 }

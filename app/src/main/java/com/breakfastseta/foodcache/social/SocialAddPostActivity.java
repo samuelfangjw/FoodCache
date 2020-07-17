@@ -22,6 +22,8 @@ import android.widget.Toast;
 
 import com.breakfastseta.foodcache.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -56,6 +58,13 @@ public class SocialAddPostActivity extends AppCompatActivity {
     private String saveCurrDate;
     private String saveCurrTime;
     private String postName;
+
+    //constants despite post type
+    private String userName;
+    private String date;
+    private String time;
+    private Uri profileImage;
+    private String uID;
 
     private Uri imageUri;
 
@@ -121,6 +130,38 @@ public class SocialAddPostActivity extends AppCompatActivity {
     }
 
     private void StoreImageFirebase() {
+
+        final StorageReference filePath = postImageRef.child("Post Images")
+                .child(imageUri.getLastPathSegment() + postName + ".jpg");
+
+        UploadTask uploadTask;
+
+        uploadTask = filePath.putFile(imageUri);
+
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                String message = e.getMessage();
+                Toast.makeText(SocialAddPostActivity.this,"Error Occured: " + message, Toast.LENGTH_SHORT).show();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        downloadURL = uri.toString();
+
+                        Toast.makeText(SocialAddPostActivity.this,"Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
+
+                        savePost();
+                    }
+                });
+            }
+        });
+    }
+
+    public void postPost(View view) {
         Calendar callDate = Calendar.getInstance();
         SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMMM-yyyy");
         saveCurrDate = currentDate.format(callDate.getTime());
@@ -130,31 +171,9 @@ public class SocialAddPostActivity extends AppCompatActivity {
         saveCurrTime = currentTime.format(callTime.getTime());
 
         postName = saveCurrDate + saveCurrTime;
+        date = saveCurrDate;
+        time = saveCurrTime;
 
-
-        final StorageReference filePath = postImageRef.child("Post Images")
-                .child(imageUri.getLastPathSegment() + postName + ".jpg");
-
-        filePath.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                if (task.isSuccessful()) {
-                    downloadURL = task.getResult().getMetadata().getReference().getDownloadUrl().toString();
-
-                    Toast.makeText(SocialAddPostActivity.this,"Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
-
-                    savePost();
-                } else {
-                    String message = task.getException().getMessage();
-                    Toast.makeText(SocialAddPostActivity.this,"Error Occured: " + message, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-
-    //TODO: set up showing post in main Social Activity
-
-    public void postPost(View view) {
         if (radioGroup.getCheckedRadioButtonId() == R.id.request) {
             savePost();
         } else {
@@ -163,6 +182,12 @@ public class SocialAddPostActivity extends AppCompatActivity {
     }
 
     private void savePost() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        uID = user.getUid();
+
+        userName = user.getDisplayName();
+        profileImage = user.getPhotoUrl();
+
         if (radioGroup.getCheckedRadioButtonId() == R.id.request) {
             String reqName = requestItem.getText().toString();
             String reqDesc = requestDesc.getText().toString();
@@ -174,14 +199,12 @@ public class SocialAddPostActivity extends AppCompatActivity {
                 return;
             }
 
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            String uid = user.getUid();
-
             CollectionReference notebookRef = FirebaseFirestore.getInstance()
                     .collection("SocialUsers")
-                    .document(uid)
+                    .document(uID)
                     .collection("UserPosts");
-            notebookRef.add(new SocialPost(SocialPostType.REQUESTPOST, reqName, reqDesc, Double.parseDouble(reqQuan), reqUnits));
+            notebookRef.add(new SocialPost(SocialPostType.REQUESTPOST, reqName, reqDesc
+                    , Double.parseDouble(reqQuan), reqUnits, userName, date, time, profileImage, uID));
             Toast.makeText(this, "Request Post added", Toast.LENGTH_SHORT).show();
             finish();
         } else {
@@ -193,15 +216,13 @@ public class SocialAddPostActivity extends AppCompatActivity {
                 return;
             }
 
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            String uid = user.getUid();
-
             CollectionReference notebookRef = FirebaseFirestore.getInstance()
                     .collection("SocialUsers")
-                    .document(uid)
+                    .document(uID)
                     .collection("UserPosts");
-            notebookRef.add(new SocialPost(SocialPostType.BLOGPOST, reqName, reqDesc, downloadURL));
-            Toast.makeText(this, "Request Post added", Toast.LENGTH_SHORT).show();
+            notebookRef.add(new SocialPost(SocialPostType.BLOGPOST, reqName, reqDesc, downloadURL,
+                    userName, date, time, profileImage, uID));
+            Toast.makeText(this, "Blog Post added", Toast.LENGTH_SHORT).show();
             finish();
         }
     }

@@ -1,5 +1,7 @@
 package com.breakfastseta.foodcache.social;
 
+import android.net.Uri;
+
 public class SocialPost {
 
     private SocialPostType type;
@@ -8,12 +10,19 @@ public class SocialPost {
     private double noItems;
     private String units;
     private String downloadURL;
+    private String userName;
+    private String date;
+    private String time;
+    private Uri profileImage;
+    private String uID;
+
 
     public SocialPost() {
         //empty constructor needed
     }
 
-    public SocialPost(SocialPostType type, String name, String desc, double noItems, String units) {
+    public SocialPost(SocialPostType type, String name, String desc, double noItems, String units, String userName
+    , String date, String time, Uri profileImage, String uID) {
         if (type == SocialPostType.REQUESTPOST) {
             this.type = type;
             this.name = name;
@@ -21,10 +30,16 @@ public class SocialPost {
             this.noItems = noItems;
             this.units = units;
             this.downloadURL = null;
+            this.userName = userName;
+            this.date = date;
+            this.time = time;
+            this.profileImage = profileImage;
+            this.uID = uID;
         }
     }
 
-    public SocialPost(SocialPostType type, String name, String desc, String downloadURL) {
+    public SocialPost(SocialPostType type, String name, String desc, String downloadURL, String userName
+            , String date, String time, Uri profileImage, String uID) {
         if (type == SocialPostType.BLOGPOST) {
             this.type = type;
             this.name = name;
@@ -32,7 +47,11 @@ public class SocialPost {
             this.noItems = 0;
             this.units = null;
             this.downloadURL = downloadURL;
-
+            this.userName = userName;
+            this.date = date;
+            this.time = time;
+            this.profileImage = profileImage;
+            this.uID = uID;
         }
     }
 
@@ -58,5 +77,25 @@ public class SocialPost {
 
     public String getDownloadURL() {
         return downloadURL;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public Uri getProfileImage() {
+        return profileImage;
+    }
+
+    public String getuID() {
+        return uID;
     }
 }
