@@ -1,5 +1,6 @@
 package com.breakfastseta.foodcache.recipe.viewrecipe;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,17 +12,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.breakfastseta.foodcache.App;
+import com.breakfastseta.foodcache.Inventory;
 import com.breakfastseta.foodcache.R;
+import com.breakfastseta.foodcache.inventory.FoodcacheActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class RemoveQuantityActivity extends AppCompatActivity {
     private static final String TAG = "RemoveQuantityActivity";
@@ -70,13 +76,13 @@ public class RemoveQuantityActivity extends AppCompatActivity {
                     Double quantity = document.getDouble("quantity");
                     String location = document.getString("location");
                     String path = document.getReference().getPath();
+                    Map<String, Double> expiryMap = (Map<String, Double>) document.get("expiryMap");
 
                     if (ingredientsOwned.containsKey(mapKey)) {
-                        ingredientsOwned.get(mapKey).newLocation(location, quantity, path);
+                        ingredientsOwned.get(mapKey).newLocation(location, quantity, path, expiryMap);
                     } else {
-                        ingredientsOwned.put(mapKey, new ExistingIngredientSnippet(name, quantity, units, path, location));
+                        ingredientsOwned.put(mapKey, new ExistingIngredientSnippet(name, quantity, units, path, location, expiryMap));
                     }
-
                 }
                 checkChanges();
             }
@@ -110,7 +116,57 @@ public class RemoveQuantityActivity extends AppCompatActivity {
     }
 
     public void acceptChanges(View view) {
-        //TODO FINISH THIS
+        Map<String, ExistingIngredientSnippet> map = adapter.map;
+
+        for (ExistingIngredientSnippet snip : map.values()) {
+            Map<String, Map<String, Double>> expiryMapMap = snip.getExpiryMap();
+            Map<String, String> pathMap = snip.getPathMap();
+            Map<String, Double> quantityMap = snip.getQuantityMap();
+
+            for (String location : pathMap.keySet()) {
+                Map<String, Double> expiryMap = expiryMapMap.get(location);
+                String path = pathMap.get(location);
+                Double quantityLeft = quantityMap.get(location);
+
+                if (quantityLeft == 0.0) {
+                    db.document(path).delete();
+                } else {
+                    Map<String, Object> update = new HashMap<String, Object>();
+                    update.put("quantity", quantityLeft);
+
+                    TreeMap<Timestamp, Double> tree = new TreeMap<>(Collections.reverseOrder());
+                    for (String key : expiryMap.keySet()) {
+                        Timestamp ts = Inventory.stringToTimestamp(key);
+                        tree.put(ts, expiryMap.get(key));
+                    }
+
+                    Map<String, Double> newExpiryMap = new HashMap<>();
+                    Timestamp dateTimestamp = null;
+                    for (Map.Entry<Timestamp, Double> entry : tree.entrySet()) {
+                        if (quantityLeft > 0) {
+                            Timestamp ts = entry.getKey();
+                            Double quantity = entry.getValue();
+
+                            if (quantity >= quantityLeft) {
+                                quantity = quantityLeft;
+                                dateTimestamp = ts;
+                            }
+                            quantityLeft -= quantity;
+                            newExpiryMap.put(ts.toString(), quantity);
+                        }
+                    }
+
+                    update.put("dateTimestamp", dateTimestamp);
+                    update.put("expiryMap", newExpiryMap);
+                    db.document(path).update(update);
+                }
+            }
+
+        }
+
+        Intent intent = new Intent(this, FoodcacheActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     @Override
@@ -131,13 +187,15 @@ public class RemoveQuantityActivity extends AppCompatActivity {
         private String units;
         private Map<String, String> pathMap = new HashMap<>();
         private Map<String, Double> quantityMap = new HashMap<>();
+        private Map<String, Map<String, Double>> expiryMap = new HashMap<>();
 
-        ExistingIngredientSnippet(String name, Double quantity, String units, String path, String location) {
+        ExistingIngredientSnippet(String name, Double quantity, String units, String path, String location, Map<String, Double> expiryMap) {
             this.name = name;
             this.quantity = quantity;
             this.units = units;
             pathMap.put(location, path);
             quantityMap.put(location, quantity);
+            this.expiryMap.put(location, expiryMap);
         }
 
         public String getName() {
@@ -160,10 +218,11 @@ public class RemoveQuantityActivity extends AppCompatActivity {
             return quantityMap;
         }
 
-        public void newLocation(String location, Double quantity, String path) {
+        public void newLocation(String location, Double quantity, String path, Map<String, Double> expiryMap) {
             quantity += quantity;
             quantityMap.put(location, quantity);
             pathMap.put(location, path);
+            this.expiryMap.put(location, expiryMap);
         }
 
         public void setQuantityUsed(Double quantityUsed) {
@@ -172,6 +231,10 @@ public class RemoveQuantityActivity extends AppCompatActivity {
 
         public Double getQuantityUsed() {
             return quantityUsed;
+        }
+
+        public Map<String, Map<String, Double>> getExpiryMap() {
+            return expiryMap;
         }
     }
 }

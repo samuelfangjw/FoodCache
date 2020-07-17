@@ -66,6 +66,8 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
             diffInMillies = 0;
         }
 
+        holder.itemCardView.setCardBackgroundColor(Color.parseColor("#ffc046"));
+
         //Countdown Timer
         CountDownTimer cdt = new CountDownTimer(diffInMillies, 3600000) {
             @Override

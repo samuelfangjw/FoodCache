@@ -1,10 +1,11 @@
 package com.breakfastseta.foodcache.recipe.viewrecipe;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
+import com.tobiasschuerg.prefixsuffix.PrefixSuffixEditText;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -21,7 +23,7 @@ public class RemoveQuantityAdapter extends
         RecyclerView.Adapter<RemoveQuantityAdapter.ViewHolder>{
 
     private ArrayList<String> keys;
-    private Map<String, RemoveQuantityActivity.ExistingIngredientSnippet> map;
+    public Map<String, RemoveQuantityActivity.ExistingIngredientSnippet> map;
     Context context;
 
     public RemoveQuantityAdapter(ArrayList<String> keys, Map<String, RemoveQuantityActivity.ExistingIngredientSnippet> map, Context context) {
@@ -50,7 +52,6 @@ public class RemoveQuantityAdapter extends
         RemoveQuantityActivity.ExistingIngredientSnippet snippet = map.get(key);
         String units = snippet.getUnits();
         Double quantityUsed = snippet.getQuantityUsed();
-        Map<String, String> pathMap = snippet.getPathMap();
         Map<String, Double> quantityMap = snippet.getQuantityMap();
 
         TextView name = holder.name;
@@ -69,11 +70,52 @@ public class RemoveQuantityAdapter extends
 
             TextView locationTV = ingredientLayout.findViewById(R.id.location);
             TextView quantityBeforeTV = ingredientLayout.findViewById(R.id.quantityBefore);
-            EditText quantityAfterTV = ingredientLayout.findViewById(R.id.quantityAfter);
+            TextView quantityAfterTV = ingredientLayout.findViewById(R.id.quantityAfter);
+            PrefixSuffixEditText quantityUsedET = ingredientLayout.findViewById(R.id.quantityUsed);
 
             locationTV.setText(location);
             quantityBeforeTV.setText(Util.formatQuantity(quantity, units));
-            quantityAfterTV.setText(Util.formatQuantity(0, units));
+
+            //Calculate QuantityAfter
+            Double quantityAfter = quantityUsed;
+            if (quantityAfter > quantity) {
+                quantityAfter = quantity;
+            }
+            quantityUsed -= quantityAfter;
+            Double leftInitial = quantity - quantityAfter;
+            quantityAfterTV.setText(Util.formatQuantity(leftInitial, units));
+            quantityUsedET.setText(Util.formatQuantityNumber(quantityAfter, units));
+            quantityUsedET.setSuffix(units);
+            quantityMap.put(location, leftInitial);
+
+            quantityUsedET.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    Double used = 0.0;
+                    String string = s.toString();
+                    if (!string.isEmpty()) {
+                        used = Double.parseDouble(string);
+                        if (used > quantity) {
+                            used = quantity;
+                            quantityUsedET.setText(Util.formatQuantityNumber(used, units));
+                        }
+                    }
+
+                    Double left = quantity - used;
+                    quantityAfterTV.setText(Util.formatQuantity(left, units));
+                    quantityMap.put(location, left);
+                }
+            });
 
             locations.addView(ingredientLayout);
         }

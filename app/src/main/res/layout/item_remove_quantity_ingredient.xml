@@ -8,23 +8,34 @@
         android:id="@+id/location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/location"/>
+        android:text="@string/location"
+        android:layout_weight="1"/>
 
     <TextView
         android:id="@+id/quantityBefore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/quantity"/>
+        android:text="@string/quantity"
+        android:layout_weight="1"/>
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_arrow_right" />
+        android:src="@drawable/ic_arrow_right"
+        android:layout_weight="1"/>
 
-    <EditText
+    <TextView
         android:id="@+id/quantityAfter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/quantity" />
+        android:text="@string/quantity"
+        android:layout_weight="1"/>
+
+    <com.tobiasschuerg.prefixsuffix.PrefixSuffixEditText
+        android:id="@+id/quantityUsed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:text="Quantity Used" />
 
 </LinearLayout>
