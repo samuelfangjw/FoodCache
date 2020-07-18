@@ -4,6 +4,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,7 +45,7 @@ public class AddRecipeActivity extends AppCompatActivity
     // Recipe fields
     Uri image_path = null;
     String imagePathString = null;
-    byte[] picture;
+    Uri resultUri;
     String name;
     String author;
     String cuisine;
@@ -57,6 +59,8 @@ public class AddRecipeActivity extends AppCompatActivity
     AddRecipeFragmentOne fragmentOne;
     AddRecipeFragmentTwo fragmentTwo;
     AddRecipeFragmentThree fragmentThree;
+
+    FrameLayout loading_overlay;
 
     // Other fields
     int current;
@@ -74,6 +78,7 @@ public class AddRecipeActivity extends AppCompatActivity
         fragmentOne = new AddRecipeFragmentOne();
         fragmentTwo = new AddRecipeFragmentTwo();
         fragmentThree = new AddRecipeFragmentThree();
+        loading_overlay = findViewById(R.id.loading_overlay);
 
         showFragmentOne();
 
@@ -81,10 +86,10 @@ public class AddRecipeActivity extends AppCompatActivity
     }
 
     @Override
-    public void nextFragmentOne(String name, String author, byte[] picture, String cuisine, boolean isPublic, String description) {
+    public void nextFragmentOne(String name, String author, Uri resultUri, String cuisine, boolean isPublic, String description) {
         this.name = name;
         this.author = author;
-        this.picture = picture;
+        this.resultUri = resultUri;
         this.cuisine = cuisine;
         this.isPublic = isPublic;
         this.description = description;
@@ -102,7 +107,6 @@ public class AddRecipeActivity extends AppCompatActivity
         this.steps = steps;
         saveRecipe();
     }
-
 
     private void showFragmentOne() {
         current = 1;
@@ -167,8 +171,14 @@ public class AddRecipeActivity extends AppCompatActivity
         ft.commit();
     }
 
+    private void showLoadingOverlay() {
+        current = 4;
+        loading_overlay.setVisibility(View.VISIBLE);
+    }
+
     private void saveRecipe() {
-        if (picture != null) {
+        showLoadingOverlay();
+        if (resultUri != null) {
             uploadImage();
         } else {
             uploadRecipe();
@@ -189,10 +199,9 @@ public class AddRecipeActivity extends AppCompatActivity
             public void onComplete(@NonNull Task<DocumentReference> task) {
                 String path = task.getResult().getPath();
                 recipeRef.document(cuisine).collection("Recipes").add(new RecipeSnippet(name, imagePathString, path));
+                finish();
             }
         });
-
-        finish();
     }
 
     private void uploadImage() {
@@ -204,7 +213,7 @@ public class AddRecipeActivity extends AppCompatActivity
                 .child("recipe_images")
                 .child(imageName);
 
-        reference.putBytes(picture)
+        reference.putFile(resultUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

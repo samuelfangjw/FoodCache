@@ -1,15 +1,9 @@
 package com.breakfastseta.foodcache.recipe.addrecipe;
 
-import android.Manifest;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -27,15 +21,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.breakfastseta.foodcache.R;
-import com.breakfastseta.foodcache.Util;
 import com.google.firebase.auth.FirebaseAuth;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -57,7 +48,7 @@ public class AddRecipeFragmentOne extends Fragment {
     TextView tv_switch;
     EditText editText_description;
 
-    Bitmap bitmap;
+    Uri resultUri;
 
     private FragmentOneListener listener;
 
@@ -140,13 +131,6 @@ public class AddRecipeFragmentOne extends Fragment {
 
         // Pass Variables to activity
         nextButton.setOnClickListener(v -> {
-            byte[] b = null;
-            if (bitmap != null) {
-                bitmap = Util.cropToSquare(bitmap);
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                b = baos.toByteArray();
-            }
             String name = editText_name.getText().toString();
             String author = editText_author.getText().toString();
             String tab = cuisine.getSelectedItem().toString();
@@ -154,7 +138,7 @@ public class AddRecipeFragmentOne extends Fragment {
             if (name.isEmpty() || author.isEmpty() || description.isEmpty()) {
                 Toast.makeText(getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
             } else {
-                listener.nextFragmentOne(name , author, b, tab, switchPublic.isChecked(), description);
+                listener.nextFragmentOne(name , author, resultUri, tab, switchPublic.isChecked(), description);
             }
         });
 
@@ -169,115 +153,30 @@ public class AddRecipeFragmentOne extends Fragment {
     }
 
     public interface FragmentOneListener {
-        void nextFragmentOne(String name, String author, byte[] picture, String cuisine, boolean isPublic, String description);
+        void nextFragmentOne(String name, String author, Uri resultUri, String cuisine, boolean isPublic, String description);
     }
 
     public void editPhoto() {
-        // Show Dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Take a picture or choose from gallery?")
-                .setPositiveButton("Take Photo", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        imageFromCamera();
-                    }
-                })
-                .setNegativeButton("Gallery", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        imageFromGallery();
-                    }
-                })
-                .setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                    }
-                });
-        builder.show();
-    }
-
-    public void imageFromCamera() {
-        //Check if camera permissions granted
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.CAMERA},
-                    CAMERA_REQUEST_CODE);
-        } else {
-            captureImage();
-        }
-    }
-
-    public void imageFromGallery() {
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    STORAGE_REQUEST_CODE);
-        } else {
-            pickFromGallery();
-        }
+        CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON_TOUCH)
+                .setInitialCropWindowPaddingRatio(0)
+                .setFixAspectRatio(true)
+                .setAutoZoomEnabled(true)
+                .setAspectRatio(1, 1)
+                .start(getContext(), this);
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case CAMERA_REQUEST_CODE:
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 &&
-                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    captureImage();
-                } else {
-                    Toast.makeText(getContext(), "Camera Permissions Required", Toast.LENGTH_SHORT).show();
-                }
-                return;
-            case STORAGE_REQUEST_CODE:
-                if (grantResults.length > 0 &&
-                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    pickFromGallery();
-                } else {
-                    Toast.makeText(getContext(), "External Storage Permissions Required", Toast.LENGTH_SHORT).show();
-                }
-                return;
-        }
-    }
-
-    private void captureImage() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivityForResult(intent, TAKE_IMAGE_CODE);
-        }
-    }
-
-    private void pickFromGallery() {
-        //Create an Intent with action as ACTION_PICK
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        // Sets the type as image/*. This ensures only components of type image are selected
-        intent.setType("image/*");
-        //We pass an extra array with the accepted mime types. This will ensure only components with these MIME types as targeted.
-        String[] mimeTypes = {"image/jpeg", "image/png"};
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
-        // Launching the Intent
-        startActivityForResult(intent, GALLERY_REQUEST_CODE);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == TAKE_IMAGE_CODE) {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
-                bitmap = (Bitmap) data.getExtras().get("data");
-                recipeImage.setImageBitmap(bitmap);
+                resultUri = result.getUri();
+                recipeImage.setImageURI(resultUri);
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
             }
-        } else if (requestCode == GALLERY_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                Uri selectedImage = data.getData();
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
-                    recipeImage.setImageBitmap(bitmap);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else {
-            Toast.makeText(getContext(), "Error Please Try Again", Toast.LENGTH_SHORT).show();
         }
     }
 }

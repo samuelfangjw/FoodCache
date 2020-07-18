@@ -6,8 +6,10 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -31,7 +33,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -43,7 +47,6 @@ import java.util.Map;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
-//TODO if shopping list/foodcache is empty should show a message
 public class ShoppingListActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -53,6 +56,7 @@ public class ShoppingListActivity extends AppCompatActivity {
 
     private static final String TAG = "ShoppingListActivity";
     private Snackbar snackbar;
+    private TextView message;
 
     private ShoppingListAdapter adapter;
 
@@ -74,14 +78,24 @@ public class ShoppingListActivity extends AppCompatActivity {
             }
         });
 
-
-
         setUpRecyclerView();
         coordinatorLayout = findViewById(R.id.activityShoppingList);
+        message = findViewById(R.id.message);
     }
 
     private void setUpRecyclerView() {
         Query query = notebookRef.orderBy("noItems", Query.Direction.DESCENDING);
+
+        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+                if (snapshots.isEmpty()) {
+                    message.setVisibility(View.VISIBLE);
+                } else {
+                    message.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
 
         FirestoreRecyclerOptions<ShoppingListItem> options = new FirestoreRecyclerOptions.Builder<ShoppingListItem>()
                 .setQuery(query, ShoppingListItem.class)

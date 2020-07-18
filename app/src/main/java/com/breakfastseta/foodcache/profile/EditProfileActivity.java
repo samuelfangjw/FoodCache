@@ -124,9 +124,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void setImage() {
         profilePicture.setImageURI(resultUri);
-        Log.d(TAG, "setImage: " + resultUri);
     }
-
 
     public void save(View view) {
         //TODO DATA VALIDATION

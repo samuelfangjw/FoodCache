@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,8 +25,11 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -37,14 +41,15 @@ public class CardFragment extends Fragment {
     private Integer counter;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    String uid = App.getFamilyUID();
+    private String uid = App.getFamilyUID();
     private CollectionReference inventoryRef = db.collection("Users").document(uid).collection("Inventory");
 
     View view;
-    RecyclerView recyclerView;
+    private RecyclerView recyclerView;
     private ItemAdapter adapter;
 
     private LinearLayout coordinatorLayout;
+    private TextView message;
 
     private Snackbar snackbar = null;
 
@@ -79,13 +84,10 @@ public class CardFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_card, container, false);
-
         recyclerView = view.findViewById(R.id.cardRecyclerView);
-
         setUpRecyclerView();
-
         coordinatorLayout = view.findViewById(R.id.activityFoodCache);
-
+        message = view.findViewById(R.id.message);
         return view;
     }
 
@@ -105,6 +107,17 @@ public class CardFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
+
+        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+                if (snapshots.isEmpty()) {
+                    message.setVisibility(View.VISIBLE);
+                } else {
+                    message.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
