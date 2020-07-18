@@ -1,22 +1,19 @@
 package com.breakfastseta.foodcache.profile;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.MainActivity;
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
@@ -24,26 +21,18 @@ import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
-
-import java.io.ByteArrayOutputStream;
-import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private static final String TAG = "ProfileActivity";
-    private static final int RESULT_CODE = 10;
+    Profile profile = App.getProfile();
 
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    
+    LinearLayout linearLayout;
     ImageView profilePicture;
     TextView nameTextView;
     TextView emailTextView;
-
-    byte[] picture = null;
-    String name = null;
+    TextView friendsCount;
+    TextView recipesCount;
+    TextView usernameTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,62 +42,82 @@ public class ProfileActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Util.createToolbar(this, toolbar);
+        setTitle("Profile");
         
         profilePicture = findViewById(R.id.profile_picture);
         nameTextView = findViewById(R.id.name);
         emailTextView = findViewById(R.id.email);
-        Button editButton =findViewById(R.id.edit_profile);
-
-        List<? extends UserInfo> providerdata = user.getProviderData();
-        Log.d(TAG, providerdata.toString());
-        if (providerdata.size() > 1) {
-            UserInfo info = providerdata.get(1);
-            String id = info.getProviderId();
-            Log.d(TAG, "onCreate: " + id);
-            if (id.equals("password") ) {
-                editButton.setVisibility(View.VISIBLE);
-            }
-        }
-
-        if (user != null) {
-            updateUserProfile();
-        }
+        friendsCount = findViewById(R.id.friends);
+        recipesCount = findViewById(R.id.recipes);
+        usernameTextView = findViewById(R.id.username);
+        linearLayout = findViewById(R.id.linear_layout);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        if (picture != null) {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(picture, 0, picture.length);
-            profilePicture.setImageBitmap(bitmap);
+        updateUserProfile();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.profile_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        //TODO create upgrade account feature for anonymous accounts
+        if (App.getAuthProvider() == App.ANONYMOUS) {
+            menu.findItem(R.id.action_edit).setVisible(false);
         }
-        if (name != null) {
-            nameTextView.setText(name);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_edit:
+                editProfile();
+                return true;
+            case R.id.action_delete:
+                delete();
+                return true;
+            case R.id.action_log_out:
+                signOut();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
     private void updateUserProfile() {
-        Uri profilePhoto = user.getPhotoUrl();
-        String name = user.getDisplayName();
-        String email = user.getEmail();
+        Uri profilePhoto = profile.getUri();
+        String name = profile.getName();
+        String email = profile.getEmail();
+        String username = profile.getUsername();
 
         if (profilePhoto != null) {
             Glide.with(this)
                     .load(profilePhoto)
+                    .placeholder(R.drawable.ic_profile_pic)
+                    .fallback(R.drawable.ic_profile_pic)
                     .into(profilePicture);
         }
 
-        if (name != null) {
-            nameTextView.setText(name);
+        nameTextView.setText(name);
+        if (username != null) {
+            usernameTextView.setText("Username: " + username);
+        } else {
+            linearLayout.removeView(usernameTextView);
         }
-
-        if (email != null) {
-            emailTextView.setText(email);
-        }
+        emailTextView.setText("Email: "+ email);
+        friendsCount.setText("" + profile.getFriendsCount());
+        recipesCount.setText("" + profile.getRecipeCount());
     }
 
-    public void signOut(View view) {
+    public void signOut() {
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -118,7 +127,7 @@ public class ProfileActivity extends AppCompatActivity {
                 });
     }
 
-    public void delete(View view) {
+    public void delete() {
         AuthUI.getInstance()
                 .delete(this)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -129,27 +138,9 @@ public class ProfileActivity extends AppCompatActivity {
                 });
     }
 
-    public void editProfile(View view) {
-        Bitmap bitmap = ((BitmapDrawable) profilePicture.getDrawable()).getBitmap();
-        bitmap = Util.cropToSquare(bitmap);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] image = baos.toByteArray();
-        String name = nameTextView.getText().toString();
-
+    public void editProfile() {
         Intent intent = new Intent(this, EditProfileActivity.class);
-        intent.putExtra("picture", image);
-        intent.putExtra("name", name);
-        startActivityForResult(intent, RESULT_CODE);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            picture = data.getByteArrayExtra("picture");
-            name = data.getStringExtra("name");
-        }
+        startActivity(intent);
     }
 
 }

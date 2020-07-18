@@ -27,6 +27,8 @@
         <activity android:name=".recipe.addrecipe.AddRecipeActivity" />
         <activity android:name=".recipe.viewrecipe.ViewRecipeActivity" />
         <activity android:name=".recipe.RecipeActivity" />
+        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat"/>
         <activity
             android:name=".profile.EditProfileActivity"
             android:parentActivityName=".profile.ProfileActivity" />

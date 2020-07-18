@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,40 +7,78 @@
     tools:context=".profile.EditProfileActivity"
     android:orientation="vertical">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profile_picture"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
-        android:contentDescription="@string/profile_picture"
-        android:src="@drawable/ic_profile_pic"
-        app:civ_border_width="2dp"
-        app:civ_border_color="#FF000000"
-        android:onClick="changeProfileImage"/>
-
-    <EditText
-        android:id="@+id/name_edit"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textNoSuggestions"
-        android:hint="@string/name" />
+        android:background="@color/primaryColor" />
+
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_below="@id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primaryColor"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_picture"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:layout_marginTop="36dp"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="@string/profile_picture"
+            android:src="@drawable/ic_profile_pic"
+            app:civ_circle_background_color="@color/md_white_1000" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit Picture"
+            android:textColor="@color/md_black_1000"
+            app:strokeColor="@color/md_black_1000"
+            app:strokeWidth="2dp"
+            android:layout_marginBottom="16dp"
+            android:onClick="editPicture"
+            />
+
+    </LinearLayout>
+
+    <com.tobiasschuerg.prefixsuffix.PrefixSuffixEditText
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_below="@id/header"
+        android:layout_marginTop="16dp"
+        android:inputType="text"
+        app:prefix="Name: "
+        android:textColor="@color/md_black_1000"
+        android:textSize="20sp" />
+
+    <com.tobiasschuerg.prefixsuffix.PrefixSuffixEditText
+        android:id="@+id/username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/name"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:inputType="text"
+        app:prefix="Username: "
+        android:textColor="@color/md_black_1000"
+        android:textSize="20sp" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="saveProfile"
-        android:text="Save" />
+        android:layout_alignParentBottom="true"
+        android:layout_margin="8dp"
+        android:onClick="save"
+        android:text="Save Profile"
+        android:textColor="@color/md_black_1000"/>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="changeProfileImage"
-        android:text="Take Picture" />
+    <include layout="@layout/loading_overlay" />
+</RelativeLayout>
 
-    <Button
-        android:id="@+id/delete_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="changeProfileImageFromGallery"
-        android:text="From Gallery" />
-
-</LinearLayout>

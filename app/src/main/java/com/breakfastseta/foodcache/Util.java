@@ -13,14 +13,13 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.breakfastseta.foodcache.discover.DiscoverRecipeActivity;
 import com.breakfastseta.foodcache.inventory.FoodcacheActivity;
+import com.breakfastseta.foodcache.profile.Profile;
 import com.breakfastseta.foodcache.profile.ProfileActivity;
 import com.breakfastseta.foodcache.recipe.RecipeActivity;
 import com.breakfastseta.foodcache.recommend.RecommendActivity;
 import com.breakfastseta.foodcache.shoppinglist.ShoppingListActivity;
 import com.breakfastseta.foodcache.social.SocialMainActivity;
 import com.bumptech.glide.Glide;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -85,10 +84,17 @@ public class Util {
         PrimaryDrawerItem itemSocial = new PrimaryDrawerItem().withIdentifier(10).withName("Social");
 
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        Uri profilePhoto = user.getPhotoUrl();
-        String name = user.getDisplayName();
-        String email = user.getEmail();
+        Profile profile = App.getProfile();
+        Uri uri = profile.getUri();
+        String name = profile.getName();
+        String email = profile.getEmail();
+
+        ProfileDrawerItem profileItem;
+        if (uri != null) {
+            profileItem = new ProfileDrawerItem().withName(name).withEmail(email).withIcon(uri);
+        } else {
+            profileItem = new ProfileDrawerItem().withName(name).withEmail(email);
+        }
 
         DrawerImageLoader.init(new AbstractDrawerImageLoader() {
             @Override
@@ -104,7 +110,7 @@ public class Util {
 
         AccountHeader header = new AccountHeaderBuilder()
                 .withActivity((Activity) context)
-                .addProfiles(new ProfileDrawerItem().withName(name).withEmail(email).withIcon(profilePhoto))
+                .addProfiles(profileItem)
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
                     public boolean onProfileChanged(View view, IProfile profile, boolean current) {
@@ -171,6 +177,7 @@ public class Util {
                 .build();
         return result;
     }
+
     // TODO Data validation for quantity (if int should not be able to type in double)
     // Helper class for formatting quantity based on units
     public static String formatQuantity(double quantity, String unit) {
@@ -212,15 +219,15 @@ public class Util {
     }
 
     // Crop square image, adapted from https://stackoverflow.com/questions/26263660/crop-image-to-square-android
-    public static Bitmap cropToSquare(Bitmap bitmap){
-        int width  = bitmap.getWidth();
+    public static Bitmap cropToSquare(Bitmap bitmap) {
+        int width = bitmap.getWidth();
         int height = bitmap.getHeight();
         int newWidth = (height > width) ? width : height;
-        int newHeight = (height > width)? height - ( height - width) : height;
+        int newHeight = (height > width) ? height - (height - width) : height;
         int cropW = (width - height) / 2;
-        cropW = (cropW < 0)? 0: cropW;
+        cropW = (cropW < 0) ? 0 : cropW;
         int cropH = (height - width) / 2;
-        cropH = (cropH < 0)? 0: cropH;
+        cropH = (cropH < 0) ? 0 : cropH;
         Bitmap cropImg = Bitmap.createBitmap(bitmap, cropW, cropH, newWidth, newHeight);
 
         return cropImg;

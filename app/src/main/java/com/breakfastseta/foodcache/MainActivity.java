@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Starts the main activity after user has been authenticated
     private void startMainActivity() {
-        App.setOnInitialisedListener(new App.OnInitialisedListener() {
+        App.setOnAppCompleteListener(new App.OnAppCompleteListener() {
             @Override
             public void onComplete() {
                 Intent intent = new Intent(MainActivity.this, FoodcacheActivity.class);
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
-        App.afterAuthenticated();
+        App.afterAuthenticated(this);
     }
 
     // Open sign in page

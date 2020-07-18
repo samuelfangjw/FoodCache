@@ -1,200 +1,151 @@
 package com.breakfastseta.foodcache.profile;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
+import androidx.appcompat.widget.Toolbar;
 
+import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.R;
-import com.breakfastseta.foodcache.Util;
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
+import com.tobiasschuerg.prefixsuffix.PrefixSuffixEditText;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EditProfileActivity extends AppCompatActivity {
 
-    private static final int TAKE_IMAGE_CODE = 10001;
-    private static final int GALLERY_REQUEST_CODE = 10002;
     private static final String TAG = "ProfileActivity";
-    private static final int CAMERA_REQUEST_CODE = 100;
-    private static final int STORAGE_REQUEST_CODE = 200;
 
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    Profile profile = App.getProfile();
 
     ImageView profilePicture;
-    EditText nameEditText;
+    PrefixSuffixEditText nameEditText;
+    PrefixSuffixEditText usernameEditText;
+    FrameLayout loadingScreen;
+    MaterialButton button;
 
-    Bitmap bitmap = null;
+    Uri resultUri;
+    private boolean overrideBack = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_black);
         setTitle("Edit Profile");
 
         profilePicture = findViewById(R.id.profile_picture);
-        nameEditText = findViewById(R.id.name_edit);
+        nameEditText = findViewById(R.id.name);
+        usernameEditText = findViewById(R.id.username);
+        loadingScreen = findViewById(R.id.loading_overlay);
+        button = findViewById(R.id.button);
 
-        if (user != null) {
-            Bundle extras = getIntent().getExtras();
-            byte[] b = extras.getByteArray("picture");
-            Bitmap bmp = BitmapFactory.decodeByteArray(b, 0, b.length);
-            String name = extras.getString("name");
-            nameEditText.setText(name);
-            profilePicture.setImageBitmap(bmp);
+        setViews();
+    }
+
+    private void setViews() {
+        Uri profilePhoto = profile.getUri();
+        String name = profile.getName();
+        String username = profile.getUsername();
+
+        if (profilePhoto != null) {
+            Glide.with(this)
+                    .load(profilePhoto)
+                    .placeholder(R.drawable.ic_profile_pic)
+                    .fallback(R.drawable.ic_profile_pic)
+                    .into(profilePicture);
         }
+
+        nameEditText.setText(name);
+        if (username != null) {
+            usernameEditText.setText(username);
+        }
+    }
+
+    public void showLoadingScreen() {
+        overrideBack = true;
+        loadingScreen.setVisibility(View.VISIBLE);
+    }
+
+    public void hideLoadingScreen() {
+        overrideBack = false;
+        loadingScreen.setVisibility(View.INVISIBLE);
+    }
+
+    public void editPicture(View view) {
+        // start picker to get image for cropping and then use the image in cropping activity
+        CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON_TOUCH)
+                .setInitialCropWindowPaddingRatio(0)
+                .setCropShape(CropImageView.CropShape.OVAL)
+                .setFixAspectRatio(true)
+                .setAutoZoomEnabled(true)
+                .setAspectRatio(1, 1)
+                .start(this);
     }
 
     @Override
-    protected void onDestroy() {
-        profilePicture = null;
-        nameEditText = null;
-        super.onDestroy();
-    }
-
-    public void changeProfileImage(View view) {
-        //Check if camera permissions granted
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.CAMERA},
-                    CAMERA_REQUEST_CODE);
-        } else {
-            captureImage();
-        }
-    }
-
-    public void changeProfileImageFromGallery(View view) {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    STORAGE_REQUEST_CODE);
-        } else {
-            pickFromGallery();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case CAMERA_REQUEST_CODE:
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 &&
-                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    captureImage();
-                }  else {
-                    Toast.makeText(this, "Camera Permissions Required", Toast.LENGTH_SHORT).show();
-                }
-                return;
-            case STORAGE_REQUEST_CODE:
-                if (grantResults.length > 0 &&
-                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    pickFromGallery();
-                }  else {
-                    Toast.makeText(this, "External Storage Permissions Required", Toast.LENGTH_SHORT).show();
-                }
-                return;
-        }
-    }
-
-    private void captureImage() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(intent, TAKE_IMAGE_CODE);
-        }
-    }
-
-    private void pickFromGallery() {
-        //Create an Intent with action as ACTION_PICK
-        Intent intent=new Intent(Intent.ACTION_PICK);
-        // Sets the type as image/*. This ensures only components of type image are selected
-        intent.setType("image/*");
-        //We pass an extra array with the accepted mime types. This will ensure only components with these MIME types as targeted.
-        String[] mimeTypes = {"image/jpeg", "image/png"};
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
-        // Launching the Intent
-        startActivityForResult(intent, GALLERY_REQUEST_CODE);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == TAKE_IMAGE_CODE) {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
-                bitmap = (Bitmap) data.getExtras().get("data");
-                bitmap = Util.cropToSquare(bitmap);
-                profilePicture.setImageBitmap(bitmap);
+                resultUri = result.getUri();
+                setImage();
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
             }
-        } else if (requestCode == GALLERY_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                Uri selectedImage = data.getData();
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
-                    bitmap = Util.cropToSquare(bitmap);
-                    profilePicture.setImageBitmap(bitmap);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+        }
+    }
+
+    private void setImage() {
+        profilePicture.setImageURI(resultUri);
+        Log.d(TAG, "setImage: " + resultUri);
+    }
+
+
+    public void save(View view) {
+        //TODO DATA VALIDATION
+        button.clearFocus();
+        showLoadingScreen();
+        if (resultUri != null) {
+            uploadPicture();
         } else {
-            Toast.makeText(this, "Error Please Try Again", Toast.LENGTH_SHORT).show();
+            saveProfile();
         }
     }
 
-    public void saveProfile(View view) {
-        String name = nameEditText.getText().toString();
-        Intent intent = new Intent();
-        intent.putExtra("name", name);
-
-        if (bitmap != null) {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            uploadPicture(baos);
-
-            byte[] b = baos.toByteArray();
-            intent.putExtra("picture", b);
-        }
-
-        UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
-                .setDisplayName(name)
-                .build();
-
-        user.updateProfile(request);
-
-        setResult(RESULT_OK, intent);
-        finish();
-    }
-
-    private void uploadPicture(ByteArrayOutputStream baos) {
-        String uid = user.getUid();
+    private void uploadPicture() {
+        String uid = App.getUID();
         final StorageReference reference = FirebaseStorage.getInstance().getReference()
                 .child("profile_images")
                 .child(uid + "jpeg");
 
-        reference.putBytes(baos.toByteArray())
+        reference.putFile(resultUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -209,36 +160,58 @@ public class EditProfileActivity extends AppCompatActivity {
                 });
     }
 
-    private void getDownloadUrl(StorageReference reference){
+    private void getDownloadUrl(StorageReference reference) {
         reference.getDownloadUrl()
                 .addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        Log.d(TAG, "onSuccess: " + uri);
-                        setUserProfileUrl(uri);
+                        resultUri = uri;
+                        saveProfile();
                     }
                 });
     }
 
-    private void setUserProfileUrl(Uri uri) {
+    private void saveProfile() {
+        String name = nameEditText.getText().toString();
+        String username = usernameEditText.getText().toString();
 
-        UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
-                .setPhotoUri(uri)
-                .build();
+        profile.setName(name);
+        profile.setUsername(username);
+        profile.setPhotoURL(resultUri.toString());
 
-        user.updateProfile(request)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(EditProfileActivity.this, "Profile Updated Successfully", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(EditProfileActivity.this, "Error Updating Profile Photo", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        uploadProfile();
+    }
 
+    private void uploadProfile() {
+        DocumentReference profileRef = App.getProfileRef();
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", profile.getName());
+        map.put("photoURL", profile.getPhotoURL());
+        map.put("username", profile.getUsername());
+        profileRef.update(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                hideLoadingScreen();
+                finish();
+            }
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                super.onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!overrideBack) {
+            super.onBackPressed();
+        }
     }
 }
