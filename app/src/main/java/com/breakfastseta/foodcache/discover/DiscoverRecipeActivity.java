@@ -25,8 +25,11 @@ import com.breakfastseta.foodcache.recipe.viewrecipe.ViewRecipeActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -98,7 +101,6 @@ public class DiscoverRecipeActivity extends AppCompatActivity {
         });
 
         getData();
-
     }
 
     private void setSpinnerListener() {
@@ -160,6 +162,7 @@ public class DiscoverRecipeActivity extends AppCompatActivity {
     }
 
     private void createRecyclerView(QuerySnapshot snapshots) {
+
         for (DocumentSnapshot document : snapshots) {
             String imagePath = document.getString("photo");
             String name = document.getString("name");
@@ -187,6 +190,45 @@ public class DiscoverRecipeActivity extends AppCompatActivity {
                 Intent intent = new Intent(DiscoverRecipeActivity.this, ViewRecipeActivity.class);
                 intent.putExtra("path", path);
                 startActivity(intent);
+            }
+        });
+
+        setSnapshotListener();
+    }
+
+    private void setSnapshotListener() {
+        recipeRef.whereEqualTo("isPublic", true).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.w(TAG, "listen:error", e);
+                    return;
+                }
+
+                for (DocumentChange dc : snapshots.getDocumentChanges()) {
+                    switch (dc.getType()) {
+//                        case ADDED:
+//                            Log.d(TAG, "New city: " + dc.getDocument().getData());
+//                            break;
+//                        case MODIFIED:
+//                            Log.d(TAG, "Modified city: " + dc.getDocument().getData());
+//                            break;
+                        case REMOVED:
+                            String path = dc.getDocument().getReference().getPath();
+                            DiscoverSnippet discover = null;
+                            for (DiscoverSnippet ds : arr) {
+                                if (ds.getPath().equals(path)) {
+                                    discover = ds;
+                                    break;
+                                }
+                            }
+                            arr.remove(discover);
+                            filteredArr.remove(discover);
+                            searchArr.remove(discover);
+                            adapter.notifyDataSetChanged();
+                            break;
+                    }
+                }
             }
         });
     }

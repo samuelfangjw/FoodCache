@@ -1,9 +1,12 @@
 package com.breakfastseta.foodcache.recipe;
 
+import com.breakfastseta.foodcache.App;
+
 public class RecipeSnippet {
     private String name;
     private String image;
     private String path;
+    private String uid;
 
     public RecipeSnippet() {
 
@@ -13,6 +16,7 @@ public class RecipeSnippet {
         this.name = name;
         this.image = image;
         this.path = path;
+        this.uid = App.getUID();
     }
 
     public String getName() {
@@ -25,5 +29,9 @@ public class RecipeSnippet {
 
     public String getPath() {
         return path;
+    }
+
+    public String getUid() {
+        return uid;
     }
 }

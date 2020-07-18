@@ -7,10 +7,12 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -25,6 +27,7 @@ import com.breakfastseta.foodcache.Util;
 import com.breakfastseta.foodcache.recipe.RecipeSnippet;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -35,6 +38,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -55,12 +59,13 @@ public class ViewRecipeActivity extends AppCompatActivity {
     private TextView tv_cuisine;
     private TableLayout tableLayout;
 
-
     Toolbar toolbar;
     AppBarLayout appbarLayout;
     CollapsingToolbarLayout collapsingToolbarLayout;
 
     Drawable save_icon;
+    MenuItem delete_menu_item;
+    Drawable delete_icon;
     DocumentSnapshot documentSnapshot;
     String path;
     String imagePath;
@@ -68,6 +73,9 @@ public class ViewRecipeActivity extends AppCompatActivity {
     String cuisine;
     ArrayList<String> steps;
     ArrayList<Map<String, Object>> ingredients;
+    String owner;
+    ArrayList<String> viewers;
+    boolean isPublic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +101,6 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         collapsingToolbarLayout.setExpandedTitleColor(Color.WHITE);
         appbarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 // Collapsed
@@ -103,6 +110,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
                     collapsingToolbarLayout.setCollapsedTitleTextColor(Color.BLACK);
                     if (save_icon != null) {
                         save_icon.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
+                        delete_icon.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
                     }
                 } else { // Expanded
                     toolbar.setBackgroundColor(Color.TRANSPARENT);
@@ -110,6 +118,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
                     collapsingToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);
                     if (save_icon != null) {
                         save_icon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+                        delete_icon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
                     }
                 }
             }
@@ -139,7 +148,9 @@ public class ViewRecipeActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.view_recipe_menu, menu);
+        delete_menu_item = menu.findItem(R.id.action_delete);
         save_icon = menu.findItem(R.id.action_save).getIcon();
+        delete_icon = delete_menu_item.getIcon();
         return true;
     }
 
@@ -152,6 +163,11 @@ public class ViewRecipeActivity extends AppCompatActivity {
         steps = (ArrayList<String>) documentSnapshot.get("steps");
         String description = documentSnapshot.getString("description");
 
+        owner = documentSnapshot.getString("owner");
+        viewers = (ArrayList<String>) documentSnapshot.get("viewers");
+        isPublic = documentSnapshot.getBoolean("isPublic");
+        toggleDeleteIcon();
+
         if (imagePath != null) {
             Uri image_path = Uri.parse(imagePath);
             Glide.with(this)
@@ -162,7 +178,6 @@ public class ViewRecipeActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(name);
         String cuisineString = "Cuisine: " + cuisine;
         String authorString = "Author: " + author;
-        Log.d(TAG, "setTextView: " + cuisineString);
         tv_author.setText(authorString);
         tv_cuisine.setText(cuisineString);
         tv_description.setText(description);
@@ -200,7 +215,14 @@ public class ViewRecipeActivity extends AppCompatActivity {
         }
 
         tv_steps.setText(steps_text.toString());
+    }
 
+    private void toggleDeleteIcon() {
+        if (!owner.equals(uid) && !viewers.contains(uid)) {
+            delete_menu_item.setVisible(false);
+        } else {
+            delete_menu_item.setVisible(true);
+        }
     }
 
     @Override
@@ -212,9 +234,89 @@ public class ViewRecipeActivity extends AppCompatActivity {
             case R.id.action_save:
                 save_recipe();
                 return true;
+            case R.id.action_delete:
+                delete_recipe();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void delete_recipe() {
+            PopupMenu menu = new PopupMenu(this, toolbar);
+            menu.setGravity(Gravity.RIGHT);
+
+            if (owner.equals(uid) && (isPublic || viewers.size() > 1)) {
+                menu.getMenu().add("Delete for Everybody");
+            }
+            if (viewers.contains(uid)) {
+                menu.getMenu().add("Delete from my RecipeCache");
+            }
+
+            menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getTitle().toString()) {
+                        case "Delete for Everybody" :
+                            deleteEverybody();
+                            return true;
+                        case "Delete from my RecipeCache" :
+                            if (!isPublic) {
+                                deleteSinglePrivate();
+                            } else {
+                                deleteSingle();
+                            }
+                            return true;
+                    }
+                    return false;
+                }
+            });
+
+            menu.show();
+    }
+
+    private void deleteEverybody() {
+        db.document(path).delete();
+        db.collectionGroup("Recipes").whereEqualTo("path", path).get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot snapshots) {
+                        for (DocumentSnapshot ds : snapshots) {
+                            ds.getReference().delete();
+                        }
+                        finish();
+                    }
+                });
+
+    }
+
+    private void deleteSinglePrivate() {
+        db.document(path).delete();
+        db.collectionGroup("Recipes").whereEqualTo("path", path).whereEqualTo("uid", uid).limit(1).get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot snapshots) {
+                        for (DocumentSnapshot ds : snapshots) {
+                            ds.getReference().delete();
+                        }
+                        finish();
+                    }
+                });
+    }
+
+    private void deleteSingle() {
+        viewers.remove(uid);
+        db.document(path).update("viewers", viewers);
+        db.collectionGroup("Recipes").whereEqualTo("path", path).whereEqualTo("uid", uid).limit(1).get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot snapshots) {
+                        for (DocumentSnapshot ds : snapshots) {
+                            ds.getReference().delete();
+                        }
+                        finish();
+                    }
+                });
     }
 
     private void save_recipe() {
