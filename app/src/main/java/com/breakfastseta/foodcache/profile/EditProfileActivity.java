@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +23,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -118,6 +122,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 setImage();
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
+                error.printStackTrace();
             }
         }
     }
@@ -127,9 +132,52 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     public void save(View view) {
-        //TODO DATA VALIDATION
         button.clearFocus();
         showLoadingScreen();
+
+        validateData();
+    }
+
+    private void validateData() {
+        String name = nameEditText.getText().toString().trim();
+        String username = usernameEditText.getText().toString().trim();
+        if (name.isEmpty()) {
+            Toast.makeText(this, "Please enter a valid Name", Toast.LENGTH_SHORT).show();
+            hideLoadingScreen();
+            return;
+        }
+
+        if (!username.isEmpty()) {
+            FirebaseFirestore
+                    .getInstance()
+                    .collection("Profiles")
+                    .whereEqualTo("username", username.toLowerCase())
+                    .limit(1)
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot snapshots) {
+                            if (snapshots.isEmpty()) {
+                                checkURI();
+                            } else {
+                                for (QueryDocumentSnapshot d : snapshots) {
+                                    String uid = d.getString("uid");
+                                    if (!uid.equals(App.getUID())) {
+                                        Toast.makeText(EditProfileActivity.this, "Username already taken!", Toast.LENGTH_SHORT).show();
+                                        hideLoadingScreen();
+                                    } else {
+                                        checkURI();
+                                    }
+                                }
+                            }
+                        }
+                    });
+        } else {
+            checkURI();
+        }
+    }
+
+    private void checkURI() {
         if (resultUri != null) {
             uploadPicture();
         } else {
@@ -170,12 +218,18 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void saveProfile() {
-        String name = nameEditText.getText().toString();
-        String username = usernameEditText.getText().toString();
+        String name = nameEditText.getText().toString().trim();
+        String username = usernameEditText.getText().toString().trim().toLowerCase();
+
+        if (!username.isEmpty()) {
+            profile.setUsername(username);
+        }
 
         profile.setName(name);
-        profile.setUsername(username);
-        profile.setPhotoURL(resultUri.toString());
+
+        if (resultUri != null) {
+            profile.setPhotoURL(resultUri.toString());
+        }
 
         uploadProfile();
     }
