@@ -17,7 +17,7 @@ import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.MainActivity;
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
-import com.breakfastseta.foodcache.settings.FamilyActivity;
+import com.breakfastseta.foodcache.family.FamilyActivity;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;

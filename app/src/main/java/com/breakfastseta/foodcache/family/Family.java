@@ -1,4 +1,4 @@
-package com.breakfastseta.foodcache.settings;
+package com.breakfastseta.foodcache.family;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -18,7 +18,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".settings.FamilyActivity"></activity>
+        <activity android:name=".family.FamilyActivity"></activity>
         <activity android:name=".social.SocialAddPostActivity" />
         <activity android:name=".social.SocialMainActivity" />
         <activity android:name=".recommend.RecommendActivity" />
