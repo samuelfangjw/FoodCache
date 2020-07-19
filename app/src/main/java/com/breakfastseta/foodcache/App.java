@@ -67,7 +67,6 @@ public class App extends Application {
                         profile.setName(user.getDisplayName());
                         profile.setEmail(user.getEmail());
                         profile.setUID(UID);
-                        profile.setFamilyUID(UID);
                         profileRef.set(profile).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
@@ -81,6 +80,7 @@ public class App extends Application {
                         profile.setUID(UID);
                         profile.setFamilyUID(documentSnapshot.getString("familyUID"));
                         profile.setPhotoURL(documentSnapshot.getString("photoURL"));
+                        profile.setUseFamilySharing(documentSnapshot.getBoolean("useFamilySharing"));
                         ArrayList<String> friends = (ArrayList<String>) documentSnapshot.get("friends");
                         if (friends != null) {
                             profile.setFriends(friends);
@@ -154,7 +154,15 @@ public class App extends Application {
     }
 
     public static String getFamilyUID() {
-        return profile.getFamilyUID();
+        if (profile.getFamilyUID() == null) {
+            return profile.getUID();
+        } else {
+            if (profile.getUseFamilySharing()) {
+                return profile.getFamilyUID();
+            } else {
+                return profile.getUID();
+            }
+        }
     }
 
     public static String getUID() {

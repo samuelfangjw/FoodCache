@@ -17,6 +17,7 @@ import com.breakfastseta.foodcache.profile.Profile;
 import com.breakfastseta.foodcache.profile.ProfileActivity;
 import com.breakfastseta.foodcache.recipe.RecipeActivity;
 import com.breakfastseta.foodcache.recommend.RecommendActivity;
+import com.breakfastseta.foodcache.settings.FamilyActivity;
 import com.breakfastseta.foodcache.shoppinglist.ShoppingListActivity;
 import com.breakfastseta.foodcache.social.SocialMainActivity;
 import com.bumptech.glide.Glide;
@@ -82,6 +83,7 @@ public class Util {
         PrimaryDrawerItem itemDiscover = new PrimaryDrawerItem().withIdentifier(5).withName("Discover Recipes");
         PrimaryDrawerItem itemRecommend = new PrimaryDrawerItem().withIdentifier(6).withName("Find a Recipe");
         PrimaryDrawerItem itemSocial = new PrimaryDrawerItem().withIdentifier(10).withName("Social");
+        PrimaryDrawerItem itemFamily = new PrimaryDrawerItem().withIdentifier(11).withName("Family Sharing");
 
 
         Profile profile = App.getProfile();
@@ -136,7 +138,9 @@ public class Util {
                         itemDiscover,
                         itemRecommend,
                         new DividerDrawerItem(),
-                        itemSocial
+                        itemSocial,
+                        new DividerDrawerItem(),
+                        itemFamily
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -169,6 +173,10 @@ public class Util {
                             case 9:
                                 context.startActivity(new Intent(context, SocialMainActivity.class));
                                 selectedItem = 10;
+                                return true;
+                            case 11:
+                                context.startActivity(new Intent(context, FamilyActivity.class));
+                                selectedItem = 11;
                                 return true;
                         }
                         return false;

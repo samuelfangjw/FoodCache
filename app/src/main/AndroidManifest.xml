@@ -18,17 +18,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".social.SocialAddPostActivity"></activity>
+        <activity android:name=".settings.FamilyActivity"></activity>
+        <activity android:name=".social.SocialAddPostActivity" />
         <activity android:name=".social.SocialMainActivity" />
         <activity android:name=".recommend.RecommendActivity" />
-        <activity android:name=".recipe.viewrecipe.RemoveQuantityActivity"></activity>
+        <activity android:name=".recipe.viewrecipe.RemoveQuantityActivity" />
         <activity android:name=".recipe.viewrecipe.CookRecipeActivity" />
         <activity android:name=".discover.DiscoverRecipeActivity" />
         <activity android:name=".recipe.addrecipe.AddRecipeActivity" />
         <activity android:name=".recipe.viewrecipe.ViewRecipeActivity" />
         <activity android:name=".recipe.RecipeActivity" />
-        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat"/>
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
         <activity
             android:name=".profile.EditProfileActivity"
             android:parentActivityName=".profile.ProfileActivity" />

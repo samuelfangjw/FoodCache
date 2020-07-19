@@ -1,5 +1,6 @@
 package com.breakfastseta.foodcache.social;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,7 @@ public class SocialPostAdapter extends FirestoreRecyclerAdapter<SocialPost, Recy
             ((SocialPostHolder) holder).textViewDate.setText(model.getDate());
 
             if (model.getProfileImage() != null) {
-                Picasso.get().load(model.getProfileImage()).into(((SocialPostHolder) holder).imageViewReqProfilePic);
+                Picasso.get().load(Uri.parse(model.getProfileImage())).into(((SocialPostHolder) holder).imageViewReqProfilePic);
             }
         } else {
             ((SocialPostHolder2) holder).textViewBlogTitle.setText(model.getName());
@@ -47,7 +48,7 @@ public class SocialPostAdapter extends FirestoreRecyclerAdapter<SocialPost, Recy
             Picasso.get().load(model.getDownloadURL()).into(((SocialPostHolder2) holder).imageViewBlogPostImage);
 
             if (model.getProfileImage() != null) {
-                Picasso.get().load(model.getProfileImage()).into(((SocialPostHolder2) holder).imageViewBlogProfilePic);
+                Picasso.get().load(Uri.parse(model.getProfileImage())).into(((SocialPostHolder2) holder).imageViewBlogProfilePic);
             }
         }
     }

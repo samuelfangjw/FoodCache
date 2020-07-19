@@ -1,22 +1,20 @@
 package com.breakfastseta.foodcache.social;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-
 import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -28,9 +26,7 @@ public class SocialMainActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "SocialActivity";
 
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-    String uid = App.getFamilyUID();
+    String uid = App.getUID();
 
     private CollectionReference notebookRef = db.collection("SocialUsers").document(uid).collection("UserPosts");
     private CoordinatorLayout coordinatorLayout;
@@ -68,7 +64,6 @@ public class SocialMainActivity extends AppCompatActivity {
                 .build();
 
         ArrayList<SocialPost> arrayListSP = new ArrayList<>();
-
 
         adapter = new SocialPostAdapter(options);
 

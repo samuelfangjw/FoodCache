@@ -1,15 +1,8 @@
 package com.breakfastseta.foodcache.social;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Layout;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -20,20 +13,23 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.R;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.breakfastseta.foodcache.profile.Profile;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -63,7 +59,7 @@ public class SocialAddPostActivity extends AppCompatActivity {
     private String userName;
     private String date;
     private String time;
-    private Uri profileImage;
+    private String profileImage;
     private String uID;
 
     private Uri imageUri;
@@ -182,11 +178,11 @@ public class SocialAddPostActivity extends AppCompatActivity {
     }
 
     private void savePost() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        uID = user.getUid();
+        uID = App.getUID();
+        Profile profile = App.getProfile();
 
-        userName = user.getDisplayName();
-        profileImage = user.getPhotoUrl();
+        userName = profile.getName();
+        profileImage = profile.getPhotoURL();
 
         if (radioGroup.getCheckedRadioButtonId() == R.id.request) {
             String reqName = requestItem.getText().toString();

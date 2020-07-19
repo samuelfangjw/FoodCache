@@ -1,7 +1,5 @@
 package com.breakfastseta.foodcache.social;
 
-import android.net.Uri;
-
 public class SocialPost {
 
     private SocialPostType type;
@@ -13,7 +11,7 @@ public class SocialPost {
     private String userName;
     private String date;
     private String time;
-    private Uri profileImage;
+    private String profileImage;
     private String uID;
 
 
@@ -22,7 +20,7 @@ public class SocialPost {
     }
 
     public SocialPost(SocialPostType type, String name, String desc, double noItems, String units, String userName
-    , String date, String time, Uri profileImage, String uID) {
+    , String date, String time, String profileImage, String uID) {
         if (type == SocialPostType.REQUESTPOST) {
             this.type = type;
             this.name = name;
@@ -39,7 +37,7 @@ public class SocialPost {
     }
 
     public SocialPost(SocialPostType type, String name, String desc, String downloadURL, String userName
-            , String date, String time, Uri profileImage, String uID) {
+            , String date, String time, String profileImage, String uID) {
         if (type == SocialPostType.BLOGPOST) {
             this.type = type;
             this.name = name;
@@ -91,7 +89,7 @@ public class SocialPost {
         return time;
     }
 
-    public Uri getProfileImage() {
+    public String getProfileImage() {
         return profileImage;
     }
 

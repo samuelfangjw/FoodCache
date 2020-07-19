@@ -13,6 +13,7 @@ public class Profile {
     String photoURL;
     ArrayList<String> friends = new ArrayList<>();
     int recipeCount;
+    Boolean useFamilySharing = false;
 
     public Profile() {
         // empty constructor
@@ -92,5 +93,13 @@ public class Profile {
 
     public void setRecipeCount(int recipeCount) {
         this.recipeCount = recipeCount;
+    }
+
+    public Boolean getUseFamilySharing() {
+        return useFamilySharing;
+    }
+
+    public void setUseFamilySharing(Boolean useFamilySharing) {
+        this.useFamilySharing = useFamilySharing;
     }
 }
