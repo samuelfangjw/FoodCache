@@ -198,7 +198,7 @@ public class AddRecipeActivity extends AppCompatActivity
             @Override
             public void onComplete(@NonNull Task<DocumentReference> task) {
                 String path = task.getResult().getPath();
-                recipeRef.document(cuisine).collection("Recipes").add(new RecipeSnippet(name, imagePathString, path));
+                recipeRef.document(cuisine).collection("Recipes").add(new RecipeSnippet(name, imagePathString, path, description));
                 finish();
             }
         });

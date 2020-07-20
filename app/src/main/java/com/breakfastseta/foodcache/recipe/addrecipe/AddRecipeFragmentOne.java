@@ -9,12 +9,10 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,14 +26,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import org.angmarch.views.NiceSpinner;
+
+import java.util.Arrays;
+import java.util.List;
+
 import static android.app.Activity.RESULT_OK;
 
 public class AddRecipeFragmentOne extends Fragment {
-
-    private static final int CAMERA_REQUEST_CODE = 100;
-    private static final int STORAGE_REQUEST_CODE = 200;
-    private static final int GALLERY_REQUEST_CODE = 300;
-    private static final int TAKE_IMAGE_CODE = 400;
 
     ImageView recipeImage;
     TextView textView_name;
@@ -43,10 +41,11 @@ public class AddRecipeFragmentOne extends Fragment {
     EditText editText_author;
     Button nextButton;
     Button addPhoto;
-    Spinner cuisine;
+    NiceSpinner cuisine;
     Switch switchPublic;
     TextView tv_switch;
     EditText editText_description;
+    TextView textView_description;
 
     Uri resultUri;
 
@@ -90,10 +89,11 @@ public class AddRecipeFragmentOne extends Fragment {
         editText_author = (EditText) view.findViewById(R.id.edit_text_author);
         nextButton = (Button) view.findViewById(R.id.next_button_one);
         addPhoto = (Button) view.findViewById(R.id.add_recipe_photo_button);
-        cuisine = (Spinner) view.findViewById(R.id.cuisine);
+        cuisine = (NiceSpinner) view.findViewById(R.id.cuisine);
         switchPublic = (Switch) view.findViewById(R.id.public_switch);
         tv_switch = (TextView) view.findViewById(R.id.tv_switch);
         editText_description = (EditText) view.findViewById(R.id.description);
+        textView_description = (TextView) view.findViewById(R.id.recipe_description);
 
         switchPublic.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -106,11 +106,8 @@ public class AddRecipeFragmentOne extends Fragment {
             }
         });
 
-        ArrayAdapter<CharSequence> adapterUnits;
-        adapterUnits = ArrayAdapter.createFromResource(getContext(),
-                R.array.cuisines, android.R.layout.simple_spinner_item);
-        adapterUnits.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        cuisine.setAdapter(adapterUnits);
+        List<String> cuisinesArr = Arrays.asList(getResources().getStringArray(R.array.cuisines));
+        cuisine.attachDataSource(cuisinesArr);
 
         editText_name.addTextChangedListener(new TextWatcher() {
             @Override
@@ -121,6 +118,23 @@ public class AddRecipeFragmentOne extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 textView_name.setText(editText_name.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        editText_description.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                textView_description.setText(editText_description.getText().toString());
             }
 
             @Override

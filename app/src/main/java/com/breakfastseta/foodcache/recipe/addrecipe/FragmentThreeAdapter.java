@@ -29,7 +29,7 @@ public class FragmentThreeAdapter extends
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
-        View stepsView = inflater.inflate(R.layout.fragment_three_item, parent, false);
+        View stepsView = inflater.inflate(R.layout.item_fragment_three, parent, false);
 
         // Return a new holder instance
         ViewHolder viewHolder = new ViewHolder(stepsView);
@@ -43,7 +43,7 @@ public class FragmentThreeAdapter extends
 
         // Set item views based on your views and data model
         TextView textView = holder.stepsTextView;
-        textView.setText(step);
+        textView.setText("Step " + (position + 1) + ": " + step);
     }
 
     @Override

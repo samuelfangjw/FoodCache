@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.breakfastseta.foodcache.R;
+import com.google.android.material.card.MaterialCardView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -41,7 +42,17 @@ public class CookRecipeActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycler_view);
         adapter = new CookAdapter(steps);
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        adapter.setOnItemClickListener(new CookAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                View view = layoutManager.findViewByPosition(position);
+                MaterialCardView card = view.findViewById(R.id.card);
+                card.setChecked(!card.isChecked());
+            }
+        });
     }
 
     public void finishCooking(View view) {

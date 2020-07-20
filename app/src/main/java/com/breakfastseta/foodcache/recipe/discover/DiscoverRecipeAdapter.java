@@ -1,4 +1,4 @@
-package com.breakfastseta.foodcache.discover;
+package com.breakfastseta.foodcache.recipe.discover;
 
 import android.content.Context;
 import android.net.Uri;
@@ -33,7 +33,7 @@ public class DiscoverRecipeAdapter extends RecyclerView.Adapter<DiscoverRecipeAd
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
-        View recipeView = inflater.inflate(R.layout.item_, parent, false);
+        View recipeView = inflater.inflate(R.layout.item_recipe, parent, false);
 
         // Return a new holder instance
         DiscoverRecipeAdapter.ViewHolder viewHolder = new DiscoverRecipeAdapter.ViewHolder(recipeView);
@@ -51,11 +51,12 @@ public class DiscoverRecipeAdapter extends RecyclerView.Adapter<DiscoverRecipeAd
         textView.setText(snippet.getName());
         String image_url = snippet.getImage();
         if (image_url != null) {
-            //TODO explore glide placeholders and fallback for image
             Uri image_path = Uri.parse(image_url);
             Glide.with(holder.itemView.getContext())
                     .load(image_path)
                     .into(imageView);
+        } else {
+            holder.imageView.setImageDrawable(holder.itemView.getContext().getDrawable(R.drawable.ic_fastfood));
         }
 
         holder.path = snippet.getPath();

@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.breakfastseta.foodcache.R;
+import com.breakfastseta.foodcache.Util;
 import com.breakfastseta.foodcache.recipe.Ingredient;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class FragmentTwoAdapter extends
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
-        View ingredientView = inflater.inflate(R.layout.fragment_two_item, parent, false);
+        View ingredientView = inflater.inflate(R.layout.item_fragment_two, parent, false);
 
         // Return a new holder instance
         ViewHolder viewHolder = new ViewHolder(ingredientView);
@@ -44,7 +45,9 @@ public class FragmentTwoAdapter extends
 
         // Set item views based on your views and data model
         TextView textView = holder.ingredientTextView;
-        textView.setText(ingredient.toString());
+        TextView quantity = holder.quantityTextView;
+        textView.setText(ingredient.getName());
+        quantity.setText(Util.formatQuantity(ingredient.getQuantity(), ingredient.getUnits()));
     }
 
     @Override
@@ -54,12 +57,14 @@ public class FragmentTwoAdapter extends
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView ingredientTextView;
+        public TextView quantityTextView;
 
         public ViewHolder(View itemView) {
 
             super(itemView);
 
             ingredientTextView = (TextView) itemView.findViewById(R.id.ingredient);
+            quantityTextView = (TextView) itemView.findViewById(R.id.quantity);
         }
     }
 }

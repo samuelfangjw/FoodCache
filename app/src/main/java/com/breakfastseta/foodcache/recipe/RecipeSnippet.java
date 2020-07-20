@@ -5,6 +5,7 @@ import com.breakfastseta.foodcache.App;
 public class RecipeSnippet {
     private String name;
     private String image;
+    private String description;
     private String path;
     private String uid;
 
@@ -12,11 +13,12 @@ public class RecipeSnippet {
 
     }
 
-    public RecipeSnippet(String name, String image, String path) {
+    public RecipeSnippet(String name, String image, String path, String description) {
         this.name = name;
         this.image = image;
         this.path = path;
         this.uid = App.getUID();
+        this.description = description;
     }
 
     public String getName() {
@@ -33,5 +35,9 @@ public class RecipeSnippet {
 
     public String getUid() {
         return uid;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }
