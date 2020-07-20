@@ -119,6 +119,11 @@ public class FamilyAdapter extends
                                 updates.put("memberStatus", memberStatus);
                                 updates.put("members", members);
                                 db.document(docPath).update(updates);
+
+                                Map<String, Object> profileUpdates = new HashMap<>();
+                                profileUpdates.put("useFamilySharing", false);
+                                profileUpdates.put("familyUID", null);
+                                db.collection("Profiles").document(key).update(profileUpdates);
                             });
                         } else {
                             acceptButton.setOnClickListener(v -> {

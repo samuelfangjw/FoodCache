@@ -67,12 +67,7 @@ public class App extends Application {
                         profile.setName(user.getDisplayName());
                         profile.setEmail(user.getEmail());
                         profile.setUID(UID);
-                        profileRef.set(profile).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                setTabs();
-                            }
-                        });
+                        profileRef.set(profile).addOnCompleteListener(task1 -> setTabs());
                     } else {
                         profile.setName(name);
                         profile.setEmail(documentSnapshot.getString("email"));

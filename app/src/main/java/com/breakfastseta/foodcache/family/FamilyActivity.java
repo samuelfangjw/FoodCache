@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
@@ -27,9 +26,7 @@ import com.breakfastseta.foodcache.profile.Profile;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.ArrayList;
@@ -54,6 +51,7 @@ public class FamilyActivity extends AppCompatActivity {
 
     ListenerRegistration listener;
     ListenerRegistration listenerMain;
+    ListenerRegistration listenerProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,11 +77,14 @@ public class FamilyActivity extends AppCompatActivity {
                 familyRef.whereEqualTo("ownerUID", profile.getFamilyUID()).limit(1).get().addOnSuccessListener(snapshots -> {
                     for (DocumentSnapshot d : snapshots) {
                         Map<String, Boolean> s = (Map<String, Boolean>) d.get("memberStatus");
-                        if (s.get(App.getUID())) {
+                        if (s.get(App.getUID()) != null && s.get(App.getUID())) {
                             toggle_text.setText("Family Sharing: On");
                             toggle_text.setTextColor(Color.parseColor("#037d50"));
                             profile.setUseFamilySharing(true);
                             App.getProfileRef().update("useFamilySharing", true);
+                            if (adapter == null) {
+                                setUpRecyclerView(d);
+                            }
                         } else {
                             Toast.makeText(FamilyActivity.this, "Please wait for the group owner to grant permission to access", Toast.LENGTH_SHORT).show();
                             toggle.setChecked(false);
@@ -105,7 +106,38 @@ public class FamilyActivity extends AppCompatActivity {
             toggle.setChecked(true);
         }
 
+        setProfileListener();
         checkFamily();
+    }
+
+    private void setProfileListener() {
+        listenerProfile = App.getProfileRef().addSnapshotListener((documentSnapshot, e) -> {
+            String familyUID = profile.getFamilyUID();
+
+            if (documentSnapshot != null) {
+                Map<String, Object> documentSnapshotData = documentSnapshot.getData();
+                Object documentFamilyUID = documentSnapshotData.get("familyUID");
+
+                //to handle remove case
+                if (familyUID != null && documentFamilyUID == null) {
+                    profile.setFamilyUID(null);
+                    toggle.setChecked(false);
+                    checkFamily();
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        removeAdapter();
+        if (listenerProfile != null) {
+            listenerProfile.remove();
+        }
+        if (listenerMain != null) {
+            listenerMain.remove();
+        }
+        super.onDestroy();
     }
 
     private void setFamilyRefListener(String nameLowercase) {
@@ -160,19 +192,20 @@ public class FamilyActivity extends AppCompatActivity {
         String path = snapshot.getReference().getPath();
         String ownerUID = snapshot.getString("ownerUID");
 
-        adapter = new FamilyAdapter(members, memberStatus, FamilyActivity.this, path, ownerUID);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(FamilyActivity.this));
+        if (memberStatus.get(App.getUID()) != null && memberStatus.get(App.getUID())) {
+            adapter = new FamilyAdapter(members, memberStatus, FamilyActivity.this, path, ownerUID);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(FamilyActivity.this));
 
-        setSnapshotListener(snapshot);
+            setSnapshotListener(snapshot);
+        }
     }
 
     private void setSnapshotListener(DocumentSnapshot snapshot) {
         DocumentReference docRef = snapshot.getReference();
-        
-        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+
+        docRef.addSnapshotListener((documentSnapshot, e) -> {
+            if (documentSnapshot.exists()) {
                 ArrayList<String> members = (ArrayList<String>) documentSnapshot.get("members");
                 Map<String, Boolean> memberStatus = (Map<String, Boolean>) documentSnapshot.get("memberStatus");
                 updateAdapter(members, memberStatus);
@@ -181,11 +214,13 @@ public class FamilyActivity extends AppCompatActivity {
     }
 
     private void updateAdapter(ArrayList<String> members, Map<String, Boolean> memberStatus) {
-        adapter.members.clear();
-        adapter.memberStatus.clear();
-        adapter.members.addAll(members);
-        adapter.memberStatus.putAll(memberStatus);
-        adapter.notifyDataSetChanged();
+        if (adapter != null) {
+            adapter.members.clear();
+            adapter.memberStatus.clear();
+            adapter.members.addAll(members);
+            adapter.memberStatus.putAll(memberStatus);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     public void join(View view) {
@@ -344,7 +379,6 @@ public class FamilyActivity extends AppCompatActivity {
                         updates.put("familyUID", null);
                         updates.put("useFamilySharing", false);
                         App.getProfileRef().update(updates);
-                        removeAdapter();
                     }
                 });
                 dialog.dismiss();
@@ -354,10 +388,6 @@ public class FamilyActivity extends AppCompatActivity {
     }
 
     private void removeAdapter() {
-        if (listenerMain != null) {
-            listenerMain.remove();
-        }
-        
         if (adapter != null) {
             adapter.members.clear();
             adapter.memberStatus.clear();
