@@ -5,10 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,7 +18,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.recipe.Ingredient;
 
+import org.angmarch.views.NiceSpinner;
+
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class AddRecipeFragmentTwo extends Fragment {
 
@@ -32,7 +34,7 @@ public class AddRecipeFragmentTwo extends Fragment {
     private RecyclerView recyclerView;
     private EditText editText_name;
     private EditText editText_quantity;
-    private Spinner spinner_units;
+    private NiceSpinner spinner_units;
     private Button button_add;
     private Button button_next;
 
@@ -71,7 +73,7 @@ public class AddRecipeFragmentTwo extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.rvFragmentTwo);
         editText_name = (EditText) view.findViewById(R.id.edit_text_name);
         editText_quantity = (EditText) view.findViewById(R.id.edit_text_quantity);
-        spinner_units = (Spinner) view.findViewById(R.id.spinner_units);
+        spinner_units = (NiceSpinner) view.findViewById(R.id.spinner_units);
         button_add = (Button) view.findViewById(R.id.add_item_button);
         button_next = (Button) view.findViewById(R.id.button_next);
 
@@ -82,11 +84,8 @@ public class AddRecipeFragmentTwo extends Fragment {
         // Set layout manager to position the items
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        ArrayAdapter<CharSequence> adapterUnits;
-        adapterUnits = ArrayAdapter.createFromResource(getContext(),
-                R.array.units, android.R.layout.simple_spinner_item);
-        adapterUnits.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner_units.setAdapter(adapterUnits);
+        List<String> unitsArr = Arrays.asList(getResources().getStringArray(R.array.units));
+        spinner_units.attachDataSource(unitsArr);
 
         button_add.setOnClickListener(v -> addIngredient());
         button_next.setOnClickListener(v -> {

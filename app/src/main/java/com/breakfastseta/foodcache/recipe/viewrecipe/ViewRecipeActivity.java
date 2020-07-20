@@ -70,6 +70,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
     String path;
     String imagePath;
     String name;
+    String description;
     String cuisine;
     ArrayList<String> steps;
     ArrayList<Map<String, Object>> ingredients;
@@ -161,7 +162,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
         cuisine = documentSnapshot.getString("cuisine");
         ingredients = (ArrayList<Map<String, Object>>) documentSnapshot.get("ingredients");
         steps = (ArrayList<String>) documentSnapshot.get("steps");
-        String description = documentSnapshot.getString("description");
+        description = documentSnapshot.getString("description");
 
         owner = documentSnapshot.getString("owner");
         viewers = (ArrayList<String>) documentSnapshot.get("viewers");
@@ -326,10 +327,9 @@ public class ViewRecipeActivity extends AppCompatActivity {
             Toast.makeText(this, "Recipe Already Saved!", Toast.LENGTH_SHORT).show();
         } else {
             db.document(path).update("viewers", FieldValue.arrayUnion(uid));
-            recipeRef.document(cuisine).collection("Recipes").add(new RecipeSnippet(name, imagePath, path));
+            recipeRef.document(cuisine).collection("Recipes").add(new RecipeSnippet(name, imagePath, path, description));
             Toast.makeText(this, "Recipe Saved Successfully!", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     public void cook(View view) {

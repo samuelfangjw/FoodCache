@@ -79,4 +79,8 @@ dependencies {
 
     //Android-Image-Cropper https://github.com/ArthurHub/Android-Image-Cropper
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
+
+    //nice-spinner https://github.com/arcadefire/nice-spinner
+    implementation 'com.github.arcadefire:nice-spinner:1.4.4'
+
 }

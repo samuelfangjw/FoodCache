@@ -34,7 +34,7 @@ public class DisplayRecipeAdapter extends
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
-        View recipeView = inflater.inflate(R.layout.item_, parent, false);
+        View recipeView = inflater.inflate(R.layout.item_recipe, parent, false);
 
         // Return a new holder instance
         ViewHolder viewHolder = new ViewHolder(recipeView);

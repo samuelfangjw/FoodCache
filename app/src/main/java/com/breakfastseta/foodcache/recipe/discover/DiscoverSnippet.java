@@ -1,4 +1,4 @@
-package com.breakfastseta.foodcache.discover;
+package com.breakfastseta.foodcache.recipe.discover;
 
 public class DiscoverSnippet {
 

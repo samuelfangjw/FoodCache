@@ -3,18 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".recipe.addrecipe.AddRecipeFragmentTwo"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".recipe.addrecipe.AddRecipeFragmentTwo">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvFragmentTwo"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
 
         <EditText
             android:id="@+id/edit_text_name"
@@ -22,7 +23,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:hint="@string/name"
+            android:textColor="@color/md_black_1000"
+            android:layout_marginHorizontal="8dp"
+            android:textSize="20sp"
+            android:hint="Ingredient Name"
             android:inputType="text" />
 
         <EditText
@@ -31,27 +35,45 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/edit_text_name"
             android:hint="@string/quantity"
+            android:layout_margin="8dp"
+            android:textColor="@color/md_black_1000"
+            android:textSize="20sp"
             android:inputType="numberDecimal" />
 
-        <Spinner
+        <org.angmarch.views.NiceSpinner
             android:id="@+id/spinner_units"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/edit_text_quantity" />
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_margin="8dp"
+            android:layout_below="@id/edit_text_name"
+            android:layout_above="@id/linear_layout"
+            android:layout_toRightOf="@id/edit_text_quantity" />
 
-        <Button
-            android:id="@+id/add_item_button"
+        <LinearLayout
+            android:id="@+id/linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/spinner_units"
-            android:text="@string/add_ingredient" />
+            android:layout_below="@+id/edit_text_quantity"
+            android:layout_margin="8dp"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/button_next"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/add_item_button"
-            android:text="@string/next" />
+            <Button
+                android:id="@+id/add_item_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:layout_weight="1"
+                android:text="@string/add_ingredient" />
+
+            <Button
+                android:id="@+id/button_next"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:layout_weight="1"
+                android:text="@string/next" />
+        </LinearLayout>
+
 
     </RelativeLayout>
 </LinearLayout>

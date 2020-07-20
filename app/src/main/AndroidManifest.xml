@@ -24,8 +24,9 @@
         <activity android:name=".recommend.RecommendActivity" />
         <activity android:name=".recipe.viewrecipe.RemoveQuantityActivity" />
         <activity android:name=".recipe.viewrecipe.CookRecipeActivity" />
-        <activity android:name=".discover.DiscoverRecipeActivity" />
-        <activity android:name=".recipe.addrecipe.AddRecipeActivity" />
+        <activity android:name=".recipe.discover.DiscoverRecipeActivity" />
+        <activity android:name=".recipe.addrecipe.AddRecipeActivity"
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".recipe.viewrecipe.ViewRecipeActivity" />
         <activity android:name=".recipe.RecipeActivity" />
         <activity
@@ -37,7 +38,8 @@
         <activity android:name=".shoppinglist.EditShoppingIngredient" />
         <activity
             android:name=".shoppinglist.AddShopIngredientActivity"
-            android:parentActivityName=".shoppinglist.ShoppingListActivity" />
+            android:parentActivityName=".shoppinglist.ShoppingListActivity"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".inventory.FoodcacheActivity"
             android:launchMode="singleTop" />
@@ -52,7 +54,8 @@
             android:parentActivityName=".inventory.FoodcacheActivity" />
         <activity
             android:name=".inventory.AddIngredientActivity"
-            android:parentActivityName=".inventory.FoodcacheActivity" />
+            android:parentActivityName=".inventory.FoodcacheActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -3,73 +3,183 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".recipe.addrecipe.AddRecipeFragmentOne"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".recipe.addrecipe.AddRecipeFragmentOne">
 
-    <ImageView
-        android:id="@+id/recipe_image"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:scaleType="centerCrop" />
-
-    <TextView
-        android:id="@+id/recipe_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Recipe"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-    <EditText
-        android:id="@+id/edit_text_recipe_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:hint="@string/recipe_name" />
-
-    <EditText
-        android:id="@+id/edit_text_author"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:hint="Author" />
-
-    <Spinner
-        android:id="@+id/cuisine"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/tv_switch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/private_string"/>
-
-    <Switch
-        android:id="@+id/public_switch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textOff="@string/private_string"
-        android:textOn="@string/public_string"/>
-
-    <EditText
-        android:id="@+id/description"
-        android:layout_width="match_parent"
-        android:inputType="textMultiLine"
-        android:layout_height="50dp"
-        android:gravity="top"
+        android:layout_height="0dp"
         android:layout_weight="1"
-        android:hint="Description"/>
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp">
+
+                <ImageView
+                    android:id="@+id/recipe_image"
+                    android:layout_width="136dp"
+                    android:layout_height="136dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginRight="16dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_fastfood" />
+
+                <TextView
+                    android:id="@+id/recipe_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_toRightOf="@+id/recipe_image"
+                    android:ellipsize="marquee"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:text="Recipe"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textColor="@color/md_black_1000" />
+
+                <TextView
+                    android:id="@+id/recipe_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/recipe_name"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_toRightOf="@+id/recipe_image"
+                    android:ellipsize="end"
+                    android:maxLines="4"
+                    android:text="Description"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textColor="@color/md_black_1000"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:text="Recipe Name"
+                android:textColor="@color/md_black_1000"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/edit_text_recipe_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="8dp"
+                android:hint="@string/recipe_name"
+                android:inputType="text"
+                android:textColor="@color/md_black_1000" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:text="Author"
+                android:textColor="@color/md_black_1000"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/edit_text_author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="8dp"
+                android:hint="Author"
+                android:inputType="text"
+                android:textColor="@color/md_black_1000" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:text="Description"
+                android:textColor="@color/md_black_1000"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="8dp"
+                android:layout_weight="1"
+                android:gravity="top"
+                android:hint="Description"
+                android:inputType="textMultiLine"
+                android:textColor="@color/md_black_1000" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:text="Cuisine"
+                android:textColor="@color/md_black_1000"
+                android:textSize="20sp" />
+
+            <org.angmarch.views.NiceSpinner
+                android:id="@+id/cuisine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:text="Settings"
+                android:textColor="@color/md_black_1000"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="8dp">
+
+                <TextView
+                    android:id="@+id/tv_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:text="@string/private_string"
+                    android:textColor="@color/md_black_1000"
+                    android:textSize="18sp" />
+
+                <Switch
+                    android:id="@+id/public_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/md_black_1000"
+                    android:textOff="@string/private_string"
+                    android:textOn="@string/public_string" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
     <Button
         android:id="@+id/add_recipe_photo_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Edit Picture"/>
+        android:text="Edit Picture"
+        android:textColor="@color/md_black_1000" />
 
     <Button
         android:id="@+id/next_button_one"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/next"/>
+        android:text="@string/next"
+        android:textColor="@color/md_black_1000" />
+
 
 </LinearLayout>

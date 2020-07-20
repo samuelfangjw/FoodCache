@@ -16,6 +16,8 @@ import java.util.ArrayList;
 public class CookAdapter extends
         RecyclerView.Adapter<CookAdapter.ViewHolder>{
 
+    private OnItemClickListener listener;
+
     private ArrayList<String> arr;
 
     public CookAdapter(ArrayList<String> arr) {
@@ -64,6 +66,23 @@ public class CookAdapter extends
 
             stepNumber = (TextView) itemView.findViewById(R.id.step_number);
             stepView = (TextView) itemView.findViewById(R.id.step);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    listener.onItemClick(position);
+                }
+            });
         }
     }
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
 }

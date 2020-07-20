@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".recipe.addrecipe.AddRecipeFragmentThree">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginVertical="8dp"
+        android:text="Steps"
+        android:textColor="@color/md_black_1000"
+        android:textSize="24sp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvFragmentThree"
@@ -17,24 +27,44 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <EditText
+        <com.tobiasschuerg.prefixsuffix.PrefixSuffixEditText
             android:id="@+id/step"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Step"
-            android:inputType="text" />
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginBottom="8dp"
+            android:hint=""
+            android:inputType="text"
+            android:textColor="@color/md_black_1000"
+            app:prefix="Step 1: " />
 
-        <Button
-            android:id="@+id/button_add"
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/add_step" />
+            android:layout_margin="8dp"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/button_save"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/save_recipe" />
+            <Button
+                android:id="@+id/button_add"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:layout_weight="1"
+                android:text="@string/add_step"
+                android:textColor="@color/md_black_1000" />
+
+            <Button
+                android:id="@+id/button_save"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:layout_weight="1"
+                android:text="@string/save_recipe"
+                android:textColor="@color/md_black_1000" />
+
+        </LinearLayout>
+
 
     </LinearLayout>
 
