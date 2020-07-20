@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Date"
-            android:layout_alignParentRight="true"
+            android:layout_toLeftOf="@id/blog_social_button"
             android:layout_alignParentTop="true"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:layout_margin="8dp" />
@@ -70,6 +70,18 @@
             android:layout_marginTop="8dp"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop" />
+        
+        <TextView
+            android:id="@+id/blog_social_button"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:text="&#8942;"
+            android:gravity="center"
+            android:layout_margin="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>
