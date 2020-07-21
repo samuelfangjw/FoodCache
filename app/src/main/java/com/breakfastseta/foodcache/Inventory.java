@@ -64,6 +64,7 @@ public class Inventory {
     }
 
     public Inventory addIngredient(Item ingredient) {
+        //TODO handle barcoderef
         //Check if ingredient with same units exists
         String name = ingredient.getIngredient();
         String units = ingredient.getUnits();

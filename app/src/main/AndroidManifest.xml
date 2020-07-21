@@ -21,6 +21,7 @@
         <activity android:name=".inventory.ManageTabsActivity"></activity>
         <activity android:name=".social.EditSocialPost" />
         <activity android:name=".family.FamilyActivity" />
+        <activity android:name=".inventory.unclassified.UnclassifiedActivity" />
         <activity android:name=".social.SocialAddPostActivity" />
         <activity android:name=".social.SocialMainActivity" />
         <activity android:name=".recipe.recommend.RecommendActivity" />

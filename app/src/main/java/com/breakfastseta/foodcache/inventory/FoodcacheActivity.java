@@ -13,13 +13,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.DialogFragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.breakfastseta.foodcache.AlertReceiver;
 import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
+import com.breakfastseta.foodcache.inventory.unclassified.UnclassifiedActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -165,24 +165,24 @@ public class FoodcacheActivity extends AppCompatActivity {
     }
 
     private void checkUnclassified() {
-        unclassifiedRef.get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                String path = document.getReference().getPath();
-                                DialogFragment dialogFragment = new UnclassifiedDialogFragment();
-                                Bundle bundle = new Bundle();
-                                bundle.putString("path", path);
-                                dialogFragment.setArguments(bundle);
-                                dialogFragment.show(getSupportFragmentManager(), "unclassified");
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
+//        unclassifiedRef.get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                String path = document.getReference().getPath();
+//                                DialogFragment dialogFragment = new UnclassifiedDialogFragment();
+//                                Bundle bundle = new Bundle();
+//                                bundle.putString("path", path);
+//                                dialogFragment.setArguments(bundle);
+//                                dialogFragment.show(getSupportFragmentManager(), "unclassified");
+//                            }
+//                        } else {
+//                            Log.d(TAG, "Error getting documents: ", task.getException());
+//                        }
+//                    }
+//                });
     }
 
     @Override
@@ -191,6 +191,10 @@ public class FoodcacheActivity extends AppCompatActivity {
             case R.id.action_tabs:
                 Intent intent = new Intent(this, ManageTabsActivity.class);
                 startActivityForResult(intent, 0);
+                return true;
+            case R.id.action_unclassified:
+                Intent intent_unclassified = new Intent(this, UnclassifiedActivity.class);
+                startActivityForResult(intent_unclassified, 0);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

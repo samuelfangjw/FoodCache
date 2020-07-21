@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -19,29 +18,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.breakfastseta.foodcache.App;
-import com.breakfastseta.foodcache.Inventory;
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
-import com.breakfastseta.foodcache.inventory.Item;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.Timestamp;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,7 +38,6 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 public class ShoppingListActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String uid = App.getFamilyUID();
     private CollectionReference notebookRef = db.collection("Users").document(uid).collection("ShoppingList");
     private CoordinatorLayout coordinatorLayout;
@@ -164,49 +152,56 @@ public class ShoppingListActivity extends AppCompatActivity {
                                     final double quantity = shopItem.getNoItems();
                                     final String units = shopItem.getUnits();
 
-                                    Query query = barcodeRef.whereEqualTo("Name", ingredient).limit(1);
-                                    query.get()
-                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                if (task.isSuccessful()) {
-                                                    QuerySnapshot result = task.getResult();
-                                                    if (result.isEmpty()) {
-                                                        Map<String, Object> incompleteItem = new HashMap<>();
-                                                        incompleteItem.put("Name", ingredient);
-                                                        incompleteItem.put("quantity", quantity);
-                                                        incompleteItem.put("units", units);
+                                    Map<String, Object> incompleteItem = new HashMap<>();
+                                    incompleteItem.put("Name", ingredient);
+                                    incompleteItem.put("quantity", quantity);
+                                    incompleteItem.put("units", units);
+                                    unclassifiedRef.add(incompleteItem);
 
-                                                        unclassifiedRef.add(incompleteItem);
-                                                    } else {
-                                                        for (QueryDocumentSnapshot document : result) {
-                                                            Map<String, Object> map = document.getData();
-                                                            long expiryInMillies = (long) map.get("expiryDays");
-                                                            String location = (String) map.get("location");
 
-                                                            // calculating expiry date
-                                                            Timestamp now = new Timestamp(new Date());
-                                                            Date expiry = new Date(now.getSeconds() * 1000 + expiryInMillies);
-
-                                                            // Removing time part from date
-                                                            Calendar cal = Calendar.getInstance();
-                                                            cal.setTime(expiry);
-                                                            cal.set(Calendar.HOUR_OF_DAY, 0);
-                                                            cal.set(Calendar.MINUTE, 0);
-                                                            cal.set(Calendar.SECOND, 0);
-                                                            cal.set(Calendar.MILLISECOND, 0);
-                                                            expiry = cal.getTime();
-
-                                                            Timestamp dateTimestamp = new Timestamp(expiry);
-
-                                                            Inventory.create().addIngredient(new Item(ingredient, quantity, dateTimestamp, units, location));
-                                                        }
-                                                    }
-                                                } else {
-                                                    Log.d(TAG, "Error getting documents: ", task.getException());
-                                                }
-                                            }
-                                        });
+//                                    Query query = barcodeRef.whereEqualTo("Name", ingredient).limit(1);
+//                                    query.get()
+//                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                                            @Override
+//                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                                                if (task.isSuccessful()) {
+//                                                    QuerySnapshot result = task.getResult();
+//                                                    if (result.isEmpty()) {
+//                                                        Map<String, Object> incompleteItem = new HashMap<>();
+//                                                        incompleteItem.put("Name", ingredient);
+//                                                        incompleteItem.put("quantity", quantity);
+//                                                        incompleteItem.put("units", units);
+//
+//                                                        unclassifiedRef.add(incompleteItem);
+//                                                    } else {
+//                                                        for (QueryDocumentSnapshot document : result) {
+//                                                            Map<String, Object> map = document.getData();
+//                                                            long expiryInMillies = (long) map.get("expiryDays");
+//                                                            String location = (String) map.get("location");
+//
+//                                                            // calculating expiry date
+//                                                            Timestamp now = new Timestamp(new Date());
+//                                                            Date expiry = new Date(now.getSeconds() * 1000 + expiryInMillies);
+//
+//                                                            // Removing time part from date
+//                                                            Calendar cal = Calendar.getInstance();
+//                                                            cal.setTime(expiry);
+//                                                            cal.set(Calendar.HOUR_OF_DAY, 0);
+//                                                            cal.set(Calendar.MINUTE, 0);
+//                                                            cal.set(Calendar.SECOND, 0);
+//                                                            cal.set(Calendar.MILLISECOND, 0);
+//                                                            expiry = cal.getTime();
+//
+//                                                            Timestamp dateTimestamp = new Timestamp(expiry);
+//
+//                                                            Inventory.create().addIngredient(new Item(ingredient, quantity, dateTimestamp, units, location));
+//                                                        }
+//                                                    }
+//                                                } else {
+//                                                    Log.d(TAG, "Error getting documents: ", task.getException());
+//                                                }
+//                                            }
+//                                        });
                                     break;
                             }
                         }
