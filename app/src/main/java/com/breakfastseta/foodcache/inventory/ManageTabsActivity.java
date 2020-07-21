@@ -147,7 +147,11 @@ public class ManageTabsActivity extends AppCompatActivity {
 
                 if (name.isEmpty()) {
                     Toast.makeText(ManageTabsActivity.this, "Name cannot be blank", Toast.LENGTH_SHORT).show();
-                } else {
+                } else if (tabs.contains(name)) {
+                    Toast.makeText(ManageTabsActivity.this, "Tabs cannot have the same name and capitalisation", Toast.LENGTH_SHORT).show();
+                } else if (tabs.size() >= 8) {
+                    Toast.makeText(ManageTabsActivity.this, "You cannot have more than 8 tabs", Toast.LENGTH_SHORT).show();
+                } else{
                     int position = adapter.getItemCount();
                     tabs.add(name);
                     adapter.notifyItemInserted(position);

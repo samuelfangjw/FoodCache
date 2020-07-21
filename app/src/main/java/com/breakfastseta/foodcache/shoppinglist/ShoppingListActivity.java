@@ -157,7 +157,7 @@ public class ShoppingListActivity extends AppCompatActivity {
                                 case Snackbar.Callback.DISMISS_EVENT_SWIPE:
                                 case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
                                 case Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE:
-                                    final CollectionReference unclassifiedRef = db.collection("Users").document(App.getUID()).collection("Unclassified");
+                                    final CollectionReference unclassifiedRef = db.collection("Users").document(App.getFamilyUID()).collection("Unclassified");
                                     CollectionReference barcodeRef = db.collection("Users").document(uid).collection("Barcodes");
 
                                     final String ingredient = shopItem.getItemName();

@@ -49,9 +49,8 @@ public class FoodcacheActivity extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     String uid = App.getFamilyUID();
-    String personalUID = App.getUID();
     private CollectionReference inventoryRef = db.collection("Users").document(uid).collection("Inventory");
-    private CollectionReference unclassifiedRef = db.collection("Users").document(personalUID).collection("Unclassified");
+    private CollectionReference unclassifiedRef = db.collection("Users").document(uid).collection("Unclassified");
 
 
     @Override
