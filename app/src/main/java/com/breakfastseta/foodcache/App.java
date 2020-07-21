@@ -21,6 +21,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -133,7 +134,9 @@ public class App extends Application {
                     ArrayList<String> arr = new ArrayList<>();
                     arr.add("Fridge");
                     arr.add("Pantry");
-                    tabsRef.update("tabs", arr);
+                    Map<String, ArrayList<String>> map = new HashMap<>();
+                    map.put("tabs", arr);
+                    tabsRef.set(map);
                     tabs = arr;
                 } else {
                     tabs = (ArrayList<String>) task.getResult().get("tabs");

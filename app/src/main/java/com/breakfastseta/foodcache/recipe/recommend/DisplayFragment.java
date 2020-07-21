@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.recipe.viewrecipe.ViewRecipeActivity;
+
+import java.util.ArrayList;
 
 public class DisplayFragment extends Fragment {
 
@@ -57,9 +60,15 @@ public class DisplayFragment extends Fragment {
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
 
-        adapter = new DisplayRecipeAdapter(((RecommendActivity) getActivity()).arrResults);
+        ArrayList<RecommendSnippet> arrResults = ((RecommendActivity) getActivity()).arrResults;
+        adapter = new DisplayRecipeAdapter(arrResults);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        if (arrResults.isEmpty()) {
+            TextView message = (TextView) view.findViewById(R.id.message);
+            message.setVisibility(View.VISIBLE);
+        }
 
         adapter.setOnItemClickListener(new DisplayRecipeAdapter.OnItemClickListener() {
             @Override

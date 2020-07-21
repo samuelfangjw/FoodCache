@@ -115,6 +115,10 @@ public class RemoveQuantityActivity extends AppCompatActivity {
         adapter = new RemoveQuantityAdapter(keys, ingredientsMatch, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        if (keys.isEmpty()) {
+            findViewById(R.id.message).setVisibility(View.VISIBLE);
+        }
     }
 
     public void acceptChanges(View view) {

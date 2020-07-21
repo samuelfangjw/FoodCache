@@ -9,7 +9,6 @@ import com.breakfastseta.foodcache.App;
 
 // For Foodcache Card
 public class ViewPagerAdapter extends FragmentStateAdapter {
-    private static int CARD_ITEM_SIZE = App.getTabs().size();
 
     public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
@@ -23,7 +22,7 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return CARD_ITEM_SIZE;
+        return App.getTabs().size();
     }
     
 }

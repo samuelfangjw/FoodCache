@@ -6,8 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
@@ -23,8 +26,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.Timestamp;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -42,12 +43,11 @@ public class FoodcacheActivity extends AppCompatActivity {
     TabLayout tabLayout;
     ViewPager2 viewPager;
 
-//    String[] tabs;
     ArrayList<String> tabs;
     long shortest = Long.MAX_VALUE;
+    ViewPagerAdapter adapter;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String uid = App.getFamilyUID();
     String personalUID = App.getUID();
     private CollectionReference inventoryRef = db.collection("Users").document(uid).collection("Inventory");
@@ -70,7 +70,10 @@ public class FoodcacheActivity extends AppCompatActivity {
         FloatingActionButton buttonAddItem = findViewById(R.id.add_item_fab);
         buttonAddItem.setOnClickListener(v -> startActivity(new Intent(FoodcacheActivity.this, AddIngredientActivity.class)));
 
-//        tabs = getResources().getStringArray(R.array.tabs);
+        makeTabs();
+    }
+
+    private void makeTabs() {
         tabs = App.getTabs();
 
         viewPager.setAdapter(createCardAdapter());
@@ -93,8 +96,14 @@ public class FoodcacheActivity extends AppCompatActivity {
     }
 
     private ViewPagerAdapter createCardAdapter() {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(this);
+        adapter = new ViewPagerAdapter(this);
         return adapter;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.foodcache_menu, menu);
+        return true;
     }
 
     private void manageNotifications() {
@@ -175,5 +184,26 @@ public class FoodcacheActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_tabs:
+                Intent intent = new Intent(this, ManageTabsActivity.class);
+                startActivityForResult(intent, 0);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 0) {
+            adapter.notifyDataSetChanged();
+        }
     }
 }

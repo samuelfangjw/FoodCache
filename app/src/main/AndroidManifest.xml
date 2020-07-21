@@ -18,7 +18,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".social.EditSocialPost"></activity>
+        <activity android:name=".inventory.ManageTabsActivity"></activity>
+        <activity android:name=".social.EditSocialPost" />
         <activity android:name=".family.FamilyActivity" />
         <activity android:name=".social.SocialAddPostActivity" />
         <activity android:name=".social.SocialMainActivity" />
@@ -26,8 +27,9 @@
         <activity android:name=".recipe.viewrecipe.RemoveQuantityActivity" />
         <activity android:name=".recipe.viewrecipe.CookRecipeActivity" />
         <activity android:name=".recipe.discover.DiscoverRecipeActivity" />
-        <activity android:name=".recipe.addrecipe.AddRecipeActivity"
-            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".recipe.addrecipe.AddRecipeActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".recipe.viewrecipe.ViewRecipeActivity" />
         <activity android:name=".recipe.RecipeActivity" />
         <activity
@@ -40,7 +42,7 @@
         <activity
             android:name=".shoppinglist.AddShopIngredientActivity"
             android:parentActivityName=".shoppinglist.ShoppingListActivity"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".inventory.FoodcacheActivity"
             android:launchMode="singleTop" />
