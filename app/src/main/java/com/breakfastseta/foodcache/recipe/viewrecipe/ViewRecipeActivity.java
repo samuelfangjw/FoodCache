@@ -337,6 +337,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
         Bundle args = new Bundle();
         args.putSerializable("steps",(Serializable) steps);
         args.putSerializable("ingredients",(Serializable) ingredients);
+        args.putString("path", path);
         intent.putExtra("bundle", args);
         startActivity(intent);
     }

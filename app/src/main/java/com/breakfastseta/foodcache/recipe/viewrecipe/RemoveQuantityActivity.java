@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.Inventory;
 import com.breakfastseta.foodcache.R;
-import com.breakfastseta.foodcache.inventory.FoodcacheActivity;
+import com.breakfastseta.foodcache.profile.Profile;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
@@ -36,6 +36,7 @@ public class RemoveQuantityActivity extends AppCompatActivity {
     HashMap<String, ExistingIngredientSnippet> ingredientsOwned = new HashMap<>();
     Map<String, ExistingIngredientSnippet> ingredientsMatch = new HashMap<>();
     ArrayList<String> keys = new ArrayList<>();
+    String path;
 
     RecyclerView recyclerView;
     RemoveQuantityAdapter adapter;
@@ -55,6 +56,7 @@ public class RemoveQuantityActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getBundleExtra("bundle");
         ingredients = (ArrayList<Map<String, Object>>) bundle.getSerializable("ingredients");
+        path = bundle.getString("path");
 
         recyclerView = findViewById(R.id.recycler_view);
 
@@ -116,7 +118,12 @@ public class RemoveQuantityActivity extends AppCompatActivity {
     }
 
     public void acceptChanges(View view) {
-        Map<String, ExistingIngredientSnippet> map = adapter.map;
+        Map<String, ExistingIngredientSnippet> map;
+        if (adapter.map == null) {
+            map = new HashMap<>();
+        } else {
+            map = adapter.map;
+        }
 
         for (ExistingIngredientSnippet snip : map.values()) {
             Map<String, Map<String, Double>> expiryMapMap = snip.getExpiryMap();
@@ -164,7 +171,12 @@ public class RemoveQuantityActivity extends AppCompatActivity {
 
         }
 
-        Intent intent = new Intent(this, FoodcacheActivity.class);
+        Profile profile = App.getProfile();
+        profile.addRecipePrepared(path);
+        App.getProfileRef().update("recipesPrepared", profile.getRecipesPrepared());
+
+        Intent intent = new Intent(this, ViewRecipeActivity.class);
+        intent.putExtra("path", path);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }

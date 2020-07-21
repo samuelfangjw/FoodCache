@@ -17,7 +17,7 @@ import com.breakfastseta.foodcache.profile.Profile;
 import com.breakfastseta.foodcache.profile.ProfileActivity;
 import com.breakfastseta.foodcache.recipe.RecipeActivity;
 import com.breakfastseta.foodcache.recipe.discover.DiscoverRecipeActivity;
-import com.breakfastseta.foodcache.recommend.RecommendActivity;
+import com.breakfastseta.foodcache.recipe.recommend.RecommendActivity;
 import com.breakfastseta.foodcache.shoppinglist.ShoppingListActivity;
 import com.breakfastseta.foodcache.social.SocialMainActivity;
 import com.bumptech.glide.Glide;

@@ -22,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class App extends Application {
     private static final String TAG = "App";
@@ -76,11 +77,19 @@ public class App extends Application {
                         profile.setFamilyUID(documentSnapshot.getString("familyUID"));
                         profile.setPhotoURL(documentSnapshot.getString("photoURL"));
                         profile.setUseFamilySharing(documentSnapshot.getBoolean("useFamilySharing"));
+
                         ArrayList<String> friends = (ArrayList<String>) documentSnapshot.get("friends");
                         if (friends != null) {
                             profile.setFriends(friends);
                         }
-                        setTabs();
+
+                        Map<String, Long> recipesPrepared = (Map<String, Long>) documentSnapshot.get("recipesPrepared");
+                        if (recipesPrepared != null) {
+                            profile.setRecipesPrepared(recipesPrepared);
+                            setTabs();
+                        } else {
+                            profileRef.set(profile).addOnCompleteListener(task1 -> setTabs());
+                        }
                     }
                 } else {
                     Toast.makeText(context, "Something went wrong, please restart", Toast.LENGTH_LONG).show();

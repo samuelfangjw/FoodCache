@@ -1,14 +1,14 @@
-package com.breakfastseta.foodcache.recommend;
+package com.breakfastseta.foodcache.recipe.recommend;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
 import com.breakfastseta.foodcache.recipe.Ingredient;
@@ -20,10 +20,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 public class RecommendActivity extends AppCompatActivity implements ParametersFragment.ParametersListener, DisplayFragment.DisplayListener {
@@ -34,15 +36,21 @@ public class RecommendActivity extends AppCompatActivity implements ParametersFr
     AlgorithmFragment algorithmFragment;
     DisplayFragment displayFragment;
 
+    public static final int DEFAULT = 0;
+    public static final int FRESH = 1;
+    String cuisine;
+    int settings;
+
     ArrayList<RecommendSnippet> arrRecipes = new ArrayList<>();
     ArrayList<IngredientSnippet> arrIngredient = new ArrayList<>();
     ArrayList<RecommendSnippet> arrResults;
+    Map<String, Long> recipesPrepared = new HashMap<>();
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String uid = user.getUid();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference recipeRef = db.collection("Recipes");
-    private CollectionReference inventoryRef = db.collection("Users").document(uid).collection("Inventory");
+    private CollectionReference inventoryRef = db.collection("Users").document(App.getFamilyUID()).collection("Inventory");
 
 
     @Override
@@ -63,20 +71,20 @@ public class RecommendActivity extends AppCompatActivity implements ParametersFr
     }
 
     @Override
-    public void nextParameters() {
+    public void nextParameters(String cuisine, int settings) {
+        this.cuisine = cuisine;
+        this.settings = settings;
         showFragmentAlgorithm();
         startAlgorithm();
-        Toast.makeText(this, "1", Toast.LENGTH_SHORT).show();
     }
 
     public void nextAlgorithm() {
         showFragmentDisplay();
-        Toast.makeText(this, "2", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void nextDisplay() {
-        Toast.makeText(this, "3", Toast.LENGTH_SHORT).show();
+
     }
 
     private void showFragmentParameters() {
@@ -99,7 +107,14 @@ public class RecommendActivity extends AppCompatActivity implements ParametersFr
     }
 
     private void startAlgorithm() {
-        recipeRef.whereEqualTo("isPublic", true).get()
+        Query query;
+
+        if (cuisine.equals("All")) {
+            query = recipeRef.whereEqualTo("isPublic", true);
+        } else {
+            query = recipeRef.whereEqualTo("cuisine", cuisine).whereEqualTo("isPublic", true);
+        }
+        query.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -133,7 +148,15 @@ public class RecommendActivity extends AppCompatActivity implements ParametersFr
     }
 
     private void getPrivateRecipes() {
-        recipeRef.whereEqualTo("isPublic", false).whereArrayContains("viewers", uid).get()
+        Query query;
+
+        if (cuisine.equals("All")) {
+            query = recipeRef.whereEqualTo("isPublic", false).whereArrayContains("viewers", uid);
+        } else {
+            query = recipeRef.whereEqualTo("cuisine", cuisine).whereEqualTo("isPublic", false).whereArrayContains("viewers", uid);
+        }
+
+        query.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -185,7 +208,11 @@ public class RecommendActivity extends AppCompatActivity implements ParametersFr
     }
 
     private void runAlgorithm() {
-        arrResults = Algorithm.runAlgorithm(arrRecipes, arrIngredient);
+        if (settings == FRESH) {
+            recipesPrepared = App.getProfile().getRecipesPrepared();
+        }
+
+        arrResults = Algorithm.runAlgorithm(arrRecipes, arrIngredient, recipesPrepared);
         nextAlgorithm();
     }
 

@@ -3,6 +3,8 @@ package com.breakfastseta.foodcache.profile;
 import android.net.Uri;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Profile {
     String name;
@@ -12,8 +14,9 @@ public class Profile {
     String familyUID;
     String photoURL;
     ArrayList<String> friends = new ArrayList<>();
-    int recipeCount;
+    int recipeCount = 0;
     Boolean useFamilySharing = false;
+    Map<String, Long> recipesPrepared = new HashMap<>();
 
     public Profile() {
         // empty constructor
@@ -102,4 +105,23 @@ public class Profile {
     public void setUseFamilySharing(Boolean useFamilySharing) {
         this.useFamilySharing = useFamilySharing;
     }
+
+    public Map<String, Long> getRecipesPrepared() {
+        return recipesPrepared;
+    }
+
+    public void setRecipesPrepared(Map<String, Long> recipesPrepared) {
+        this.recipesPrepared = recipesPrepared;
+    }
+
+    public void addRecipePrepared(String recipePath) {
+        if (recipesPrepared.containsKey(recipePath)) {
+            Long count = recipesPrepared.get(recipePath);
+            count++;
+            recipesPrepared.put(recipePath, count);
+        } else {
+            recipesPrepared.put(recipePath, 1L);
+        }
+    }
+
 }

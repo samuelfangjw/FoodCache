@@ -22,7 +22,7 @@
         <activity android:name=".family.FamilyActivity" />
         <activity android:name=".social.SocialAddPostActivity" />
         <activity android:name=".social.SocialMainActivity" />
-        <activity android:name=".recommend.RecommendActivity" />
+        <activity android:name=".recipe.recommend.RecommendActivity" />
         <activity android:name=".recipe.viewrecipe.RemoveQuantityActivity" />
         <activity android:name=".recipe.viewrecipe.CookRecipeActivity" />
         <activity android:name=".recipe.discover.DiscoverRecipeActivity" />

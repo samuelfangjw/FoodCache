@@ -1,4 +1,4 @@
-package com.breakfastseta.foodcache.recommend;
+package com.breakfastseta.foodcache.recipe.recommend;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

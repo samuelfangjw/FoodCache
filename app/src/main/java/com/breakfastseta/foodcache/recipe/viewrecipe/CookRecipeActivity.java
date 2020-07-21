@@ -21,6 +21,7 @@ public class CookRecipeActivity extends AppCompatActivity {
 
     ArrayList<String> steps;
     ArrayList<Map<String, Object>> ingredients;
+    String path;
 
     CookAdapter adapter;
     RecyclerView recyclerView;
@@ -31,6 +32,7 @@ public class CookRecipeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cook_recipe);
 
         Bundle bundle = getIntent().getBundleExtra("bundle");
+        path = bundle.getString("path");
         steps = (ArrayList<String>) bundle.getSerializable("steps");
         ingredients = (ArrayList<Map<String, Object>>) bundle.getSerializable("ingredients");
 
@@ -59,6 +61,7 @@ public class CookRecipeActivity extends AppCompatActivity {
         Intent intent = new Intent(CookRecipeActivity.this, RemoveQuantityActivity.class);
         Bundle args = new Bundle();
         args.putSerializable("ingredients",(Serializable) ingredients);
+        args.putString("path", path);
         intent.putExtra("bundle", args);
         startActivity(intent);
     }

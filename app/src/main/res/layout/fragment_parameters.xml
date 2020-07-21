@@ -3,13 +3,89 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".recommend.ParametersFragment">
+    tools:context=".recipe.recommend.ParametersFragment">
 
-    <Button
-        android:id="@+id/button"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Find a recipe!"
-        />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="8dp"
+            android:text="Find a Recipe helps you find the optimal recipe to minimise food waste using a smart algorithm that takes into account ingredient expiry dates.\n\nIngredients must have the same name and units as the ingredients in the recipe."
+            android:textColor="@color/md_black_1000"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="8dp"
+            android:text="Cuisine"
+            android:textColor="@color/md_black_1000"
+            android:textSize="20sp" />
+
+        <org.angmarch.views.NiceSpinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="8dp"
+            android:text="Settings"
+            android:textColor="@color/md_black_1000"
+            android:textSize="20sp" />
+
+        <RadioGroup
+            android:id="@+id/radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/radio_default"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="8dp"
+                android:checked="true"
+                android:text="Default Settings - Find recipe based on expiry date only"
+                android:textColor="@color/md_black_1000"
+                android:textSize="14sp" />
+
+            <RadioButton
+                android:id="@+id/radio_fresh"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="8dp"
+                android:text="Keep it Fresh - Takes into account how many times you have prepared a meal and avoids recommending the same recipe as much as possible"
+                android:textColor="@color/md_black_1000"
+                android:textSize="14sp" />
+
+        </RadioGroup>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="8dp"
+            android:text="Find a recipe!" />
+
+    </LinearLayout>
+
 
 </FrameLayout>

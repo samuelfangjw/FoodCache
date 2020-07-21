@@ -1,4 +1,4 @@
-package com.breakfastseta.foodcache.recommend;
+package com.breakfastseta.foodcache.recipe.recommend;
 
 import com.breakfastseta.foodcache.recipe.Ingredient;
 
@@ -47,5 +47,10 @@ public class RecommendSnippet {
 
     public void setRecipeScore(double recipeScore) {
         this.recipeScore = recipeScore;
+    }
+
+    @Override
+    public String toString() {
+        return "{name='" + name + ", recipeScore=" + recipeScore + '}';
     }
 }
