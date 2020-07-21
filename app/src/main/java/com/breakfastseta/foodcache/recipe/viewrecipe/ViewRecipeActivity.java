@@ -22,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
 import com.breakfastseta.foodcache.recipe.RecipeSnippet;
@@ -183,7 +184,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
         tv_cuisine.setText(cuisineString);
         tv_description.setText(description);
 
-        for(Map<String, Object> i : ingredients) {
+        for (Map<String, Object> i : ingredients) {
             String ingredient_name = (String) i.get("name");
             String ingredient_units = (String) i.get("units");
             double ingredient_quantity = (double) i.get("quantity");
@@ -192,7 +193,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
             TextView tv1 = new TextView(this);
             TextView tv2 = new TextView(this);
             TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
-            params.setMargins(8,8,8,8);
+            params.setMargins(8, 8, 8, 8);
             tv1.setLayoutParams(params);
             tv2.setLayoutParams(params);
 
@@ -244,36 +245,36 @@ public class ViewRecipeActivity extends AppCompatActivity {
     }
 
     private void delete_recipe() {
-            PopupMenu menu = new PopupMenu(this, toolbar);
-            menu.setGravity(Gravity.RIGHT);
+        PopupMenu menu = new PopupMenu(this, toolbar);
+        menu.setGravity(Gravity.RIGHT);
 
-            if (owner.equals(uid) && (isPublic || viewers.size() > 1)) {
-                menu.getMenu().add("Delete for Everybody");
-            }
-            if (viewers.contains(uid)) {
-                menu.getMenu().add("Delete from my RecipeCache");
-            }
+        if (owner.equals(uid) && (isPublic || viewers.size() > 1)) {
+            menu.getMenu().add("Delete for Everybody");
+        }
+        if (viewers.contains(uid)) {
+            menu.getMenu().add("Delete from my RecipeCache");
+        }
 
-            menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    switch (item.getTitle().toString()) {
-                        case "Delete for Everybody" :
-                            deleteEverybody();
-                            return true;
-                        case "Delete from my RecipeCache" :
-                            if (!isPublic) {
-                                deleteSinglePrivate();
-                            } else {
-                                deleteSingle();
-                            }
-                            return true;
-                    }
-                    return false;
+        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getTitle().toString()) {
+                    case "Delete for Everybody":
+                        deleteEverybody();
+                        return true;
+                    case "Delete from my RecipeCache":
+                        if (!isPublic) {
+                            deleteSinglePrivate();
+                        } else {
+                            deleteSingle();
+                        }
+                        return true;
                 }
-            });
+                return false;
+            }
+        });
 
-            menu.show();
+        menu.show();
     }
 
     private void deleteEverybody() {
@@ -288,7 +289,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
                         finish();
                     }
                 });
-
+        App.getProfile().minusRecipeCount();
     }
 
     private void deleteSinglePrivate() {
@@ -303,6 +304,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
                         finish();
                     }
                 });
+        App.getProfile().minusRecipeCount();
     }
 
     private void deleteSingle() {
@@ -335,8 +337,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
     public void cook(View view) {
         Intent intent = new Intent(ViewRecipeActivity.this, CookRecipeActivity.class);
         Bundle args = new Bundle();
-        args.putSerializable("steps",(Serializable) steps);
-        args.putSerializable("ingredients",(Serializable) ingredients);
+        args.putSerializable("steps", (Serializable) steps);
+        args.putSerializable("ingredients", (Serializable) ingredients);
         args.putString("path", path);
         intent.putExtra("bundle", args);
         startActivity(intent);

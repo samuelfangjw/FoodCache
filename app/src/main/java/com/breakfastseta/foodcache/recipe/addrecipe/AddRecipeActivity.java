@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.recipe.Ingredient;
 import com.breakfastseta.foodcache.recipe.Recipe;
@@ -199,6 +200,7 @@ public class AddRecipeActivity extends AppCompatActivity
             public void onComplete(@NonNull Task<DocumentReference> task) {
                 String path = task.getResult().getPath();
                 recipeRef.document(cuisine).collection("Recipes").add(new RecipeSnippet(name, imagePathString, path, description));
+                App.getProfile().addRecipeCount();
                 finish();
             }
         });

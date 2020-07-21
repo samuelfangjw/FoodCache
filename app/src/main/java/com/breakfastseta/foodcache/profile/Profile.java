@@ -2,6 +2,8 @@ package com.breakfastseta.foodcache.profile;
 
 import android.net.Uri;
 
+import com.breakfastseta.foodcache.App;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +16,7 @@ public class Profile {
     String familyUID;
     String photoURL;
     ArrayList<String> friends = new ArrayList<>();
-    int recipeCount = 0;
+    Long recipeCount = 0L;
     Boolean useFamilySharing = false;
     Map<String, Long> recipesPrepared = new HashMap<>();
 
@@ -90,11 +92,11 @@ public class Profile {
         return friends.size();
     }
 
-    public int getRecipeCount() {
+    public Long getRecipeCount() {
         return recipeCount;
     }
 
-    public void setRecipeCount(int recipeCount) {
+    public void setRecipeCount(Long recipeCount) {
         this.recipeCount = recipeCount;
     }
 
@@ -124,4 +126,15 @@ public class Profile {
         }
     }
 
+    public void addRecipeCount() {
+        recipeCount++;
+        App.getProfileRef().update("recipeCount", recipeCount);
+    }
+
+    public void minusRecipeCount() {
+        if (recipeCount > 0) {
+            recipeCount--;
+            App.getProfileRef().update("recipeCount", recipeCount);
+        }
+    }
 }

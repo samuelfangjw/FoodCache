@@ -77,6 +77,7 @@ public class App extends Application {
                         profile.setFamilyUID(documentSnapshot.getString("familyUID"));
                         profile.setPhotoURL(documentSnapshot.getString("photoURL"));
                         profile.setUseFamilySharing(documentSnapshot.getBoolean("useFamilySharing"));
+                        profile.setRecipeCount(documentSnapshot.getLong("recipeCount"));
 
                         ArrayList<String> friends = (ArrayList<String>) documentSnapshot.get("friends");
                         if (friends != null) {
