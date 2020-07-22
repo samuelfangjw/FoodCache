@@ -141,6 +141,7 @@ public class UnclassifiedAdapter extends
                         docData.put("quantity", quantity);
                         docData.put("units", units);
                         docData.put("location", tab);
+                        docData.put("nameLowerCase", nameString.toLowerCase());
                         inventory.checkBarcode(docData);
 
                         snapshots.remove(position);
@@ -179,7 +180,7 @@ public class UnclassifiedAdapter extends
             }
         });
 
-        Query query = barcodeRef.whereEqualTo("Name", name).limit(1);
+        Query query = barcodeRef.whereEqualTo("nameLowerCase", name.toLowerCase()).limit(1);
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {

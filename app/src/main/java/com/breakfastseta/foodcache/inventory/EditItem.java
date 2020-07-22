@@ -156,6 +156,7 @@ public class EditItem extends AppCompatActivity {
                 update.put("quantity", quantity);
                 update.put("dateTimestamp", dateTimestamp);
                 update.put("expiryMap", newExpiryMap);
+                update.put("nameLowerCase", ingredient.toLowerCase());
                 docRef.update(update);
             }
 

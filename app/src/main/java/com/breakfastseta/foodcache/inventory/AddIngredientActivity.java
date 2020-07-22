@@ -110,8 +110,9 @@ public class AddIngredientActivity extends AppCompatActivity {
             docData.put("quantity", quantity);
             docData.put("units", units);
             docData.put("location", tab);
+            docData.put("nameLowerCase", ingredient.toLowerCase());
 
-            Query query = barcodeRef.whereEqualTo("Name", ingredient).limit(1);
+            Query query = barcodeRef.whereEqualTo("nameLowerCase", ingredient.toLowerCase()).limit(1);
 
             // updating barcode database if barcode found
             if (barcode != null) {

@@ -72,9 +72,10 @@ public class Inventory {
         String name = ingredient.getIngredient();
         String units = ingredient.getUnits();
         String location = ingredient.getLocation();
+        String nameLowerCase = ingredient.getNameLowerCase();
 
         Query query = inventoryRef
-                .whereEqualTo("ingredient", name)
+                .whereEqualTo("nameLowerCase", nameLowerCase)
                 .whereEqualTo("units", units)
                 .whereEqualTo("location", location)
                 .limit(1);
@@ -136,9 +137,7 @@ public class Inventory {
     }
 
     public void checkBarcode(Map<String, Object> docData) {
-        Log.d(TAG, "checkBarcode: CHECKING BARCODE");
-
-        Query query = barcodeRef.whereEqualTo("Name", docData.get("Name")).limit(1);
+        Query query = barcodeRef.whereEqualTo("nameLowerCase", docData.get("nameLowerCase")).limit(1);
 
         // update document with matching field, else create new document
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

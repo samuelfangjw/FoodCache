@@ -2,6 +2,7 @@ package com.breakfastseta.foodcache.recipe.viewrecipe;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -73,8 +74,8 @@ public class RemoveQuantityActivity extends AppCompatActivity {
                 for (DocumentSnapshot document : snapshots) {
                     String name = document.getString("ingredient");
                     String units = document.getString("units");
-                    String mapKey = name + units;
-
+                    String nameLowerCase = document.getString("nameLowerCase");
+                    String mapKey = nameLowerCase + units;
                     Double quantity = document.getDouble("quantity");
                     String location = document.getString("location");
                     String path = document.getReference().getPath();
@@ -97,13 +98,15 @@ public class RemoveQuantityActivity extends AppCompatActivity {
             String name = (String) i.get("name");
             double quantity = (double) i.get("quantity");
             String units = (String) i.get("units");
-            String key = name + units;
+
+            String key = name.toLowerCase() + units;
 
             if (ingredientsOwned.containsKey(key)) {
                 ExistingIngredientSnippet existingSnippet = ingredientsOwned.get(key);
                 existingSnippet.setQuantityUsed(quantity);
-                ingredientsMatch.put(existingSnippet.getName(), existingSnippet);
+                ingredientsMatch.put(name, existingSnippet);
             }
+
         }
         setUpRecyclerView();
     }
@@ -157,10 +160,10 @@ public class RemoveQuantityActivity extends AppCompatActivity {
                         if (quantityLeft > 0) {
                             Timestamp ts = entry.getKey();
                             Double quantity = entry.getValue();
+                            dateTimestamp = ts;
 
                             if (quantity >= quantityLeft) {
                                 quantity = quantityLeft;
-                                dateTimestamp = ts;
                             }
                             quantityLeft -= quantity;
                             newExpiryMap.put(ts.toString(), quantity);
@@ -170,6 +173,10 @@ public class RemoveQuantityActivity extends AppCompatActivity {
                     update.put("dateTimestamp", dateTimestamp);
                     update.put("expiryMap", newExpiryMap);
                     db.document(path).update(update);
+
+                    //TODO fix this shit
+                    Log.d(TAG, "acceptChanges: " + path);
+                    Log.d(TAG, "acceptChanges: " + update);
                 }
             }
 
@@ -235,9 +242,9 @@ public class RemoveQuantityActivity extends AppCompatActivity {
         }
 
         public void newLocation(String location, Double quantity, String path, Map<String, Double> expiryMap) {
-            quantity += quantity;
-            quantityMap.put(location, quantity);
-            pathMap.put(location, path);
+            this.quantity += quantity;
+            this.quantityMap.put(location, quantity);
+            this.pathMap.put(location, path);
             this.expiryMap.put(location, expiryMap);
         }
 

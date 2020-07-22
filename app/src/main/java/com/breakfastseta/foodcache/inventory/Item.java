@@ -15,18 +15,20 @@ public class Item {
     private String units;
     private String location;
     private Map<String, Double> expiryMap = new HashMap<>();
+    private String nameLowerCase;
 
     public Item() {
         //empty constructor required for Firestore
     }
 
     public Item(String ingredient, double quantity, Timestamp dateTimestamp, String units, String location) {
-        this.ingredient = ingredient;
+        this.ingredient = ingredient.trim();
         this.quantity = quantity;
         this.dateTimestamp = dateTimestamp;
         this.units = units;
         this.location = location;
         expiryMap.put(dateTimestamp.toString(), quantity);
+        this.nameLowerCase = ingredient.trim().toLowerCase();
     }
 
     public String getIngredient() {
@@ -59,6 +61,10 @@ public class Item {
 
     public void setQuantity(double quantity) {
         this.quantity = quantity;
+    }
+
+    public String getNameLowerCase() {
+        return nameLowerCase;
     }
 
     //calculates expiry from expiryMap
