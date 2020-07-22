@@ -31,6 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.mikepenz.actionitembadge.library.ActionItemBadge;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,7 +51,8 @@ public class FoodcacheActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     String uid = App.getFamilyUID();
     private CollectionReference inventoryRef = db.collection("Users").document(uid).collection("Inventory");
-    private CollectionReference unclassifiedRef = db.collection("Users").document(uid).collection("Unclassified");
+
+    MenuItem menuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +92,12 @@ public class FoodcacheActivity extends AppCompatActivity {
         super.onStart();
 
         manageNotifications();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         checkUnclassified();
     }
 
@@ -101,6 +109,13 @@ public class FoodcacheActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.foodcache_menu, menu);
+        menuItem = menu.findItem(R.id.action_unclassified);
+        if (App.getUnclassifiedNum() > 0) {
+            ActionItemBadge.update(this, menu.findItem(R.id.action_unclassified), getDrawable(R.drawable.ic_unclassified), ActionItemBadge.BadgeStyles.RED, App.getUnclassifiedNum());
+        } else {
+            ActionItemBadge.hide(menu.findItem(R.id.action_unclassified));
+        }
+
         return true;
     }
 
@@ -164,24 +179,14 @@ public class FoodcacheActivity extends AppCompatActivity {
     }
 
     private void checkUnclassified() {
-//        unclassifiedRef.get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            for (QueryDocumentSnapshot document : task.getResult()) {
-//                                String path = document.getReference().getPath();
-//                                DialogFragment dialogFragment = new UnclassifiedDialogFragment();
-//                                Bundle bundle = new Bundle();
-//                                bundle.putString("path", path);
-//                                dialogFragment.setArguments(bundle);
-//                                dialogFragment.show(getSupportFragmentManager(), "unclassified");
-//                            }
-//                        } else {
-//                            Log.d(TAG, "Error getting documents: ", task.getException());
-//                        }
-//                    }
-//                });
+        if (menuItem != null) {
+            int num = App.getUnclassifiedNum();
+            if (num > 0) {
+                ActionItemBadge.update(menuItem, num);
+            } else {
+                ActionItemBadge.hide(menuItem);
+            }
+        }
     }
 
     @Override

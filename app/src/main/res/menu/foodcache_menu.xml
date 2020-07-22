@@ -5,7 +5,7 @@
     <item
         android:title="Unclassified Notifications"
         android:id="@+id/action_unclassified"
-        android:icon="@drawable/ic_unclassified"
+        app:actionLayout="@layout/menu_action_item_badge"
         app:showAsAction="always"
         />
 

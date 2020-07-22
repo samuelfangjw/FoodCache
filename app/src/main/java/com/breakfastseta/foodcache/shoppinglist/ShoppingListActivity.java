@@ -135,6 +135,7 @@ public class ShoppingListActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             adapter.restoreItem(shopItem);
+                            App.minusUnclassifiedNum();
                         }
                     }).setDuration(5000).setActionTextColor(Color.YELLOW)
                     .addCallback(new Snackbar.Callback() {
@@ -157,12 +158,12 @@ public class ShoppingListActivity extends AppCompatActivity {
                                     incompleteItem.put("quantity", quantity);
                                     incompleteItem.put("units", units);
                                     unclassifiedRef.add(incompleteItem);
-                                    App.plusUnclassifiedNum();
                                     break;
                             }
                         }
                     });
                     snackbar.show();
+                    App.plusUnclassifiedNum();
                 }
             }
 

@@ -83,4 +83,10 @@ dependencies {
     //nice-spinner https://github.com/arcadefire/nice-spinner
     implementation 'com.github.arcadefire:nice-spinner:1.4.4'
 
+    //Android-ActionItemBadge https://github.com/mikepenz/Android-ActionItemBadge
+    // Don't upgrade these will break other dependencies
+    //noinspection GradleDependency
+    implementation 'com.mikepenz:actionitembadge:3.3.2@aar'
+    //noinspection GradleDependency
+    implementation 'com.mikepenz:iconics-core:3.2.5@aar'
 }

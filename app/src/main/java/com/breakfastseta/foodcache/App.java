@@ -36,7 +36,7 @@ public class App extends Application {
     public static final int GOOGLE = 1;
     public static final int ANONYMOUS = 2;
 
-    public static long unclassifiedNum;
+    public static int unclassifiedNum;
 
     public static ArrayList<String> tabs;
 
@@ -114,7 +114,7 @@ public class App extends Application {
         unclassifiedRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot snapshots) {
-                Long num = 0L;
+                int num = 0;
                 for (DocumentSnapshot d : snapshots) {
                     num ++;
                 }
@@ -216,7 +216,7 @@ public class App extends Application {
         App.listener = listener;
     }
 
-    public static long getUnclassifiedNum() {
+    public static int getUnclassifiedNum() {
         return unclassifiedNum;
     }
 
