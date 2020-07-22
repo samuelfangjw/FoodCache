@@ -1,41 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginHorizontal="16dp"
+        android:layout_weight="1"
         android:text="@string/location"
-        android:layout_weight="1"/>
-
-    <TextView
-        android:id="@+id/quantityBefore"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/quantity"
-        android:layout_weight="1"/>
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_arrow_right"
-        android:layout_weight="1"/>
-
-    <TextView
-        android:id="@+id/quantityAfter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/quantity"
-        android:layout_weight="1"/>
+        android:textColor="@color/md_black_1000"
+        android:textSize="18sp" />
 
     <com.tobiasschuerg.prefixsuffix.PrefixSuffixEditText
         android:id="@+id/quantityUsed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/location"
+        android:layout_alignParentLeft="true"
+        android:layout_marginHorizontal="16dp"
+        android:layout_toLeftOf="@+id/changes"
         android:inputType="numberDecimal"
-        android:text="Quantity Used" />
+        android:text="Quantity Used"
+        android:textColor="@color/md_black_1000" />
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/changes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:layout_marginHorizontal="16dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/quantityBefore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/quantity"
+            android:textColor="@color/md_black_1000"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="8dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_arrow_right"
+            android:tint="@color/md_black_1000" />
+
+        <TextView
+            android:id="@+id/quantityAfter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/quantity"
+            android:textColor="@color/md_black_1000"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+</RelativeLayout>

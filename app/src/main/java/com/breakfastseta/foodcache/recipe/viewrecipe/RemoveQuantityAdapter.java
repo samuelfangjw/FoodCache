@@ -85,7 +85,7 @@ public class RemoveQuantityAdapter extends
             Double leftInitial = quantity - quantityAfter;
             quantityAfterTV.setText(Util.formatQuantity(leftInitial, units));
             quantityUsedET.setText(Util.formatQuantityNumber(quantityAfter, units));
-            quantityUsedET.setSuffix(units);
+            quantityUsedET.setSuffix(" " + units);
             quantityMap.put(location, leftInitial);
 
             quantityUsedET.addTextChangedListener(new TextWatcher() {

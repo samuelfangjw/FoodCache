@@ -208,11 +208,11 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         StringBuilder steps_text = new StringBuilder();
         int count = steps.size();
-        for (int i = 0; i < count; i++) {
-            if (i == count - 1) {
-                steps_text.append(steps.get(i));
+        for (int i = 1; i < count + 1; i++) {
+            if (i == count) {
+                steps_text.append("Step ").append(i).append(": ").append(steps.get(i - 1));
             } else {
-                steps_text.append(steps.get(i)).append("\n");
+                steps_text.append("Step ").append(i).append(": ").append(steps.get(i - 1)).append("\n");
             }
         }
 
