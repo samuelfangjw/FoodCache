@@ -94,7 +94,7 @@ public class App extends Application {
                             profile.setRecipesPrepared(recipesPrepared);
                             setTabs();
                         } else {
-                            profileRef.set(profile).addOnCompleteListener(task1 -> setTabs());
+                            setTabs();
                         }
                     }
 
