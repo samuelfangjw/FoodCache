@@ -52,7 +52,6 @@ public class FoodcacheActivity extends AppCompatActivity {
     private CollectionReference inventoryRef = db.collection("Users").document(uid).collection("Inventory");
     private CollectionReference unclassifiedRef = db.collection("Users").document(uid).collection("Unclassified");
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

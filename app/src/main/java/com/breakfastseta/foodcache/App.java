@@ -12,16 +12,18 @@ import androidx.annotation.NonNull;
 
 import com.breakfastseta.foodcache.profile.Profile;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +35,8 @@ public class App extends Application {
     public static final int PASSWORD = 0;
     public static final int GOOGLE = 1;
     public static final int ANONYMOUS = 2;
+
+    public static long unclassifiedNum;
 
     public static ArrayList<String> tabs;
 
@@ -93,6 +97,9 @@ public class App extends Application {
                             profileRef.set(profile).addOnCompleteListener(task1 -> setTabs());
                         }
                     }
+
+                    checkNumUnclassified();
+
                 } else {
                     Toast.makeText(context, "Something went wrong, please restart", Toast.LENGTH_LONG).show();
                 }
@@ -100,6 +107,20 @@ public class App extends Application {
         });
 
         setProvider();
+    }
+
+    private static void checkNumUnclassified() {
+        CollectionReference unclassifiedRef = FirebaseFirestore.getInstance().collection("Users").document(App.getFamilyUID()).collection("Unclassified");
+        unclassifiedRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot snapshots) {
+                Long num = 0L;
+                for (DocumentSnapshot d : snapshots) {
+                    num ++;
+                }
+                unclassifiedNum = num;
+            }
+        });
     }
 
     public static DocumentReference getProfileRef() {
@@ -134,9 +155,7 @@ public class App extends Application {
                     ArrayList<String> arr = new ArrayList<>();
                     arr.add("Fridge");
                     arr.add("Pantry");
-                    Map<String, ArrayList<String>> map = new HashMap<>();
-                    map.put("tabs", arr);
-                    tabsRef.set(map);
+                    tabsRef.update("tabs", arr);
                     tabs = arr;
                 } else {
                     tabs = (ArrayList<String>) task.getResult().get("tabs");
@@ -195,5 +214,17 @@ public class App extends Application {
 
     public static void setOnAppCompleteListener(OnAppCompleteListener listener) {
         App.listener = listener;
+    }
+
+    public static long getUnclassifiedNum() {
+        return unclassifiedNum;
+    }
+
+    public static void minusUnclassifiedNum() {
+        unclassifiedNum--;
+    }
+
+    public static void plusUnclassifiedNum() {
+        unclassifiedNum++;
     }
 }

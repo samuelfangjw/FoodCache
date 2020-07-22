@@ -17,7 +17,6 @@ import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.MainActivity;
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
-import com.breakfastseta.foodcache.family.FamilyActivity;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -87,9 +86,6 @@ public class ProfileActivity extends AppCompatActivity {
                 return true;
             case R.id.action_log_out:
                 signOut();
-                return true;
-            case R.id.action_settings:
-                this.startActivity(new Intent(this, FamilyActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

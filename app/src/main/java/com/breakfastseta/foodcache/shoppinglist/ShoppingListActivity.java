@@ -157,51 +157,7 @@ public class ShoppingListActivity extends AppCompatActivity {
                                     incompleteItem.put("quantity", quantity);
                                     incompleteItem.put("units", units);
                                     unclassifiedRef.add(incompleteItem);
-
-
-//                                    Query query = barcodeRef.whereEqualTo("Name", ingredient).limit(1);
-//                                    query.get()
-//                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                                            @Override
-//                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                                                if (task.isSuccessful()) {
-//                                                    QuerySnapshot result = task.getResult();
-//                                                    if (result.isEmpty()) {
-//                                                        Map<String, Object> incompleteItem = new HashMap<>();
-//                                                        incompleteItem.put("Name", ingredient);
-//                                                        incompleteItem.put("quantity", quantity);
-//                                                        incompleteItem.put("units", units);
-//
-//                                                        unclassifiedRef.add(incompleteItem);
-//                                                    } else {
-//                                                        for (QueryDocumentSnapshot document : result) {
-//                                                            Map<String, Object> map = document.getData();
-//                                                            long expiryInMillies = (long) map.get("expiryDays");
-//                                                            String location = (String) map.get("location");
-//
-//                                                            // calculating expiry date
-//                                                            Timestamp now = new Timestamp(new Date());
-//                                                            Date expiry = new Date(now.getSeconds() * 1000 + expiryInMillies);
-//
-//                                                            // Removing time part from date
-//                                                            Calendar cal = Calendar.getInstance();
-//                                                            cal.setTime(expiry);
-//                                                            cal.set(Calendar.HOUR_OF_DAY, 0);
-//                                                            cal.set(Calendar.MINUTE, 0);
-//                                                            cal.set(Calendar.SECOND, 0);
-//                                                            cal.set(Calendar.MILLISECOND, 0);
-//                                                            expiry = cal.getTime();
-//
-//                                                            Timestamp dateTimestamp = new Timestamp(expiry);
-//
-//                                                            Inventory.create().addIngredient(new Item(ingredient, quantity, dateTimestamp, units, location));
-//                                                        }
-//                                                    }
-//                                                } else {
-//                                                    Log.d(TAG, "Error getting documents: ", task.getException());
-//                                                }
-//                                            }
-//                                        });
+                                    App.plusUnclassifiedNum();
                                     break;
                             }
                         }

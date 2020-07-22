@@ -1,5 +1,7 @@
 package com.breakfastseta.foodcache;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.breakfastseta.foodcache.inventory.Item;
@@ -11,6 +13,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Date;
@@ -26,13 +29,14 @@ public class Inventory {
     private static String uid = App.getFamilyUID();
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static CollectionReference inventoryRef = db.collection("Users").document(uid).collection("Inventory");
+    private static CollectionReference barcodeRef = db.collection("Users").document(uid).collection("Barcodes");
 
     Inventory() {
         // empty constructor
     }
 
     public static Inventory create() {
-     return new Inventory();
+        return new Inventory();
     }
 
     // Helper class to add based on units
@@ -64,7 +68,6 @@ public class Inventory {
     }
 
     public Inventory addIngredient(Item ingredient) {
-        //TODO handle barcoderef
         //Check if ingredient with same units exists
         String name = ingredient.getIngredient();
         String units = ingredient.getUnits();
@@ -89,7 +92,7 @@ public class Inventory {
                         }
                     });
                 } else {
-                    for (DocumentSnapshot document: snapshot) {
+                    for (DocumentSnapshot document : snapshot) {
                         DocumentReference docRef = document.getReference();
                         Double quantity = document.getDouble("quantity");
                         Map<String, Double> expiryMap = (Map<String, Double>) document.get("expiryMap");
@@ -132,6 +135,32 @@ public class Inventory {
         return this;
     }
 
+    public void checkBarcode(Map<String, Object> docData) {
+        Log.d(TAG, "checkBarcode: CHECKING BARCODE");
+
+        Query query = barcodeRef.whereEqualTo("Name", docData.get("Name")).limit(1);
+
+        // update document with matching field, else create new document
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot result = task.getResult();
+                    if (result.isEmpty()) { // no matching document found
+                        barcodeRef.add(docData);
+                    } else { // matching document found
+                        for (QueryDocumentSnapshot document : result) {
+                            String path = document.getReference().getPath();
+                            db.document(path).set(docData);
+                        }
+                    }
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
+    }
+
     public static Timestamp stringToTimestamp(String string) {
         String[] arr = string.split(" ");
         String secondsString = arr[0].replaceAll("[^0-9]", "");
@@ -144,7 +173,7 @@ public class Inventory {
     }
 
     private void callback() {
-        if(listener != null){
+        if (listener != null) {
             listener.onFinish();
         }
     }
@@ -153,7 +182,7 @@ public class Inventory {
         void onFinish();
     }
 
-    public void setListener(OnFinishListener value){
+    public void setListener(OnFinishListener value) {
         this.listener = value;
     }
 }

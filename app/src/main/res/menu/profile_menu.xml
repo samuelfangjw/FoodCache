@@ -10,13 +10,6 @@
         />
 
     <item
-        android:title="Settings"
-        android:id="@+id/action_settings"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_baseline_settings_24"
-        />
-
-    <item
         android:title="Log Out"
         android:id="@+id/action_log_out"
         app:showAsAction="never"

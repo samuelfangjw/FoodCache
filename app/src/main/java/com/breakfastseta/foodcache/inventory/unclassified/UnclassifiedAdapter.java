@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -89,6 +90,7 @@ public class UnclassifiedAdapter extends
                 snapshot.getReference().delete();
                 snapshots.remove(position);
                 notifyItemRemoved(position);
+                App.minusUnclassifiedNum();
             }
         });
 
@@ -117,16 +119,28 @@ public class UnclassifiedAdapter extends
 
                         Timestamp dateTimestamp = new Timestamp(date);
 
-                        Inventory.create()
-                                .addIngredient(new Item(name, quantity, dateTimestamp, units, tab))
+                        Inventory inventory = Inventory.create();
+                        inventory.addIngredient(new Item(nameString, quantity, dateTimestamp, units, tab))
                                 .setListener(new Inventory.OnFinishListener() {
                                     @Override
                                     public void onFinish() {
                                         snapshot.getReference().delete();
                                     }
                                 });
+
+                        Date now = new Date();
+                        final long expiryDays = date.getTime() - now.getTime();
+                        final Map<String, Object> docData = new HashMap<>();
+                        docData.put("Name", nameString);
+                        docData.put("expiryDays", expiryDays);
+                        docData.put("quantity", quantity);
+                        docData.put("units", units);
+                        docData.put("location", tab);
+                        inventory.checkBarcode(docData);
+
                         snapshots.remove(position);
                         notifyItemRemoved(position);
+                        App.minusUnclassifiedNum();
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
