@@ -50,6 +50,7 @@ public class UnclassifiedAdapter extends
     private ArrayList<DocumentSnapshot> snapshots;
     private Context context;
     CollectionReference barcodeRef = FirebaseFirestore.getInstance().collection("Users").document(App.getFamilyUID()).collection("Barcodes");
+    private UnclassifiedListener listener;
 
     public UnclassifiedAdapter(ArrayList<DocumentSnapshot> snapshots, Context context) {
         this.snapshots = snapshots;
@@ -91,6 +92,10 @@ public class UnclassifiedAdapter extends
                 snapshots.remove(position);
                 notifyItemRemoved(position);
                 App.minusUnclassifiedNum();
+
+                if (snapshots.isEmpty()) {
+                    listener.onEmpty();
+                }
             }
         });
 
@@ -141,6 +146,10 @@ public class UnclassifiedAdapter extends
                         snapshots.remove(position);
                         notifyItemRemoved(position);
                         App.minusUnclassifiedNum();
+
+                        if (snapshots.isEmpty()) {
+                            listener.onEmpty();
+                        }
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -263,5 +272,13 @@ public class UnclassifiedAdapter extends
             discardButton = (Button) itemView.findViewById(R.id.discard_button);
             saveButton = (Button) itemView.findViewById(R.id.save_button);
         }
+    }
+
+    public interface UnclassifiedListener {
+        void onEmpty();
+    }
+
+    public void setUnclassifiedListener(UnclassifiedListener listener) {
+        this.listener = listener;
     }
 }

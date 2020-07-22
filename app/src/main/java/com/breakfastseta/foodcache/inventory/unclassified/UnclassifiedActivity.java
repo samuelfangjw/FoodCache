@@ -60,6 +60,14 @@ public class UnclassifiedActivity extends AppCompatActivity {
                 adapter = new UnclassifiedAdapter(snapshotsArr, UnclassifiedActivity.this);
                 recyclerView.setAdapter(adapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(UnclassifiedActivity.this));
+
+                adapter.setUnclassifiedListener(new UnclassifiedAdapter.UnclassifiedListener() {
+                    @Override
+                    public void onEmpty() {
+                        TextView message = findViewById(R.id.message);
+                        message.setVisibility(View.VISIBLE);
+                    }
+                });
             }
         });
     }
