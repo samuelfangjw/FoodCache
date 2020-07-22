@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -84,6 +85,8 @@ public class AddRecipeFragmentTwo extends Fragment {
         // Set layout manager to position the items
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        addItemTouchHelper();
+
         List<String> unitsArr = Arrays.asList(getResources().getStringArray(R.array.units));
         spinner_units.attachDataSource(unitsArr);
 
@@ -91,6 +94,24 @@ public class AddRecipeFragmentTwo extends Fragment {
         button_next.setOnClickListener(v -> {
             listener.nextFragmentTwo(arr);
         });
+    }
+
+    private void addItemTouchHelper() {
+        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                adapter.delete(position);
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
     public interface FragmentTwoListener {

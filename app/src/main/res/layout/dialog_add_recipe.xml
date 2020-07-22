@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/edit_text_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:layout_alignParentTop="true"
+        android:hint="Ingredient Name"
+        android:inputType="text"
+        android:textColor="@color/md_black_1000"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/edit_text_quantity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_text_name"
+        android:layout_margin="8dp"
+        android:hint="@string/quantity"
+        android:inputType="numberDecimal"
+        android:textColor="@color/md_black_1000"
+        android:textSize="20sp" />
+
+    <org.angmarch.views.NiceSpinner
+        android:id="@+id/spinner_units"
+        android:layout_below="@id/edit_text_name"
+        android:layout_toRightOf="@id/edit_text_quantity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp" />
+
+</RelativeLayout>

@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -76,6 +77,8 @@ public class AddRecipeFragmentThree extends Fragment {
         // Set layout manager to position the items
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        addItemTouchHelper();
+
         addButton.setOnClickListener(v -> addStep());
         saveRecipe.setOnClickListener(v -> {
             if (arr.isEmpty()) {
@@ -86,6 +89,26 @@ public class AddRecipeFragmentThree extends Fragment {
         });
     }
 
+    private void addItemTouchHelper() {
+        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                int stepNumber = arr.size();
+                editText_step.setPrefix("Step " + (stepNumber) + ": ");
+                adapter.delete(position);
+
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+    }
 
 
     public interface FragmentThreeListener {
@@ -96,7 +119,7 @@ public class AddRecipeFragmentThree extends Fragment {
         String step = editText_step.getText().toString().trim();
         int stepNumber = arr.size() + 1;
 
-        if(!step.isEmpty()) {
+        if (!step.isEmpty()) {
             int pos = adapter.getItemCount();
             arr.add(step);
 
