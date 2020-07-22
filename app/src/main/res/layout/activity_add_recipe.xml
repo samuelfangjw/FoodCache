@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".recipe.addrecipe.AddRecipeActivity">
+    tools:context=".recipe.addeditrecipe.AddRecipeActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

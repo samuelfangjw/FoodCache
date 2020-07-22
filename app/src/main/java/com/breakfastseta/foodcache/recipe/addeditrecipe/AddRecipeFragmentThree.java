@@ -1,4 +1,4 @@
-package com.breakfastseta.foodcache.recipe.addrecipe;
+package com.breakfastseta.foodcache.recipe.addeditrecipe;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -34,7 +34,12 @@ public class AddRecipeFragmentThree extends Fragment {
 
 
     public AddRecipeFragmentThree() {
-        // Required empty public constructor
+        // Empty constructor for add activity
+    }
+
+    public AddRecipeFragmentThree(ArrayList<String> steps) {
+        // constructor for edit activity
+        arr.addAll(steps);
     }
 
     @Override

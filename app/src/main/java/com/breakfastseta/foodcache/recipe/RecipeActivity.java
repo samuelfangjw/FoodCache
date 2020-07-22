@@ -11,7 +11,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
-import com.breakfastseta.foodcache.recipe.addrecipe.AddRecipeActivity;
+import com.breakfastseta.foodcache.recipe.addeditrecipe.AddRecipeActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;

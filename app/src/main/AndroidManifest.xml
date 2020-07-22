@@ -29,7 +29,10 @@
         <activity android:name=".recipe.viewrecipe.CookRecipeActivity" />
         <activity android:name=".recipe.discover.DiscoverRecipeActivity" />
         <activity
-            android:name=".recipe.addrecipe.AddRecipeActivity"
+            android:name=".recipe.addeditrecipe.AddRecipeActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".recipe.addeditrecipe.EditRecipeActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".recipe.viewrecipe.ViewRecipeActivity" />
         <activity android:name=".recipe.RecipeActivity" />

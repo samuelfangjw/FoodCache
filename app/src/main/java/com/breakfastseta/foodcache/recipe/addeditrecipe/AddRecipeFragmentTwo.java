@@ -1,4 +1,4 @@
-package com.breakfastseta.foodcache.recipe.addrecipe;
+package com.breakfastseta.foodcache.recipe.addeditrecipe;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -24,6 +24,7 @@ import org.angmarch.views.NiceSpinner;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class AddRecipeFragmentTwo extends Fragment {
 
@@ -40,7 +41,18 @@ public class AddRecipeFragmentTwo extends Fragment {
     private Button button_next;
 
     public AddRecipeFragmentTwo() {
-        // Required empty public constructor
+        // empty public constructor for add recipe
+    }
+
+    public AddRecipeFragmentTwo(ArrayList<Map<String, Object>> ingredients) {
+        // for edit recipe activity
+        for (Map<String, Object> map : ingredients) {
+            String name = (String) map.get("name");
+            Double quantity = (Double) map.get("quantity");
+            String units = (String) map.get("units");
+
+            arr.add(new Ingredient(name, quantity, units));
+        }
     }
 
     @Override
@@ -94,6 +106,7 @@ public class AddRecipeFragmentTwo extends Fragment {
         button_next.setOnClickListener(v -> {
             listener.nextFragmentTwo(arr);
         });
+
     }
 
     private void addItemTouchHelper() {

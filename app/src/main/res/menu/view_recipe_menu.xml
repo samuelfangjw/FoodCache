@@ -10,6 +10,13 @@
         />
 
     <item
+        android:title="Edit"
+        android:id="@+id/action_edit"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_edit"
+        />
+
+    <item
         android:title="Save"
         android:id="@+id/action_save"
         app:showAsAction="ifRoom"

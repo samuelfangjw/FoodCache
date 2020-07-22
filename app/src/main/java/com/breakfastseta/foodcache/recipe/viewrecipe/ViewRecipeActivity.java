@@ -26,6 +26,7 @@ import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
 import com.breakfastseta.foodcache.recipe.RecipeSnippet;
+import com.breakfastseta.foodcache.recipe.addeditrecipe.EditRecipeActivity;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -67,6 +68,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
     Drawable save_icon;
     MenuItem delete_menu_item;
     Drawable delete_icon;
+    MenuItem edit_menu_item;
+    Drawable edit_icon;
     DocumentSnapshot documentSnapshot;
     String path;
     String imagePath;
@@ -77,6 +80,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
     ArrayList<Map<String, Object>> ingredients;
     String owner;
     ArrayList<String> viewers;
+    String author;
     boolean isPublic;
 
     @Override
@@ -113,6 +117,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
                     if (save_icon != null) {
                         save_icon.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
                         delete_icon.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
+                        edit_icon.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
                     }
                 } else { // Expanded
                     toolbar.setBackgroundColor(Color.TRANSPARENT);
@@ -121,6 +126,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
                     if (save_icon != null) {
                         save_icon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
                         delete_icon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+                        edit_icon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
                     }
                 }
             }
@@ -153,12 +159,14 @@ public class ViewRecipeActivity extends AppCompatActivity {
         delete_menu_item = menu.findItem(R.id.action_delete);
         save_icon = menu.findItem(R.id.action_save).getIcon();
         delete_icon = delete_menu_item.getIcon();
+        edit_menu_item = menu.findItem(R.id.action_edit);
+        edit_icon = edit_menu_item.getIcon();
         return true;
     }
 
     private void setTextView() {
         imagePath = documentSnapshot.getString("photo");
-        String author = documentSnapshot.getString("author");
+        author = documentSnapshot.getString("author");
         name = documentSnapshot.getString("name");
         cuisine = documentSnapshot.getString("cuisine");
         ingredients = (ArrayList<Map<String, Object>>) documentSnapshot.get("ingredients");
@@ -169,6 +177,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
         viewers = (ArrayList<String>) documentSnapshot.get("viewers");
         isPublic = documentSnapshot.getBoolean("isPublic");
         toggleDeleteIcon();
+        toggleEditIcon();
 
         if (imagePath != null) {
             Uri image_path = Uri.parse(imagePath);
@@ -227,6 +236,14 @@ public class ViewRecipeActivity extends AppCompatActivity {
         }
     }
 
+    private void toggleEditIcon() {
+        if (!owner.equals(uid)) {
+            edit_menu_item.setVisible(false);
+        } else {
+            edit_menu_item.setVisible(true);
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -239,9 +256,27 @@ public class ViewRecipeActivity extends AppCompatActivity {
             case R.id.action_delete:
                 delete_recipe();
                 return true;
+            case R.id.action_edit:
+                edit_recipe();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void edit_recipe() {
+        Intent intent = new Intent(this, EditRecipeActivity.class);
+        Bundle args = new Bundle();
+        args.putString("name", name);
+        args.putString("imagePath", imagePath);
+        args.putString("author", author);
+        args.putString("cuisine", cuisine);
+        args.putString("description", description);
+        args.putSerializable("steps", (Serializable) steps);
+        args.putSerializable("ingredients", (Serializable) ingredients);
+        args.putString("path", path);
+        intent.putExtra("bundle", args);
+        startActivity(intent);
     }
 
     private void delete_recipe() {

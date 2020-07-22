@@ -1,4 +1,4 @@
-package com.breakfastseta.foodcache.recipe.addrecipe;
+package com.breakfastseta.foodcache.recipe.addeditrecipe;
 
 import android.net.Uri;
 import android.os.Bundle;

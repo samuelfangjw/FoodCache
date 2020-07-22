@@ -133,37 +133,6 @@
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginVertical="8dp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:text="Settings"
-                android:textColor="@color/md_black_1000"
-                android:textSize="20sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="8dp">
-
-                <TextView
-                    android:id="@+id/tv_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
-                    android:text="@string/private_string"
-                    android:textColor="@color/md_black_1000"
-                    android:textSize="18sp" />
-
-                <Switch
-                    android:id="@+id/public_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/md_black_1000"
-                    android:textOff="@string/private_string"
-                    android:textOn="@string/public_string" />
-            </LinearLayout>
-
         </LinearLayout>
     </ScrollView>
 
