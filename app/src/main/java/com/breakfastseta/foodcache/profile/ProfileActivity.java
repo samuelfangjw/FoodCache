@@ -113,7 +113,11 @@ public class ProfileActivity extends AppCompatActivity {
         }
         emailTextView.setText("Email: "+ email);
         friendsCount.setText("" + profile.getFriendsCount());
-        recipesCount.setText("" + profile.getRecipeCount());
+        Long recipeCount = profile.getRecipeCount();
+        if (recipeCount == null) {
+            recipeCount = 0L;
+        }
+        recipesCount.setText("" + recipeCount);
     }
 
     public void signOut() {
