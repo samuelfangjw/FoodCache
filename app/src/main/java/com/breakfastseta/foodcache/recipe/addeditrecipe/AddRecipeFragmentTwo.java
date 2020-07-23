@@ -113,7 +113,11 @@ public class AddRecipeFragmentTwo extends Fragment {
 
         button_add.setOnClickListener(v -> addIngredient());
         button_next.setOnClickListener(v -> {
-            listener.nextFragmentTwo(arr);
+            if (arr.isEmpty()) {
+                Toast.makeText(getContext(), "Please add at least one ingredient", Toast.LENGTH_SHORT).show();
+            } else {
+                listener.nextFragmentTwo(arr);
+            }
         });
     }
 
