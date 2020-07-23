@@ -94,7 +94,7 @@ public class FamilyActivity extends AppCompatActivity {
 
             } else {
                 
-                if (App.getUID().equals(App.getFamilyUID())) {
+                if (profile.getFamilyUID() != null && profile.getUID().equals(profile.getFamilyUID())) {
                     toggle.setChecked(true);
                     Toast.makeText(this, "Owner cannot turn off family sharing", Toast.LENGTH_SHORT).show();
                 } else {

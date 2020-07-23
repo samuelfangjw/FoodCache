@@ -303,8 +303,4 @@ public class CardFragment extends Fragment {
         registration.remove();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
 }
