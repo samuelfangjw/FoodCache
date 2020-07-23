@@ -93,12 +93,18 @@ public class FamilyActivity extends AppCompatActivity {
                 });
 
             } else {
-                if (profile.getUseFamilySharing()) {
-                    profile.setUseFamilySharing(false);
-                    App.getProfileRef().update("useFamilySharing", false);
+                
+                if (App.getUID().equals(App.getFamilyUID())) {
+                    toggle.setChecked(true);
+                    Toast.makeText(this, "Owner cannot turn off family sharing", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (profile.getUseFamilySharing()) {
+                        profile.setUseFamilySharing(false);
+                        App.getProfileRef().update("useFamilySharing", false);
+                    }
+                    toggle_text.setText("Family Sharing: Off");
+                    toggle_text.setTextColor(Color.RED); 
                 }
-                toggle_text.setText("Family Sharing: Off");
-                toggle_text.setTextColor(Color.RED);
             }
         });
 
@@ -156,7 +162,12 @@ public class FamilyActivity extends AppCompatActivity {
         if (familyUID == null) {
             id_text.setText("Create or Join a family to get started!");
             toggleDisplay(false);
+            removeAdapter();
         } else {
+            if (App.getUID().equals(familyUID)) {
+                toggle.setChecked(true);
+            }
+
             familyRef.whereEqualTo("ownerUID", familyUID).limit(1).get().addOnSuccessListener(snapshots -> {
                 for (DocumentSnapshot d : snapshots) {
                     name = d.getString(("name"));
