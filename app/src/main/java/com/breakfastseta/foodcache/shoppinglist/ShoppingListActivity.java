@@ -74,7 +74,7 @@ public class ShoppingListActivity extends AppCompatActivity {
     private void setUpRecyclerView() {
         Query query = notebookRef.orderBy("noItems", Query.Direction.DESCENDING);
 
-        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        query.addSnapshotListener(this, new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
                 if (snapshots.isEmpty()) {

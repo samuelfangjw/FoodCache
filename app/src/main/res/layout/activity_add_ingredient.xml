@@ -13,51 +13,87 @@
         android:layout_alignParentTop="true"
         android:background="@color/primaryColor" />
 
+    <TextView
+        android:id="@+id/ingredient_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="8dp"
+        android:text="Ingredient Name"
+        android:textColor="@color/md_black_1000"
+        android:textSize="20sp" />
+
     <EditText
         android:id="@+id/edit_text_ingredient"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
-        android:hint="@string/ingredient"
+        android:layout_below="@+id/ingredient_text_view"
+        android:layout_marginHorizontal="16dp"
+        android:hint="Ingredient Name"
         android:inputType="text"
-        android:layout_margin="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/md_black_1000" />
+
+    <TextView
+        android:id="@+id/quantity_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_text_ingredient"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="8dp"
+        android:text="Quantity"
+        android:textColor="@color/md_black_1000"
+        android:textSize="20sp" />
 
     <EditText
         android:id="@+id/edit_text_quantity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/edit_text_ingredient"
+        android:layout_below="@+id/quantity_text_view"
+        android:layout_marginHorizontal="16dp"
         android:hint="@string/quantity"
         android:inputType="numberDecimal"
-        android:layout_margin="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/md_black_1000" />
 
-    <Spinner
+    <org.angmarch.views.NiceSpinner
         android:id="@+id/spinner_units"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/edit_text_quantity"
-        android:layout_toEndOf="@+id/edit_text_quantity"
-        android:layout_margin="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+        android:layout_toEndOf="@+id/edit_text_quantity" />
+
+    <TextView
+        android:id="@+id/expiry_date_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_text_quantity"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="8dp"
+        android:text="Expiry Date"
+        android:textColor="@color/md_black_1000"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/expiry_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/edit_text_quantity"
+        android:layout_below="@id/expiry_date_text_view"
+        android:textSize="18sp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="8dp"
         android:hint="@string/expiry_date"
         android:onClick="pickDate"
-        android:layout_margin="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+        android:textColor="@color/md_black_1000" />
 
-    <Spinner
+    <org.angmarch.views.NiceSpinner
         android:id="@+id/tab_spinner"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/expiry_date"
-        android:layout_margin="8dp" />
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="8dp" />
 
     <EditText
         android:id="@+id/edit_text_barcode"
@@ -66,34 +102,35 @@
         android:layout_below="@id/tab_spinner"
         android:hint="@string/barcode"
         android:inputType="number"
-        android:layout_margin="8dp"
+        android:textColor="@color/md_black_1000"
         android:visibility="invisible" />
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/add_item"
-        android:onClick="debugBarcode"
-        android:layout_margin="8dp"
-        android:text="@string/debug"
-        android:visibility="invisible" />
-
-    <Button
-        android:id="@+id/add_item"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/scan_item"
-        android:onClick="addNote"
-        android:layout_margin="8dp"
-        android:text="@string/add_item_button" />
-
-    <Button
-        android:id="@+id/scan_item"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:onClick="scanItem"
-        android:layout_margin="8dp"
-        android:text="@string/scan" />
+        android:layout_marginHorizontal="8dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/add_item"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:onClick="addNote"
+            android:text="@string/add_item_button" />
+
+        <Button
+            android:id="@+id/scan_item"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:onClick="scanItem"
+            android:text="@string/scan" />
+
+    </LinearLayout>
+
 
 </RelativeLayout>

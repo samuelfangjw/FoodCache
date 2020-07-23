@@ -95,20 +95,4 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
-// Example Code for Theme/logo and privacy/terms
-//    public void themeAndLogo() {
-//        List<AuthUI.IdpConfig> providers = Collections.emptyList();
-//
-//        // [START auth_fui_theme_logo]
-//        startActivityForResult(
-//                AuthUI.getInstance()
-//                        .createSignInIntentBuilder()
-//                        .setAvailableProviders(providers)
-//                        .setLogo(R.drawable.my_great_logo)      // Set logo drawable
-//                        .setTheme(R.style.MySuperAppTheme)      // Set theme
-//                        .build(),
-//                RC_SIGN_IN);
-//        // [END auth_fui_theme_logo]
-//    }
 }

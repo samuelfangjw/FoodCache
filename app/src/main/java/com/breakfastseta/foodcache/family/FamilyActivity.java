@@ -111,7 +111,7 @@ public class FamilyActivity extends AppCompatActivity {
     }
 
     private void setProfileListener() {
-        listenerProfile = App.getProfileRef().addSnapshotListener((documentSnapshot, e) -> {
+        listenerProfile = App.getProfileRef().addSnapshotListener(this, (documentSnapshot, e) -> {
             String familyUID = profile.getFamilyUID();
 
             if (documentSnapshot != null) {
@@ -141,7 +141,7 @@ public class FamilyActivity extends AppCompatActivity {
     }
 
     private void setFamilyRefListener(String nameLowercase) {
-        listener = familyRef.document(nameLowercase).addSnapshotListener((documentSnapshot, e) -> {
+        listener = familyRef.document(nameLowercase).addSnapshotListener(this, (documentSnapshot, e) -> {
             checkFamily();
             removeListener();
         });
@@ -204,7 +204,7 @@ public class FamilyActivity extends AppCompatActivity {
     private void setSnapshotListener(DocumentSnapshot snapshot) {
         DocumentReference docRef = snapshot.getReference();
 
-        docRef.addSnapshotListener((documentSnapshot, e) -> {
+        docRef.addSnapshotListener(this, (documentSnapshot, e) -> {
             if (documentSnapshot.exists()) {
                 ArrayList<String> members = (ArrayList<String>) documentSnapshot.get("members");
                 Map<String, Boolean> memberStatus = (Map<String, Boolean>) documentSnapshot.get("memberStatus");

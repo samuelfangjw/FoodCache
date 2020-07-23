@@ -197,7 +197,7 @@ public class DiscoverRecipeActivity extends AppCompatActivity {
     }
 
     private void setSnapshotListener() {
-        recipeRef.whereEqualTo("isPublic", true).addSnapshotListener(new EventListener<QuerySnapshot>() {
+        recipeRef.whereEqualTo("isPublic", true).addSnapshotListener(this, new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
                 if (e != null) {

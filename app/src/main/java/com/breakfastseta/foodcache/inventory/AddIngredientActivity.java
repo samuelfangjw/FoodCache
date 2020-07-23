@@ -6,10 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.Inventory;
 import com.breakfastseta.foodcache.R;
+import com.breakfastseta.foodcache.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
@@ -32,11 +31,16 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import org.angmarch.views.NiceSpinner;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AddIngredientActivity extends AppCompatActivity {
@@ -46,8 +50,8 @@ public class AddIngredientActivity extends AppCompatActivity {
     private EditText editTextIngredient;
     private EditText editTextQuantity;
     private TextView textViewExpiryDate;
-    private Spinner spinnerUnits;
-    private Spinner spinnerTab;
+    private NiceSpinner spinnerUnits;
+    private NiceSpinner spinnerTab;
     private EditText editTextBarcode;
 
     private Date date = null;
@@ -57,7 +61,8 @@ public class AddIngredientActivity extends AppCompatActivity {
     String uid = App.getFamilyUID();
     private CollectionReference barcodeRef = db.collection("Users").document(uid).collection("Barcodes");
 
-    ArrayAdapter<CharSequence> adapterUnits;
+    ArrayList<String> tabs;
+    List<String> unitsArr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,17 +82,11 @@ public class AddIngredientActivity extends AppCompatActivity {
         spinnerTab = findViewById(R.id.tab_spinner);
         editTextBarcode = findViewById(R.id.edit_text_barcode);
 
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        adapterUnits = ArrayAdapter.createFromResource(this,
-                R.array.units, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapterUnits.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        spinnerUnits.setAdapter(adapterUnits);
+        tabs = App.getTabs();
+        unitsArr = Arrays.asList(getResources().getStringArray(R.array.units));
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, App.getTabs());
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerTab.setAdapter(adapter);
+        spinnerTab.attachDataSource(tabs);
+        spinnerUnits.attachDataSource(unitsArr);
     }
 
     public void addNote(View view) {
@@ -200,8 +199,8 @@ public class AddIngredientActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if(result != null) {
-            if(result.getContents() == null) {
+        if (result != null) {
+            if (result.getContents() == null) {
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
             } else {
                 barcode = result.getContents();
@@ -226,9 +225,10 @@ public class AddIngredientActivity extends AppCompatActivity {
                                                    if (document.exists()) {
                                                        Log.d("AddIngredient", "Document exists!");
                                                        String name = document.getString("Name");
-                                                       long expiry = document.getLong("expiryDays");
-                                                       double quantity = document.getDouble("quantity");
+                                                       Long expiry = document.getLong("expiryDays");
+                                                       Double quantity = document.getDouble("quantity");
                                                        String units = document.getString("units");
+                                                       String location = document.getString("location");
 
                                                        // Calculating date
                                                        Date now = new Date();
@@ -238,12 +238,17 @@ public class AddIngredientActivity extends AppCompatActivity {
                                                        String expiryString = dateFormat.format(date);
 
                                                        editTextIngredient.setText(name);
-                                                       editTextQuantity.setText(String.valueOf(quantity));
+                                                       editTextQuantity.setText(Util.formatQuantityNumber(quantity, units));
                                                        textViewExpiryDate.setText(expiryString);
 
                                                        if (units != null) {
-                                                           int spinnerPosition = adapterUnits.getPosition(units);
-                                                           spinnerUnits.setSelection(spinnerPosition);
+                                                           int spinnerPosition = unitsArr.indexOf(units);
+                                                           spinnerUnits.setSelectedIndex(spinnerPosition);
+                                                       }
+
+                                                       if (location != null) {
+                                                           int locationIndex = tabs.indexOf(location);
+                                                           spinnerTab.setSelectedIndex(locationIndex);
                                                        }
                                                    } else {
                                                        Toast.makeText(AddIngredientActivity.this, "No Matching Product Found", Toast.LENGTH_SHORT).show();
@@ -255,12 +260,5 @@ public class AddIngredientActivity extends AppCompatActivity {
                                            }
                                        }
                 );
-    }
-
-    //for debugging purposes. will remove
-    public void debugBarcode(View view) {
-        String s = editTextBarcode.getText().toString();
-        barcode = s;
-        checkBarcode(s);
     }
 }

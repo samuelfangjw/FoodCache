@@ -2,7 +2,6 @@ package com.breakfastseta.foodcache.recipe.viewrecipe;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -173,13 +172,8 @@ public class RemoveQuantityActivity extends AppCompatActivity {
                     update.put("dateTimestamp", dateTimestamp);
                     update.put("expiryMap", newExpiryMap);
                     db.document(path).update(update);
-
-                    //TODO fix this shit
-                    Log.d(TAG, "acceptChanges: " + path);
-                    Log.d(TAG, "acceptChanges: " + update);
                 }
             }
-
         }
 
         Profile profile = App.getProfile();
