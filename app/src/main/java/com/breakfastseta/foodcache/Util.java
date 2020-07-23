@@ -186,7 +186,6 @@ public class Util {
         return result;
     }
 
-    // TODO Data validation for quantity (if int should not be able to type in double)
     // Helper class for formatting quantity based on units
     public static String formatQuantity(double quantity, String unit) {
         DecimalFormat intFormat = new DecimalFormat("#");

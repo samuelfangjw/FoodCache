@@ -55,7 +55,6 @@ public class App extends Application {
 
     // afterAuthenticated, do profile stuff
     public static void afterAuthenticated(Context context) {
-        //TODO check if user is authenticated using anonymous means
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String UID = user.getUid();
 
