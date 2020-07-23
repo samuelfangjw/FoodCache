@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -53,6 +54,14 @@ public class SocialMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(SocialMainActivity.this, SocialAddPostActivity.class));
+            }
+        });
+
+        Button buttonAddFriend = findViewById(R.id.add_friend);
+        buttonAddFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SocialMainActivity.this, SocialFindFriendMain.class));
             }
         });
 
