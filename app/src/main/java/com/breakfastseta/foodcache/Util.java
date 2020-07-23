@@ -190,14 +190,14 @@ public class Util {
     // Helper class for formatting quantity based on units
     public static String formatQuantity(double quantity, String unit) {
         DecimalFormat intFormat = new DecimalFormat("#");
-        DecimalFormat oneDPFormat = new DecimalFormat("0.0");
+        DecimalFormat twoDPFormat = new DecimalFormat("0.00");
 
         switch (unit) {
             case "g":
             case "ml":
                 return intFormat.format(quantity) + " " + unit;
             case "kg":
-                return oneDPFormat.format(quantity) + " " + unit;
+                return twoDPFormat.format(quantity) + " " + unit;
             case "Items":
                 return intFormat.format(quantity);
             default:
@@ -208,7 +208,7 @@ public class Util {
     // Helper class for formatting quantity based on units
     public static String formatQuantityNumber(double quantity, String unit) {
         DecimalFormat intFormat = new DecimalFormat("#");
-        DecimalFormat oneDPFormat = new DecimalFormat("0.0");
+        DecimalFormat twoDPFormat = new DecimalFormat("0.00");
 
         if (quantity < 0) {
             quantity = 0;
@@ -220,7 +220,7 @@ public class Util {
             case "Items":
                 return intFormat.format(quantity);
             case "kg":
-                return oneDPFormat.format(quantity);
+                return twoDPFormat.format(quantity);
             default:
                 return "" + quantity;
         }

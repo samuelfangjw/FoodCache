@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.breakfastseta.foodcache.DigitsInputFilter;
 import com.breakfastseta.foodcache.Inventory;
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
@@ -112,6 +113,12 @@ public class EditQuantityAdapter extends
                 }
             }
         });
+
+        if (units.equals("kg")) {
+            editQuantity.setFilters(DigitsInputFilter.DOUBLE_FILTER);
+        } else {
+            editQuantity.setFilters(DigitsInputFilter.INTEGER_FILTER);
+        }
 
         editExpiry.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.breakfastseta.foodcache.DigitsInputFilter;
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
 import com.tobiasschuerg.prefixsuffix.PrefixSuffixEditText;
@@ -86,6 +87,12 @@ public class RemoveQuantityAdapter extends
             quantityAfterTV.setText(Util.formatQuantity(leftInitial, units));
             quantityUsedET.setText(Util.formatQuantityNumber(quantityAfter, units));
             quantityUsedET.setSuffix(" " + units);
+            if (units.equals("kg")) {
+                quantityUsedET.setFilters(DigitsInputFilter.DOUBLE_FILTER);
+            } else {
+                quantityUsedET.setFilters(DigitsInputFilter.INTEGER_FILTER);
+            }
+
             quantityMap.put(location, leftInitial);
 
             quantityUsedET.addTextChangedListener(new TextWatcher() {

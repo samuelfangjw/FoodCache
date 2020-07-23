@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.breakfastseta.foodcache.App;
+import com.breakfastseta.foodcache.DigitsInputFilter;
 import com.breakfastseta.foodcache.Inventory;
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
@@ -31,6 +32,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.angmarch.views.NiceSpinner;
+import org.angmarch.views.OnSpinnerItemSelectedListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -45,6 +47,8 @@ import java.util.Map;
 public class UnclassifiedAdapter extends
         RecyclerView.Adapter<UnclassifiedAdapter.ViewHolder>{
     private static final String TAG = "UnclassifiedAdapter";
+
+    //TODO units not carrying over, crash with null pointer (data validation)
 
     final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
     private ArrayList<DocumentSnapshot> snapshots;
@@ -180,6 +184,15 @@ public class UnclassifiedAdapter extends
             }
         });
 
+        unitsSpinner.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
+            @Override
+            public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
+                checkUnits(unitsSpinner, quantityEditText);
+            }
+        });
+
+        checkUnits(unitsSpinner, quantityEditText);
+
         Query query = barcodeRef.whereEqualTo("nameLowerCase", name.toLowerCase()).limit(1);
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -217,6 +230,19 @@ public class UnclassifiedAdapter extends
                 }
             }
         });
+    }
+
+    private void checkUnits(NiceSpinner spinnerUnits, EditText editTextQuantity) {
+        String units = spinnerUnits.getSelectedItem().toString();
+        if (units.equals("kg")) {
+            editTextQuantity.setFilters(DigitsInputFilter.DOUBLE_FILTER);
+        } else {
+            String text = editTextQuantity.getText().toString();
+            if (text.contains(".")) {
+                editTextQuantity.setText(Util.formatQuantityNumber(Double.parseDouble(text), units));
+            }
+            editTextQuantity.setFilters(DigitsInputFilter.INTEGER_FILTER);
+        }
     }
 
     public void pickDate(TextView expiryDateView, Date date) {

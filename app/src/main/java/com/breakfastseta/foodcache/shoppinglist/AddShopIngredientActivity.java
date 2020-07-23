@@ -3,29 +3,35 @@ package com.breakfastseta.foodcache.shoppinglist;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.breakfastseta.foodcache.App;
+import com.breakfastseta.foodcache.DigitsInputFilter;
 import com.breakfastseta.foodcache.R;
+import com.breakfastseta.foodcache.Util;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.angmarch.views.NiceSpinner;
+import org.angmarch.views.OnSpinnerItemSelectedListener;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class AddShopIngredientActivity extends AppCompatActivity {
 
     private EditText editTextName;
     private EditText editTextDescription;
     private EditText editTextQuantity;
-    private Spinner editUnits;
+    private NiceSpinner editUnits;
 
-    ArrayAdapter<CharSequence> adapterUnits;
+    List<String> unitsArr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,13 +49,30 @@ public class AddShopIngredientActivity extends AppCompatActivity {
         editTextQuantity = findViewById(R.id.edit_shopitem_quantity);
         editUnits = findViewById(R.id.spinner_edit_shoppingunits);
 
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        adapterUnits = ArrayAdapter.createFromResource(this,
-                R.array.units, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapterUnits.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        editUnits.setAdapter(adapterUnits);
+        unitsArr = Arrays.asList(getResources().getStringArray(R.array.units));
+        editUnits.attachDataSource(unitsArr);
+
+        editUnits.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
+            @Override
+            public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
+                checkUnits();
+            }
+        });
+
+        checkUnits();
+    }
+
+    private void checkUnits() {
+        String units = editUnits.getSelectedItem().toString();
+        if (units.equals("kg")) {
+            editTextQuantity.setFilters(DigitsInputFilter.DOUBLE_FILTER);
+        } else {
+            String text = editTextQuantity.getText().toString();
+            if (text.contains(".")) {
+                editTextQuantity.setText(Util.formatQuantityNumber(Double.parseDouble(text), units));
+            }
+            editTextQuantity.setFilters(DigitsInputFilter.INTEGER_FILTER);
+        }
     }
 
     public void saveShopIngredient(View view) {

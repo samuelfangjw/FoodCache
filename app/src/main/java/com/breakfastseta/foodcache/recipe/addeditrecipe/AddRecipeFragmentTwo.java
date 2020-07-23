@@ -16,10 +16,13 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.breakfastseta.foodcache.DigitsInputFilter;
 import com.breakfastseta.foodcache.R;
+import com.breakfastseta.foodcache.Util;
 import com.breakfastseta.foodcache.recipe.Ingredient;
 
 import org.angmarch.views.NiceSpinner;
+import org.angmarch.views.OnSpinnerItemSelectedListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -90,11 +93,8 @@ public class AddRecipeFragmentTwo extends Fragment {
         button_add = (Button) view.findViewById(R.id.add_item_button);
         button_next = (Button) view.findViewById(R.id.button_next);
 
-        // Create adapter passing in the sample user data
         adapter = new FragmentTwoAdapter(arr);
-        // Attach the adapter to the recyclerview to populate items
         recyclerView.setAdapter(adapter);
-        // Set layout manager to position the items
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         addItemTouchHelper();
@@ -102,11 +102,32 @@ public class AddRecipeFragmentTwo extends Fragment {
         List<String> unitsArr = Arrays.asList(getResources().getStringArray(R.array.units));
         spinner_units.attachDataSource(unitsArr);
 
+        spinner_units.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
+            @Override
+            public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
+                checkUnits();
+            }
+        });
+
+        checkUnits();
+
         button_add.setOnClickListener(v -> addIngredient());
         button_next.setOnClickListener(v -> {
             listener.nextFragmentTwo(arr);
         });
+    }
 
+    private void checkUnits() {
+        String units = spinner_units.getSelectedItem().toString();
+        if (units.equals("kg")) {
+            editText_quantity.setFilters(DigitsInputFilter.DOUBLE_FILTER);
+        } else {
+            String text = editText_quantity.getText().toString();
+            if (text.contains(".")) {
+                editText_quantity.setText(Util.formatQuantityNumber(Double.parseDouble(text), units));
+            }
+            editText_quantity.setFilters(DigitsInputFilter.INTEGER_FILTER);
+        }
     }
 
     private void addItemTouchHelper() {

@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.breakfastseta.foodcache.App;
+import com.breakfastseta.foodcache.DigitsInputFilter;
 import com.breakfastseta.foodcache.Inventory;
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
@@ -32,6 +33,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import org.angmarch.views.NiceSpinner;
+import org.angmarch.views.OnSpinnerItemSelectedListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -87,6 +89,28 @@ public class AddIngredientActivity extends AppCompatActivity {
 
         spinnerTab.attachDataSource(tabs);
         spinnerUnits.attachDataSource(unitsArr);
+
+        checkUnits();
+
+        spinnerUnits.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
+            @Override
+            public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
+                checkUnits();
+            }
+        });
+    }
+
+    private void checkUnits() {
+        String units = spinnerUnits.getSelectedItem().toString();
+        if (units.equals("kg")) {
+            editTextQuantity.setFilters(DigitsInputFilter.DOUBLE_FILTER);
+        } else {
+            String text = editTextQuantity.getText().toString();
+            if (text.contains(".")) {
+                editTextQuantity.setText(Util.formatQuantityNumber(Double.parseDouble(text), units));
+            }
+            editTextQuantity.setFilters(DigitsInputFilter.INTEGER_FILTER);
+        }
     }
 
     public void addNote(View view) {

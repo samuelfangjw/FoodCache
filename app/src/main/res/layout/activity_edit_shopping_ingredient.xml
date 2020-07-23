@@ -20,7 +20,8 @@
         android:layout_below="@+id/toolbar"
         android:layout_margin="16dp"
         android:hint="Edit Name"
-        android:inputType="text" />
+        android:inputType="text"
+        android:textColor="@color/md_black_1000" />
 
     <EditText
         android:id="@+id/edit_shopitem_edit_description"
@@ -29,7 +30,8 @@
         android:layout_below="@id/edit_shopitem_edit_name"
         android:layout_margin="16dp"
         android:hint="Edit Description"
-        android:inputType="textMultiLine" />
+        android:inputType="textMultiLine"
+        android:textColor="@color/md_black_1000" />
 
     <EditText
         android:id="@+id/edit_shopitem_quantity"
@@ -38,16 +40,16 @@
         android:layout_below="@id/edit_shopitem_edit_description"
         android:layout_margin="16dp"
         android:hint="Quantity"
-        android:inputType="numberDecimal" />
+        android:inputType="numberDecimal"
+        android:textColor="@color/md_black_1000" />
 
-    <Spinner
+    <org.angmarch.views.NiceSpinner
         android:id="@+id/spinner_edit_shoppingunits"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/edit_shopitem_quantity"
-        android:layout_margin="16dp"
-        android:layout_toRightOf="@id/edit_shopitem_quantity"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        android:layout_marginHorizontal="16dp"
+        android:layout_toRightOf="@id/edit_shopitem_quantity" />
 
     <Button
         android:id="@+id/edit_shopitem_save_button"

@@ -4,21 +4,27 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.breakfastseta.foodcache.DigitsInputFilter;
 import com.breakfastseta.foodcache.R;
+import com.breakfastseta.foodcache.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.angmarch.views.NiceSpinner;
+import org.angmarch.views.OnSpinnerItemSelectedListener;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class EditShoppingIngredient extends AppCompatActivity {
 
@@ -27,9 +33,9 @@ public class EditShoppingIngredient extends AppCompatActivity {
     private EditText editShopName;
     private EditText editShopDescription;
     private EditText editShopQuantity;
-    private Spinner editShopUnits;
+    private NiceSpinner editShopUnits;
 
-    ArrayAdapter<CharSequence> adapterUnits;
+    List<String> unitsArr;
 
     private String path;
     private static final String TAG = "EditShoppingIngredient";
@@ -50,13 +56,15 @@ public class EditShoppingIngredient extends AppCompatActivity {
         editShopQuantity = findViewById(R.id.edit_shopitem_quantity);
         editShopUnits = findViewById(R.id.spinner_edit_shoppingunits);
 
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        adapterUnits = ArrayAdapter.createFromResource(this,
-                R.array.units, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapterUnits.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        editShopUnits.setAdapter(adapterUnits);
+        unitsArr = Arrays.asList(getResources().getStringArray(R.array.units));
+        editShopUnits.attachDataSource(unitsArr);
+
+        editShopUnits.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
+            @Override
+            public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
+                checkUnits();
+            }
+        });
 
         path = getIntent().getStringExtra("path");
         DocumentReference docRef = db.document(path);
@@ -68,6 +76,7 @@ public class EditShoppingIngredient extends AppCompatActivity {
                     assert document != null;
                     if (document.exists()) {
                         setTextView(document);
+                        checkUnits();
                     } else {
                         Log.d(TAG, "No such document");
                     }
@@ -77,6 +86,19 @@ public class EditShoppingIngredient extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void checkUnits() {
+        String units = editShopUnits.getSelectedItem().toString();
+        if (units.equals("kg")) {
+            editShopQuantity.setFilters(DigitsInputFilter.DOUBLE_FILTER);
+        } else {
+            String text = editShopQuantity.getText().toString();
+            if (text.contains(".")) {
+                editShopQuantity.setText(Util.formatQuantityNumber(Double.parseDouble(text), units));
+            }
+            editShopQuantity.setFilters(DigitsInputFilter.INTEGER_FILTER);
+        }
     }
 
     private void setTextView(DocumentSnapshot document) {
@@ -92,8 +114,8 @@ public class EditShoppingIngredient extends AppCompatActivity {
         editShopQuantity.setText(quantity);
         //Setting Spinner
         if (shoppingIngredientUnits != null) {
-            int spinnerPosition = adapterUnits.getPosition(shoppingIngredientUnits);
-            editShopUnits.setSelection(spinnerPosition);
+            int spinnerPosition = unitsArr.indexOf(shoppingIngredientUnits);
+            editShopUnits.setSelectedIndex(spinnerPosition);
         }
     }
 
