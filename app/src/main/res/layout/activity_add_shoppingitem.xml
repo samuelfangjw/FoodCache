@@ -16,6 +16,7 @@
     <EditText
         android:id="@+id/edit_shopitem_name"
         android:layout_width="match_parent"
+        android:maxLength="50"
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
         android:textColor="@color/md_black_1000"
@@ -28,6 +29,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/md_black_1000"
+        android:maxLines="5"
+        android:maxLength="300"
         android:layout_below="@id/edit_shopitem_name"
         android:hint="Description"
         android:inputType="textMultiLine"

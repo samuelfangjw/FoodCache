@@ -20,6 +20,7 @@
         android:layout_below="@+id/toolbar"
         android:layout_marginHorizontal="16dp"
         android:layout_marginVertical="8dp"
+        android:maxLength="50"
         android:hint="Ingredient Name"
         android:inputType="text"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"

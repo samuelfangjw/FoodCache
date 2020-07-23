@@ -16,8 +16,9 @@
         android:id="@+id/edit_ingredient"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"
         android:layout_margin="8dp"
+        android:inputType="text"
+        android:maxLength="50"
         android:text="@string/ingredient"
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
@@ -25,20 +26,20 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="addQuantity"
         android:layout_margin="8dp"
+        android:onClick="addQuantity"
         android:text="Add Quantity" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="saveEditIngredient"
         android:layout_margin="8dp"
+        android:onClick="saveEditIngredient"
         android:text="@string/save_button" />
 
 

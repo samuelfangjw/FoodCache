@@ -17,7 +17,7 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 public class DisplayRecipeAdapter extends
-        RecyclerView.Adapter<DisplayRecipeAdapter.ViewHolder>{
+        RecyclerView.Adapter<DisplayRecipeAdapter.ViewHolder> {
 
     private ArrayList<RecommendSnippet> arr;
 

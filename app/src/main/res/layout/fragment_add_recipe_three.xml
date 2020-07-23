@@ -33,6 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="8dp"
             android:layout_marginBottom="8dp"
+            android:maxLength="500"
             android:hint=""
             android:inputType="text"
             android:textColor="@color/md_black_1000"

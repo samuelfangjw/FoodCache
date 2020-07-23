@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_margin="8dp"
+            android:maxLength="50"
             android:hint="@string/ingredient"
             android:inputType="text"
             android:padding="8dp"
