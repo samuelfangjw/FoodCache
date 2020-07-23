@@ -18,6 +18,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".social.SocialFriendsActivity"></activity>
+        <activity android:name=".social.SocialFindFriendMain"></activity>
         <activity android:name=".inventory.ManageTabsActivity" />
         <activity android:name=".social.EditSocialPost" />
         <activity android:name=".family.FamilyActivity" />

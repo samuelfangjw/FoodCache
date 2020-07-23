@@ -19,6 +19,7 @@ import com.breakfastseta.foodcache.recipe.RecipeActivity;
 import com.breakfastseta.foodcache.recipe.discover.DiscoverRecipeActivity;
 import com.breakfastseta.foodcache.recipe.recommend.RecommendActivity;
 import com.breakfastseta.foodcache.shoppinglist.ShoppingListActivity;
+import com.breakfastseta.foodcache.social.SocialFriendsActivity;
 import com.breakfastseta.foodcache.social.SocialMainActivity;
 import com.bumptech.glide.Glide;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -83,6 +84,7 @@ public class Util {
         PrimaryDrawerItem itemDiscover = new PrimaryDrawerItem().withIdentifier(5).withName("Discover Recipes");
         PrimaryDrawerItem itemRecommend = new PrimaryDrawerItem().withIdentifier(6).withName("Find a Recipe");
         PrimaryDrawerItem itemSocial = new PrimaryDrawerItem().withIdentifier(10).withName("Social");
+        PrimaryDrawerItem itemFriends = new PrimaryDrawerItem().withIdentifier(9).withName("Friends");
         PrimaryDrawerItem itemFamily = new PrimaryDrawerItem().withIdentifier(11).withName("Family Sharing");
 
 
@@ -139,6 +141,7 @@ public class Util {
                         itemRecommend,
                         new DividerDrawerItem(),
                         itemSocial,
+                        itemFriends,
                         new DividerDrawerItem(),
                         itemFamily
                 )
@@ -173,6 +176,10 @@ public class Util {
                             case 9:
                                 context.startActivity(new Intent(context, SocialMainActivity.class));
                                 selectedItem = 10;
+                                return true;
+                            case 10:
+                                context.startActivity(new Intent(context, SocialFriendsActivity.class));
+                                selectedItem = 9;
                                 return true;
                             case 11:
                                 context.startActivity(new Intent(context, FamilyActivity.class));
