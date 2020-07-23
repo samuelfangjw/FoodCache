@@ -83,6 +83,11 @@ public class App extends Application {
                         profile.setUseFamilySharing(documentSnapshot.getBoolean("useFamilySharing"));
                         profile.setRecipeCount(documentSnapshot.getLong("recipeCount"));
 
+                        ArrayList<String> friendRequests = (ArrayList<String>) documentSnapshot.get("friendRequests");
+                        if (friendRequests != null) {
+                            profile.setFriendRequests(friendRequests);
+                        }
+
                         ArrayList<String> friends = (ArrayList<String>) documentSnapshot.get("friends");
                         if (friends != null) {
                             profile.setFriends(friends);

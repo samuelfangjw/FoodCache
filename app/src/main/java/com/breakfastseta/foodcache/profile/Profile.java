@@ -19,6 +19,7 @@ public class Profile {
     Long recipeCount = 0L;
     Boolean useFamilySharing = false;
     Map<String, Long> recipesPrepared = new HashMap<>();
+    ArrayList<String> friendRequests = new ArrayList<>();
 
     public Profile() {
         // empty constructor
@@ -136,5 +137,13 @@ public class Profile {
             recipeCount--;
             App.getProfileRef().update("recipeCount", recipeCount);
         }
+    }
+
+    public ArrayList<String> getFriendRequests() {
+        return friendRequests;
+    }
+
+    public void setFriendRequests(ArrayList<String> friendRequests) {
+        this.friendRequests = friendRequests;
     }
 }
