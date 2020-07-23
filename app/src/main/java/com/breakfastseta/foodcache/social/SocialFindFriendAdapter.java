@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.breakfastseta.foodcache.R;
@@ -21,12 +22,15 @@ import com.squareup.picasso.Picasso;
 
 public class SocialFindFriendAdapter extends FirestoreRecyclerAdapter<Profile, SocialFindFriendAdapter.SocialFindFriendHolder> {
     private Context mCtx;
+    private String uID;
 
     private OnItemClickListener listener;
+    private AddFriendListener listener2;
 
-    public SocialFindFriendAdapter(@NonNull FirestoreRecyclerOptions<Profile> options, Context mCtx) {
+    public SocialFindFriendAdapter(@NonNull FirestoreRecyclerOptions<Profile> options, Context mCtx, String uID) {
         super(options);
         this.mCtx = mCtx;
+        this.uID = uID;
     }
 
     @NonNull
@@ -41,10 +45,33 @@ public class SocialFindFriendAdapter extends FirestoreRecyclerAdapter<Profile, S
     protected void onBindViewHolder(@NonNull SocialFindFriendAdapter.SocialFindFriendHolder holder, int position, @NonNull Profile model) {
         holder.textViewUsername.setText(model.getName());
 
+        if (uID.equals(model.getUID())) {
+            holder.imageButtonAddFriend.setVisibility(View.GONE);
+        }
+
         if (model.getPhotoURL() != null) {
             Picasso.get().load((Uri.parse(model.getPhotoURL()))).into(holder.imageViewProfilePic);
+        } else {
+            holder.imageViewProfilePic.setImageDrawable(ContextCompat.getDrawable(mCtx, R.drawable.ic_profile_pic));
         }
+        holder.imageButtonAddFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener2 != null) {
+                    listener2.addfriend(uID);
+                }
+            }
+        });
     }
+
+    public interface AddFriendListener {
+        void addfriend(String uID);
+    }
+
+    public void setAddFriendListener(AddFriendListener listener2) {
+        this.listener2 = listener2;
+    }
+
 
     class SocialFindFriendHolder extends RecyclerView.ViewHolder {
         TextView textViewUsername;

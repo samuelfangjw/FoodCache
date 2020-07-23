@@ -1,5 +1,6 @@
 package com.breakfastseta.foodcache.social;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -19,7 +20,11 @@ import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
 import com.breakfastseta.foodcache.profile.Profile;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -65,7 +70,13 @@ public class SocialFindFriendMain extends AppCompatActivity {
                 .setQuery(query, Profile.class)
                 .build();
 
-        adapter = new SocialFindFriendAdapter(options, this);
+        adapter = new SocialFindFriendAdapter(options, this, uid);
+        adapter.setAddFriendListener(new SocialFindFriendAdapter.AddFriendListener() {
+            @Override
+            public void addfriend(String uID) {
+                addFriendRequest(uID);
+            }
+        });
 
         recyclerView = findViewById(R.id.findfriend_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -103,6 +114,33 @@ public class SocialFindFriendMain extends AppCompatActivity {
         });
 
     }
+
+    public void addFriendRequest(String requestuID) {
+        DocumentReference docRef = db.collection("Profiles").document(requestuID);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot documentSnapshot = task.getResult();
+                    ArrayList<String> arrayList = ((ArrayList<String>) documentSnapshot.get("friendRequests"));
+                    if (arrayList.contains(uid)) {
+                        Toast toast = Toast.makeText(SocialFindFriendMain.this, "Friend Request Already Sent!", Toast.LENGTH_SHORT);
+                        toast.show();
+                    } else {
+                        arrayList.add(uid);
+                        docRef.update("friendRequests", arrayList);
+                        Toast toast = Toast.makeText(SocialFindFriendMain.this, "Friend Request Sent!", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                } else {
+                    Log.d(TAG, "get failed with",  task.getException());
+                }
+            }
+        });
+    }
+
+
 
     private void search(String text) {
         query = notebookRef.orderBy("name").whereLessThanOrEqualTo("name", text + "\uf8ff");
