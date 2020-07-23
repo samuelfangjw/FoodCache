@@ -48,7 +48,6 @@ import java.util.Map;
 
 public class ViewRecipeActivity extends AppCompatActivity {
     private static final String TAG = "ViewRecipeActivity";
-    //TODO compare ingredients regardless of case
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String uid = user.getUid();

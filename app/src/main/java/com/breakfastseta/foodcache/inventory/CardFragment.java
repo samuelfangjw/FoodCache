@@ -56,7 +56,6 @@ public class CardFragment extends Fragment {
 
     ListenerRegistration registration;
 
-//    String[] tabs;
     ArrayList<String> tabs;
 
     public CardFragment() {
@@ -78,7 +77,6 @@ public class CardFragment extends Fragment {
             counter = getArguments().getInt(ARG_COUNT);
         }
 
-//        tabs = getResources().getStringArray(R.array.tabs);
         tabs = App.getTabs();
     }
 
@@ -110,17 +108,6 @@ public class CardFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
-
-        registration = query.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
-                if (snapshots.isEmpty()) {
-                    message.setVisibility(View.VISIBLE);
-                } else {
-                    message.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -246,7 +233,6 @@ public class CardFragment extends Fragment {
 
             @Override
             public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-
                 new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
                         .addBackgroundColor(ContextCompat.getColor(getContext(), R.color.primaryColor))
                         .addActionIcon(R.drawable.ic_delete)
@@ -282,6 +268,18 @@ public class CardFragment extends Fragment {
         if (adapter != null) {
             adapter.startListening();
         }
+
+        Query query = inventoryRef.whereEqualTo("location", tabs.get(counter)).orderBy("dateTimestamp", Query.Direction.ASCENDING);
+        registration = query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+                if (snapshots.isEmpty()) {
+                    message.setVisibility(View.VISIBLE);
+                } else {
+                    message.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
     }
 
     @Override
@@ -303,5 +301,10 @@ public class CardFragment extends Fragment {
         }
 
         registration.remove();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 }

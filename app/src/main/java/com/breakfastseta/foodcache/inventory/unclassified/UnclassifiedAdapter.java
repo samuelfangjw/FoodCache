@@ -48,8 +48,6 @@ public class UnclassifiedAdapter extends
         RecyclerView.Adapter<UnclassifiedAdapter.ViewHolder>{
     private static final String TAG = "UnclassifiedAdapter";
 
-    //TODO units not carrying over, crash with null pointer (data validation)
-
     final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
     private ArrayList<DocumentSnapshot> snapshots;
     private Context context;
@@ -94,7 +92,7 @@ public class UnclassifiedAdapter extends
             public void onClick(View v) {
                 snapshot.getReference().delete();
                 snapshots.remove(position);
-                notifyItemRemoved(position);
+                notifyDataSetChanged();
                 App.minusUnclassifiedNum();
 
                 if (snapshots.isEmpty()) {
@@ -107,15 +105,16 @@ public class UnclassifiedAdapter extends
             @Override
             public void onClick(View v) {
                 String nameString = nameEditText.getText().toString().trim();
-                Double quantity = Double.parseDouble(quantityEditText.getText().toString());
+                String doubleString = quantityEditText.getText().toString();
                 String units = unitsSpinner.getSelectedItem().toString();
                 String tab = tabsSpinner.getSelectedItem().toString();
                 String dateString = expiryDate.getText().toString();
 
-                if (nameString.isEmpty() || dateString.isEmpty()) {
+                if (nameString.isEmpty() || dateString.isEmpty() || doubleString.isEmpty()) {
                     Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT).show();
                 } else {
                     try {
+                        Double quantity = Double.parseDouble(doubleString);
                         Date date = dateFormat.parse(dateString);
 
                         Calendar cal = Calendar.getInstance();
@@ -149,7 +148,7 @@ public class UnclassifiedAdapter extends
                         inventory.checkBarcode(docData);
 
                         snapshots.remove(position);
-                        notifyItemRemoved(position);
+                        notifyDataSetChanged();
                         App.minusUnclassifiedNum();
 
                         if (snapshots.isEmpty()) {
@@ -172,6 +171,9 @@ public class UnclassifiedAdapter extends
 
         tabsSpinner.attachDataSource(tabs);
         unitsSpinner.attachDataSource(unitsArr);
+
+        int unitsPosition = unitsArr.indexOf(units);
+        unitsSpinner.setSelectedIndex(unitsPosition);
 
         expiryDate.setOnClickListener(new View.OnClickListener() {
             @Override

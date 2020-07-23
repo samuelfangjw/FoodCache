@@ -68,7 +68,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        //TODO create upgrade account feature for anonymous accounts
         if (App.getAuthProvider() == App.ANONYMOUS) {
             menu.findItem(R.id.action_edit).setVisible(false);
         }

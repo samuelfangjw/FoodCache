@@ -54,7 +54,6 @@ public class DisplayRecipeAdapter extends
         textView.setText(snippet.getName());
         String image_url = snippet.getImage();
         if (image_url != null) {
-            //TODO explore glide placeholders and fallback for image
             Uri image_path = Uri.parse(image_url);
             Glide.with(holder.itemView.getContext())
                     .load(image_path)

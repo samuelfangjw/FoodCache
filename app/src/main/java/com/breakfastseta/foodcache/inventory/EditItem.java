@@ -34,7 +34,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class EditItem extends AppCompatActivity {
-    //TODO edit item 0 should delete
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private EditText editTextIngredient;
