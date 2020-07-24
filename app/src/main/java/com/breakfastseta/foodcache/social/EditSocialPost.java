@@ -154,7 +154,7 @@ public class EditSocialPost extends AppCompatActivity {
 
     private void checkUnits() {
         String units = editRequestUnits.getSelectedItem().toString();
-        if (units.equals("kg")) {
+        if (units.equals("kg") || units.equals("Cups")) {
             editRequestQuan.setFilters(DigitsInputFilter.DOUBLE_FILTER);
         } else {
             String text = editRequestQuan.getText().toString();

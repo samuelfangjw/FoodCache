@@ -95,8 +95,6 @@ public class SocialFindFriendMain extends AppCompatActivity {
                             .setQuery(query, Profile.class)
                             .build();
                     adapter.updateOptions(newOptions);
-                    Toast toast = Toast.makeText(SocialFindFriendMain.this, s, Toast.LENGTH_SHORT);
-                    toast.show();
                 } else {
                     query = notebookRef.orderBy("nameLowerCase", Query.Direction.DESCENDING);
                     FirestoreRecyclerOptions<Profile> newOptions2 = new FirestoreRecyclerOptions.Builder<Profile>()

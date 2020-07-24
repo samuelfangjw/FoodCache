@@ -32,8 +32,12 @@
     </string-array>
 
     <string-array name="cuisines">
-        <item>Asian</item>
-        <item>Western</item>
+        <item>Japanese</item>
+        <item>Chinese</item>
+        <item>Italian</item>
+        <item>Mexican</item>
+        <item>Dessert</item>
+        <item>Vegetarian</item>
     </string-array>
 
     <string-array name="units">
@@ -41,6 +45,7 @@
         <item>g</item>
         <item>kg</item>
         <item>ml</item>
+        <item>Cups</item>
     </string-array>
     <string name="next">Next</string>
     <string name="recipe_name">Recipe Name</string>

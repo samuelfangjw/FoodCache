@@ -153,7 +153,7 @@ public class SocialAddPostActivity extends AppCompatActivity {
 
     private void checkUnits() {
         String units = requestUnits.getSelectedItem().toString();
-        if (units.equals("kg")) {
+        if (units.equals("kg") || units.equals("Cups")) {
             requestQuan.setFilters(DigitsInputFilter.DOUBLE_FILTER);
         } else {
             String text = requestQuan.getText().toString();
