@@ -3,6 +3,7 @@ package com.breakfastseta.foodcache.social;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -24,9 +25,14 @@ import com.breakfastseta.foodcache.DigitsInputFilter;
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
 import com.breakfastseta.foodcache.profile.Profile;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -38,12 +44,14 @@ import org.angmarch.views.NiceSpinner;
 import org.angmarch.views.OnSpinnerItemSelectedListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
 public class SocialAddPostActivity extends AppCompatActivity {
 
+    private static final String TAG = "SocialAddPostActivity";
     private EditText requestItem;
     private EditText requestDesc;
     private EditText requestQuan;
@@ -77,6 +85,9 @@ public class SocialAddPostActivity extends AppCompatActivity {
     private String downloadURL = null;
 
     List<String> unitsArr;
+
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private ArrayList<String> friendArr = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -227,14 +238,29 @@ public class SocialAddPostActivity extends AppCompatActivity {
                 return;
             }
 
-            CollectionReference notebookRef = FirebaseFirestore.getInstance()
-                    .collection("SocialUsers")
-                    .document(uID)
-                    .collection("UserPosts");
+            CollectionReference notebookRef = db
+                    .collection("SocialPosts");
             notebookRef.add(new SocialPost(SocialPostType.REQUESTPOST, reqName, reqDesc
-                    , Double.parseDouble(reqQuan), reqUnits, userName, date, time, profileImage, uID));
-            Toast.makeText(this, "Request Post added", Toast.LENGTH_SHORT).show();
+                    , Double.parseDouble(reqQuan), reqUnits, userName, date, time, profileImage, uID))
+                    .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentReference> task) {
+                    if (task.isSuccessful()) {
+                        CollectionReference socialUserRef = db
+                                .collection("SocialUsers")
+                                .document(uID)
+                                .collection("posts");
+                        SocialPostSnippet snippet = new SocialPostSnippet(date, time, task.getResult().getPath(), SocialPostType.REQUESTPOST);
+                        socialUserRef.add(snippet);
+                        findFriendList(snippet);
+                        Toast.makeText(SocialAddPostActivity.this, "Request Post added", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Log.d(TAG, "Add Social Post(Reqt) initial failed with ", task.getException());
+                    }
+                }
+            });
             finish();
+
         } else {
             String reqName = blogTitle.getText().toString();
             String reqDesc = blogDesc.getText().toString();
@@ -244,15 +270,53 @@ public class SocialAddPostActivity extends AppCompatActivity {
                 return;
             }
 
-            CollectionReference notebookRef = FirebaseFirestore.getInstance()
-                    .collection("SocialUsers")
-                    .document(uID)
-                    .collection("UserPosts");
+            CollectionReference notebookRef = db
+                    .collection("SocialPosts");
             notebookRef.add(new SocialPost(SocialPostType.BLOGPOST, reqName, reqDesc, downloadURL,
-                    userName, date, time, profileImage, uID));
-            Toast.makeText(this, "Blog Post added", Toast.LENGTH_SHORT).show();
+                    userName, date, time, profileImage, uID))
+                    .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentReference> task) {
+                    if (task.isSuccessful()) {
+                        CollectionReference socialUserRef = db
+                                .collection("SocialUsers")
+                                .document(uID)
+                                .collection("posts");
+                        SocialPostSnippet snippet = new SocialPostSnippet(date, time, task.getResult().getPath(), SocialPostType.BLOGPOST);
+                        socialUserRef.add(snippet);
+                        findFriendList(snippet);
+                        Toast.makeText(SocialAddPostActivity.this, "Blog Post added", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Log.d(TAG, "Add Social Post(Blog) initial failed with ", task.getException());
+                    }
+                }
+            });
             finish();
         }
+    }
+
+    private void findFriendList(SocialPostSnippet snippet) {
+        db.collection("Profiles").document().get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    if ((task.getResult().get("friends")) != null) {
+                        friendArr.addAll((ArrayList<String>) task.getResult().get("friends"));
+                        if (!friendArr.isEmpty()) {
+                            for (String friendProf : friendArr) {
+                                CollectionReference friendRef = db.collection("SocialUsers")
+                                        .document(friendProf)
+                                        .collection("posts");
+                                friendRef.add(snippet);
+                            }
+                        }
+                    }
+                } else {
+                    Log.d(TAG, "Add SocialPostSnippet to friends failed with ", task.getException());
+
+                }
+            }
+        });
     }
 
     private void OpenGallery() {

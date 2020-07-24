@@ -2,9 +2,12 @@ package com.breakfastseta.foodcache.social;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -15,10 +18,21 @@ import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class SocialMainActivity extends AppCompatActivity {
 
@@ -27,10 +41,16 @@ public class SocialMainActivity extends AppCompatActivity {
 
     String uid = App.getUID();
 
-    private CollectionReference notebookRef = db.collection("SocialUsers").document(uid).collection("UserPosts");
+    private CollectionReference notebookRef = db.collection("SocialUsers").document(uid).collection("posts");
     private CoordinatorLayout coordinatorLayout;
 
-    private SocialPostAdapter adapter;
+    private SocialFeedAdapter adapter;
+    private RecyclerView recyclerView;
+    private ArrayList<QueryDocumentSnapshot> queryDocumentSnapshotsArr = new ArrayList<QueryDocumentSnapshot>();
+
+    private ListenerRegistration registration;
+
+    private ArrayList<String> friendArr = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +70,8 @@ public class SocialMainActivity extends AppCompatActivity {
             }
         });
 
+        recyclerView = findViewById(R.id.social_recycler_view);
+
         Button buttonAddFriend = findViewById(R.id.add_friend);
         buttonAddFriend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,36 +80,89 @@ public class SocialMainActivity extends AppCompatActivity {
             }
         });
 
-        setUpRecyclerView();
+        adapter = new SocialFeedAdapter(queryDocumentSnapshotsArr, this);
+
+        recyclerView.setAdapter(adapter);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         coordinatorLayout = findViewById(R.id.activitySocialMain);
     }
 
-    private void setUpRecyclerView() {
+    private void getData() {
         Query query = notebookRef.orderBy("date", Query.Direction.DESCENDING)
                 .orderBy("time", Query.Direction.DESCENDING);
 
-        FirestoreRecyclerOptions<SocialPost> options = new FirestoreRecyclerOptions.Builder<SocialPost>()
-                .setQuery(query, SocialPost.class)
-                .build();
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    queryDocumentSnapshotsArr.clear();
+                    for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
+                        queryDocumentSnapshotsArr.add(queryDocumentSnapshot);
+                    }
+                    if (adapter != null) {
+                        adapter.notifyDataSetChanged();
+                    }
+                    setSnapshotListener(query);
+                }
+            }
+        });
+    }
 
-        adapter = new SocialPostAdapter(options, this, uid);
+    private void setSnapshotListener(Query query) {
+        registration = query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                queryDocumentSnapshotsArr.clear();
+                if (queryDocumentSnapshots != null && adapter != null) {
+                    for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
+                        queryDocumentSnapshotsArr.add(queryDocumentSnapshot);
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
+    }
 
-        RecyclerView recyclerView = findViewById(R.id.social_recycler_view);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
+    @Override
+    protected void onDestroy() {
+        registration.remove();
+        super.onDestroy();
+    }
 
+//    private void createRecyclerView(ArrayList<QueryDocumentSnapshot> queryDocumentSnapshotsArr) {
+//
+//    }
+
+//    private void findFriendList() {
+//        db.collection("Profiles").document(uid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    friendArr.addAll((ArrayList<String>) task.getResult().get("friends"));
+//                } else {
+//                    Log.d(TAG, "find friend list failed with ", task.getException());
+//
+//                }
+//            }
+//        });
+//    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getData();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        adapter.startListening();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        adapter.stopListening();
     }
 }
