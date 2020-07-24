@@ -58,7 +58,7 @@ public class SocialFindFriendAdapter extends FirestoreRecyclerAdapter<Profile, S
             @Override
             public void onClick(View v) {
                 if (listener2 != null) {
-                    listener2.addfriend(uID);
+                    listener2.addfriend(model.getUID());
                 }
             }
         });

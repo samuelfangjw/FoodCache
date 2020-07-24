@@ -65,7 +65,7 @@ public class SocialFriendsActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setTitle("Find Friends");
+        setTitle("Friends");
         Util.createToolbar(this, toolbar);
 
         recyclerView = findViewById(R.id.friend_request_recycler_view);
