@@ -2,9 +2,9 @@ package com.breakfastseta.foodcache.social;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,12 +17,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -31,7 +29,6 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class SocialMainActivity extends AppCompatActivity {
@@ -47,6 +44,7 @@ public class SocialMainActivity extends AppCompatActivity {
     private SocialFeedAdapter adapter;
     private RecyclerView recyclerView;
     private ArrayList<QueryDocumentSnapshot> queryDocumentSnapshotsArr = new ArrayList<QueryDocumentSnapshot>();
+    private TextView message;
 
     private ListenerRegistration registration;
 
@@ -71,6 +69,7 @@ public class SocialMainActivity extends AppCompatActivity {
         });
 
         recyclerView = findViewById(R.id.social_recycler_view);
+        message = findViewById(R.id.message);
 
         Button buttonAddFriend = findViewById(R.id.add_friend);
         buttonAddFriend.setOnClickListener(new View.OnClickListener() {
@@ -98,7 +97,13 @@ public class SocialMainActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     queryDocumentSnapshotsArr.clear();
-                    for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
+                    QuerySnapshot snapshots = task.getResult();
+                    if (snapshots.isEmpty()) {
+                        message.setVisibility(View.VISIBLE);
+                    } else {
+                        message.setVisibility(View.GONE);
+                    }
+                    for (QueryDocumentSnapshot queryDocumentSnapshot : snapshots) {
                         queryDocumentSnapshotsArr.add(queryDocumentSnapshot);
                     }
                     if (adapter != null) {
@@ -120,6 +125,11 @@ public class SocialMainActivity extends AppCompatActivity {
                         queryDocumentSnapshotsArr.add(queryDocumentSnapshot);
                     }
                     adapter.notifyDataSetChanged();
+                    if (queryDocumentSnapshots.isEmpty()) {
+                        message.setVisibility(View.VISIBLE);
+                    } else {
+                        message.setVisibility(View.GONE);
+                    }
                 }
             }
         });

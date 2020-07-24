@@ -123,7 +123,6 @@ public class SocialFriendsActivity extends AppCompatActivity {
 
                             compareFriendsArray(documentSnapshot);
                         }
-
                     }
                 });
             }
