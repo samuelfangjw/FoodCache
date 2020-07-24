@@ -24,8 +24,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class App extends Application {
     private static final String TAG = "App";
@@ -93,7 +93,7 @@ public class App extends Application {
                             profile.setFriends(friends);
                         }
 
-                        Map<String, Long> recipesPrepared = (Map<String, Long>) documentSnapshot.get("recipesPrepared");
+                        HashMap<String, Long> recipesPrepared = (HashMap<String, Long>) documentSnapshot.get("recipesPrepared");
                         if (recipesPrepared != null) {
                             profile.setRecipesPrepared(recipesPrepared);
                             setTabs();

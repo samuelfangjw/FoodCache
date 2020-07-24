@@ -6,7 +6,6 @@ import com.breakfastseta.foodcache.App;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class Profile {
     String name;
@@ -18,7 +17,7 @@ public class Profile {
     ArrayList<String> friends = new ArrayList<>();
     Long recipeCount = 0L;
     Boolean useFamilySharing = false;
-    Map<String, Long> recipesPrepared = new HashMap<>();
+    HashMap<String, Long> recipesPrepared = new HashMap<>();
     ArrayList<String> friendRequests = new ArrayList<>();
     String nameLowerCase;
 
@@ -111,11 +110,11 @@ public class Profile {
         this.useFamilySharing = useFamilySharing;
     }
 
-    public Map<String, Long> getRecipesPrepared() {
+    public HashMap<String, Long> getRecipesPrepared() {
         return recipesPrepared;
     }
 
-    public void setRecipesPrepared(Map<String, Long> recipesPrepared) {
+    public void setRecipesPrepared(HashMap<String, Long> recipesPrepared) {
         this.recipesPrepared = recipesPrepared;
     }
 

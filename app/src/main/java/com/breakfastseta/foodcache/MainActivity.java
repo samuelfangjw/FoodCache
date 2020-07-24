@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.breakfastseta.foodcache.inventory.FoodcacheActivity;
 import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -90,9 +91,12 @@ public class MainActivity extends AppCompatActivity {
             // Sign in unsuccessful
             if (response == null) {
                 Toast.makeText(this, "Sign in Cancelled", Toast.LENGTH_SHORT).show();
+            } else if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
+                Toast.makeText(this, "No Intenet Connection, please try again", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Error signing in", Toast.LENGTH_SHORT).show();
             }
+            createSignInIntent();
         }
     }
 }
