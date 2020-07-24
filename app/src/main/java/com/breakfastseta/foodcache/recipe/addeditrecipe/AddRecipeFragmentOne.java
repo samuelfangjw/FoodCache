@@ -95,16 +95,16 @@ public class AddRecipeFragmentOne extends Fragment {
         editText_description = (EditText) view.findViewById(R.id.description);
         textView_description = (TextView) view.findViewById(R.id.recipe_description);
 
-        switchPublic.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    tv_switch.setText(switchPublic.getTextOn().toString());
-                } else {
-                    tv_switch.setText(switchPublic.getTextOff().toString());
-                }
-            }
-        });
+//        switchPublic.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if (isChecked) {
+//                    tv_switch.setText(switchPublic.getTextOn().toString());
+//                } else {
+//                    tv_switch.setText(switchPublic.getTextOff().toString());
+//                }
+//            }
+//        });
 
         List<String> cuisinesArr = Arrays.asList(getResources().getStringArray(R.array.cuisines));
         cuisine.attachDataSource(cuisinesArr);
