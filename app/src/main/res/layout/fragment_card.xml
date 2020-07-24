@@ -20,5 +20,13 @@
         android:visibility="gone"
         android:text="Foodcache is Empty" />
 
+    <TextView
+        android:id="@+id/message2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="@color/md_black_1000"
+        android:visibility="gone"
+        android:text="RecipeCache is Empty" />
 
 </FrameLayout>

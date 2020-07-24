@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,8 +21,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class RecipeCardFragment extends Fragment {
 
@@ -36,6 +41,8 @@ public class RecipeCardFragment extends Fragment {
     View view;
     RecyclerView recyclerView;
     private RecipeAdapter adapter;
+    private TextView message2;
+    private ListenerRegistration registration;
 
     private LinearLayout coordinatorLayout;
 
@@ -74,6 +81,8 @@ public class RecipeCardFragment extends Fragment {
         setUpRecyclerView();
 
         coordinatorLayout = view.findViewById(R.id.activityRecipe);
+
+        message2 = view.findViewById(R.id.message2);
 
         return view;
     }
@@ -115,6 +124,18 @@ public class RecipeCardFragment extends Fragment {
         if (adapter != null) {
             adapter.startListening();
         }
+
+        Query query = recipeRef.document(tabs[counter]).collection("Recipes");
+        registration = query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+                if (snapshots.isEmpty()) {
+                    message2.setVisibility(View.VISIBLE);
+                } else {
+                    message2.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
     }
 
     // Stops listening for changes on activity stop
@@ -124,5 +145,7 @@ public class RecipeCardFragment extends Fragment {
         if (adapter != null) {
             adapter.startListening();
         }
+
+        registration.remove();
     }
 }

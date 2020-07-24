@@ -98,14 +98,16 @@ public class SocialMainActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     queryDocumentSnapshotsArr.clear();
                     QuerySnapshot snapshots = task.getResult();
-                    if (snapshots.isEmpty()) {
+                    for (QueryDocumentSnapshot queryDocumentSnapshot : snapshots) {
+                        queryDocumentSnapshotsArr.add(queryDocumentSnapshot);
+                    }
+
+                    if (queryDocumentSnapshotsArr.isEmpty()) {
                         message.setVisibility(View.VISIBLE);
                     } else {
                         message.setVisibility(View.GONE);
                     }
-                    for (QueryDocumentSnapshot queryDocumentSnapshot : snapshots) {
-                        queryDocumentSnapshotsArr.add(queryDocumentSnapshot);
-                    }
+
                     if (adapter != null) {
                         adapter.notifyDataSetChanged();
                     }
