@@ -9,9 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,9 +18,10 @@ import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.squareup.picasso.Picasso;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SocialPostAdapter extends FirestoreRecyclerAdapter<SocialPost, RecyclerView.ViewHolder> {
     private OnItemClickListener listener;
@@ -50,8 +49,6 @@ public class SocialPostAdapter extends FirestoreRecyclerAdapter<SocialPost, Recy
             ((SocialPostHolder) holder).buttonViewOptions.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-
 
                     //creating a popup menu
                     PopupMenu popupMenu = new PopupMenu(mCtx, ((SocialPostHolder) holder).buttonViewOptions);
@@ -114,7 +111,7 @@ public class SocialPostAdapter extends FirestoreRecyclerAdapter<SocialPost, Recy
                         public boolean onMenuItemClick(MenuItem item) {
                             switch (item.getItemId()) {
                                 case R.id.delete_menu:
-                                    deleteItem(position);
+                                    deleteItem(holder.getAdapterPosition());
                                     break;
                                 case R.id.edit_menu:
                                     String path = getSnapshots().getSnapshot(position).getReference().getPath();
@@ -159,7 +156,7 @@ public class SocialPostAdapter extends FirestoreRecyclerAdapter<SocialPost, Recy
         TextView textViewReqItemDesc;
         TextView textViewReqItemQuan;
         TextView textViewReqItemUnits;
-        ImageView imageViewReqProfilePic;
+        CircleImageView imageViewReqProfilePic;
         TextView buttonViewOptions;
 
         View mView;
@@ -199,7 +196,7 @@ public class SocialPostAdapter extends FirestoreRecyclerAdapter<SocialPost, Recy
         TextView textViewDate;
         TextView textViewBlogTitle;
         TextView textViewBlogDesc;
-        ImageView imageViewBlogProfilePic;
+        CircleImageView imageViewBlogProfilePic;
         ImageView imageViewBlogPostImage;
         TextView buttonViewOptions;
 

@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,19 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.R;
-import com.breakfastseta.foodcache.profile.Profile;
-import com.breakfastseta.foodcache.recipe.recommend.RecommendSnippet;
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SocialFriendsRequest extends
         RecyclerView.Adapter<SocialFriendsRequest.ViewHolder>{
@@ -63,10 +55,9 @@ public class SocialFriendsRequest extends
 
         // Set item views based on your views and data model
         TextView textView = holder.textViewName;
-        ImageView imageView = holder.imageViewProfile;
+        CircleImageView imageView = holder.imageViewProfile;
 
         String uID = App.getUID();
-
 
         textView.setText(request.getString("name"));
         String image_url = request.getString("photoURL");
@@ -103,7 +94,7 @@ public class SocialFriendsRequest extends
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView textViewName;
-        ImageView imageViewProfile;
+        CircleImageView imageViewProfile;
         Button acceptButton;
         Button declineButton;
 

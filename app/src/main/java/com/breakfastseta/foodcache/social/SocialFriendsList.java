@@ -5,8 +5,6 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,6 +16,8 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SocialFriendsList extends
         RecyclerView.Adapter<SocialFriendsList.ViewHolder>{
@@ -52,7 +52,7 @@ public class SocialFriendsList extends
 
         // Set item views based on your views and data model
         TextView textView = holder.textViewName;
-        ImageView imageView = holder.imageViewProfile;
+        CircleImageView imageView = holder.imageViewProfile;
 
         String uID = App.getUID();
 
@@ -75,7 +75,7 @@ public class SocialFriendsList extends
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView textViewName;
-        ImageView imageViewProfile;
+        CircleImageView imageViewProfile;
 
         public ViewHolder(View itemView) {
 

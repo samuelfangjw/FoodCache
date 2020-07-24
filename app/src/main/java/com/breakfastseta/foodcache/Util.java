@@ -181,7 +181,7 @@ public class Util {
                                 context.startActivity(new Intent(context, SocialFriendsActivity.class));
                                 selectedItem = 9;
                                 return true;
-                            case 11:
+                            case 12:
                                 context.startActivity(new Intent(context, FamilyActivity.class));
                                 selectedItem = 11;
                                 return true;

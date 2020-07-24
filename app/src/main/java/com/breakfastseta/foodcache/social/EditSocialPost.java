@@ -1,29 +1,35 @@
 package com.breakfastseta.foodcache.social;
 
+import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import com.breakfastseta.foodcache.DigitsInputFilter;
 import com.breakfastseta.foodcache.R;
+import com.breakfastseta.foodcache.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
+
+import org.angmarch.views.NiceSpinner;
+import org.angmarch.views.OnSpinnerItemSelectedListener;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class EditSocialPost extends AppCompatActivity {
 
@@ -32,7 +38,7 @@ public class EditSocialPost extends AppCompatActivity {
     private EditText editRequestItem;
     private EditText editRequestDesc;
     private EditText editRequestQuan;
-    private Spinner editRequestUnits;
+    private NiceSpinner editRequestUnits;
 
     private EditText editBlogTitle;
     private EditText editBlogDesc;
@@ -40,7 +46,7 @@ public class EditSocialPost extends AppCompatActivity {
 
     private TextView postTypeTextChange;
 
-    ArrayAdapter<CharSequence> adapterUnits;
+    List<String> unitsArr;
 
     private static final String TAG = "EditPost";
 
@@ -70,13 +76,8 @@ public class EditSocialPost extends AppCompatActivity {
 
         postTypeTextChange = findViewById(R.id.post_type_text_change);
 
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        adapterUnits = ArrayAdapter.createFromResource(this,
-                R.array.units, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapterUnits.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        editRequestUnits.setAdapter(adapterUnits);
+        unitsArr = Arrays.asList(getResources().getStringArray(R.array.units));
+        editRequestUnits.attachDataSource(unitsArr);
 
         path = getIntent().getStringExtra("path");
         DocumentReference docRef = db.document(path);
@@ -101,7 +102,7 @@ public class EditSocialPost extends AppCompatActivity {
 
     private void setTextView(DocumentSnapshot document) {
         ConstraintLayout editReqLayout = findViewById(R.id.edit_post_request_layout);
-        ConstraintLayout editBlogLayout = findViewById(R.id.edit_post_blogpost_layout);
+        ScrollView editBlogLayout = findViewById(R.id.edit_post_blogpost_layout);
         this.currPostType = document.getString("type");
 
         if (currPostType.equals(SocialPostType.REQUESTPOST.toString())) {
@@ -122,9 +123,18 @@ public class EditSocialPost extends AppCompatActivity {
             editRequestQuan.setText(quantity);
             //setting Spinner
             if (reqPostUnits != null) {
-                int spinnerPosition = adapterUnits.getPosition(reqPostUnits);
-                editRequestUnits.setSelection(spinnerPosition);
+                int spinnerPosition = unitsArr.indexOf(reqPostUnits);
+                editRequestUnits.setSelectedIndex(spinnerPosition);
             }
+
+            checkUnits();
+
+            editRequestUnits.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
+                @Override
+                public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
+                    checkUnits();
+                }
+            });
         } else {
             postTypeTextChange.setText("Blog Post");
 
@@ -139,6 +149,19 @@ public class EditSocialPost extends AppCompatActivity {
             editBlogTitle.setText(blogPostItem);
             editBlogDesc.setText(blogPostDesc);
             Picasso.get().load(blogPostPhoto).into(editBlogImage);
+        }
+    }
+
+    private void checkUnits() {
+        String units = editRequestUnits.getSelectedItem().toString();
+        if (units.equals("kg")) {
+            editRequestQuan.setFilters(DigitsInputFilter.DOUBLE_FILTER);
+        } else {
+            String text = editRequestQuan.getText().toString();
+            if (text.contains(".")) {
+                editRequestQuan.setText(Util.formatQuantityNumber(Double.parseDouble(text), units));
+            }
+            editRequestQuan.setFilters(DigitsInputFilter.INTEGER_FILTER);
         }
     }
 

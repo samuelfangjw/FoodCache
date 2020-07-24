@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,6 +18,8 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.squareup.picasso.Picasso;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SocialFindFriendAdapter extends FirestoreRecyclerAdapter<Profile, SocialFindFriendAdapter.SocialFindFriendHolder> {
     private Context mCtx;
@@ -75,7 +76,7 @@ public class SocialFindFriendAdapter extends FirestoreRecyclerAdapter<Profile, S
 
     class SocialFindFriendHolder extends RecyclerView.ViewHolder {
         TextView textViewUsername;
-        ImageView imageViewProfilePic;
+        CircleImageView imageViewProfilePic;
         ImageButton imageButtonAddFriend;
 
         View mView;

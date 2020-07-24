@@ -5,12 +5,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,7 +20,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.breakfastseta.foodcache.App;
+import com.breakfastseta.foodcache.DigitsInputFilter;
 import com.breakfastseta.foodcache.R;
+import com.breakfastseta.foodcache.Util;
 import com.breakfastseta.foodcache.profile.Profile;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -29,20 +31,28 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
+
+import org.angmarch.views.NiceSpinner;
+import org.angmarch.views.OnSpinnerItemSelectedListener;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 public class SocialAddPostActivity extends AppCompatActivity {
 
     private EditText requestItem;
     private EditText requestDesc;
     private EditText requestQuan;
-    private Spinner requestUnits;
+    private NiceSpinner requestUnits;
 
     private EditText blogTitle;
     private EditText blogDesc;
     private ImageButton blogImage;
+    private ImageView imageView;
 
     private RadioGroup radioGroup;
     private RadioButton button;
@@ -64,9 +74,9 @@ public class SocialAddPostActivity extends AppCompatActivity {
 
     private Uri imageUri;
 
-    private String downloadURL;
+    private String downloadURL = null;
 
-    ArrayAdapter<CharSequence> adapterUnits;
+    List<String> unitsArr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +92,7 @@ public class SocialAddPostActivity extends AppCompatActivity {
         this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_black);
 
         ConstraintLayout reqLayout = findViewById(R.id.request_layout);
-        ConstraintLayout blogLayout = findViewById(R.id.blogpost_layout);
+        ScrollView blogLayout = findViewById(R.id.blogpost_layout);
 
         radioGroup = (RadioGroup) findViewById(R.id.type_radio_group);
 
@@ -106,15 +116,20 @@ public class SocialAddPostActivity extends AppCompatActivity {
 
         blogTitle = findViewById(R.id.edit_blog_title) ;
         blogDesc = findViewById(R.id.edit_blog_description);
-        blogImage = findViewById(R.id.imageButton); //Need this?
+        blogImage = findViewById(R.id.imageButton);
+        imageView = findViewById(R.id.image_view);
 
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        adapterUnits = ArrayAdapter.createFromResource(this,
-                R.array.units, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapterUnits.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        requestUnits.setAdapter(adapterUnits);
+        unitsArr = Arrays.asList(getResources().getStringArray(R.array.units));
+        requestUnits.attachDataSource(unitsArr);
+
+        checkUnits();
+
+        requestUnits.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
+            @Override
+            public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
+                checkUnits();
+            }
+        });
 
         blogImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,36 +140,53 @@ public class SocialAddPostActivity extends AppCompatActivity {
 
     }
 
+    private void checkUnits() {
+        String units = requestUnits.getSelectedItem().toString();
+        if (units.equals("kg")) {
+            requestQuan.setFilters(DigitsInputFilter.DOUBLE_FILTER);
+        } else {
+            String text = requestQuan.getText().toString();
+            if (text.contains(".")) {
+                requestQuan.setText(Util.formatQuantityNumber(Double.parseDouble(text), units));
+            }
+            requestQuan.setFilters(DigitsInputFilter.INTEGER_FILTER);
+        }
+    }
+
     private void StoreImageFirebase() {
 
-        final StorageReference filePath = postImageRef.child("Post Images")
-                .child(imageUri.getLastPathSegment() + postName + ".jpg");
+        if (imageUri != null) {
+            UploadTask uploadTask;
 
-        UploadTask uploadTask;
+            final StorageReference filePath = postImageRef.child("Post Images")
+                    .child(imageUri.getLastPathSegment() + postName + ".jpg");
 
-        uploadTask = filePath.putFile(imageUri);
+            uploadTask = filePath.putFile(imageUri);
 
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                String message = e.getMessage();
-                Toast.makeText(SocialAddPostActivity.this,"Error Occured: " + message, Toast.LENGTH_SHORT).show();
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        downloadURL = uri.toString();
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    String message = e.getMessage();
+                    Toast.makeText(SocialAddPostActivity.this,"Error Occured: " + message, Toast.LENGTH_SHORT).show();
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            downloadURL = uri.toString();
 
-                        Toast.makeText(SocialAddPostActivity.this,"Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SocialAddPostActivity.this,"Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
 
-                        savePost();
-                    }
-                });
-            }
-        });
+                            savePost();
+                        }
+                    });
+                }
+            });
+        } else {
+            savePost();
+        }
     }
 
     public void postPost(View view) {
@@ -224,19 +256,36 @@ public class SocialAddPostActivity extends AppCompatActivity {
     }
 
     private void OpenGallery() {
-        Intent newIntent = new Intent();
-        newIntent.setAction(Intent.ACTION_GET_CONTENT);
-        newIntent.setType("image/*");
-        startActivityForResult(newIntent, Gallery_Pick);
+//        Intent newIntent = new Intent();
+//        newIntent.setAction(Intent.ACTION_GET_CONTENT);
+//        newIntent.setType("image/*");
+//        startActivityForResult(newIntent, Gallery_Pick);
+        CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON_TOUCH)
+                .setInitialCropWindowPaddingRatio(0)
+                .setFixAspectRatio(true)
+                .setAutoZoomEnabled(true)
+                .setAspectRatio(1, 1)
+                .start(this);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == Gallery_Pick && data != null) {
-            imageUri = data.getData();
-            blogImage.setImageURI(imageUri);
+//        if (requestCode == Gallery_Pick && data != null) {
+//            imageUri = data.getData();
+//            blogImage.setImageURI(imageUri);
+//        }
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                imageUri = result.getUri();
+                imageView.setImageURI(imageUri);
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
         }
     }
 
