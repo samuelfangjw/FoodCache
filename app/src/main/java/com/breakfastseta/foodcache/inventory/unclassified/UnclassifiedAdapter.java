@@ -236,7 +236,7 @@ public class UnclassifiedAdapter extends
 
     private void checkUnits(NiceSpinner spinnerUnits, EditText editTextQuantity) {
         String units = spinnerUnits.getSelectedItem().toString();
-        if (units.equals("kg")) {
+        if (units.equals("kg") || units.equals("Cups")) {
             editTextQuantity.setFilters(DigitsInputFilter.DOUBLE_FILTER);
         } else {
             String text = editTextQuantity.getText().toString();

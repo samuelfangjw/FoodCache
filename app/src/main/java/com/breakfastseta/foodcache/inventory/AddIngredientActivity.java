@@ -102,7 +102,7 @@ public class AddIngredientActivity extends AppCompatActivity {
 
     private void checkUnits() {
         String units = spinnerUnits.getSelectedItem().toString();
-        if (units.equals("kg")) {
+        if (units.equals("kg") || units.equals("Cups")) {
             editTextQuantity.setFilters(DigitsInputFilter.DOUBLE_FILTER);
         } else {
             String text = editTextQuantity.getText().toString();

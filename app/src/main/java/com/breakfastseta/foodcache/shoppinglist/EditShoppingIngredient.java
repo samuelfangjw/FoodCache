@@ -90,7 +90,7 @@ public class EditShoppingIngredient extends AppCompatActivity {
 
     private void checkUnits() {
         String units = editShopUnits.getSelectedItem().toString();
-        if (units.equals("kg")) {
+        if (units.equals("kg") || units.equals("Cups")) {
             editShopQuantity.setFilters(DigitsInputFilter.DOUBLE_FILTER);
         } else {
             String text = editShopQuantity.getText().toString();

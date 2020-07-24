@@ -203,6 +203,7 @@ public class Util {
             case "ml":
                 return intFormat.format(quantity) + " " + unit;
             case "kg":
+            case "Cups":
                 return twoDPFormat.format(quantity) + " " + unit;
             case "Items":
                 return intFormat.format(quantity);
@@ -226,6 +227,7 @@ public class Util {
             case "Items":
                 return intFormat.format(quantity);
             case "kg":
+            case "Cups":
                 return twoDPFormat.format(quantity);
             default:
                 return "" + quantity;

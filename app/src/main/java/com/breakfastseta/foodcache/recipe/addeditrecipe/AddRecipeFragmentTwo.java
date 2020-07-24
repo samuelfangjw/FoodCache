@@ -123,7 +123,7 @@ public class AddRecipeFragmentTwo extends Fragment {
 
     private void checkUnits() {
         String units = spinner_units.getSelectedItem().toString();
-        if (units.equals("kg")) {
+        if (units.equals("kg") || units.equals("Cups")) {
             editText_quantity.setFilters(DigitsInputFilter.DOUBLE_FILTER);
         } else {
             String text = editText_quantity.getText().toString();

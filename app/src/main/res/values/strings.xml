@@ -45,6 +45,7 @@
         <item>g</item>
         <item>kg</item>
         <item>ml</item>
+        <item>Cups</item>
     </string-array>
     <string name="next">Next</string>
     <string name="recipe_name">Recipe Name</string>
