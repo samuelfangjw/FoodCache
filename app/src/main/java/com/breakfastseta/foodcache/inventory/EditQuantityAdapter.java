@@ -114,7 +114,7 @@ public class EditQuantityAdapter extends
             }
         });
 
-        if (units.equals("kg")) {
+        if (units.equals("kg") || units.equals("Cups")) {
             editQuantity.setFilters(DigitsInputFilter.DOUBLE_FILTER);
         } else {
             editQuantity.setFilters(DigitsInputFilter.INTEGER_FILTER);

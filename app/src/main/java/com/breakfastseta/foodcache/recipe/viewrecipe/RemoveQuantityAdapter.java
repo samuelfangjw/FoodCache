@@ -87,7 +87,7 @@ public class RemoveQuantityAdapter extends
             quantityAfterTV.setText(Util.formatQuantity(leftInitial, units));
             quantityUsedET.setText(Util.formatQuantityNumber(quantityAfter, units));
             quantityUsedET.setSuffix(" " + units);
-            if (units.equals("kg")) {
+            if (units.equals("kg") || units.equals("Cups")) {
                 quantityUsedET.setFilters(DigitsInputFilter.DOUBLE_FILTER);
             } else {
                 quantityUsedET.setFilters(DigitsInputFilter.INTEGER_FILTER);
