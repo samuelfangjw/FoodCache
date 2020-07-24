@@ -7,7 +7,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 //For Recipe Card
 public class RecipeViewPagerAdapter extends FragmentStateAdapter {
-    private static final int CARD_ITEM_SIZE = 2;
+    private static final int CARD_ITEM_SIZE = 6;
 
     public RecipeViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
