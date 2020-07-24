@@ -78,7 +78,7 @@ public class Util {
     public static Drawer createToolbar(Context context, Toolbar toolbar) {
 
         PrimaryDrawerItem itemFoodCache = new PrimaryDrawerItem().withIdentifier(1).withName("FoodCache");
-        PrimaryDrawerItem itemShoppingList = new PrimaryDrawerItem().withIdentifier(2).withName("ShoppingList");
+        PrimaryDrawerItem itemShoppingList = new PrimaryDrawerItem().withIdentifier(2).withName("Shopping List");
         PrimaryDrawerItem itemRecipe = new PrimaryDrawerItem().withIdentifier(3).withName("RecipeCache");
         PrimaryDrawerItem itemProfile = new PrimaryDrawerItem().withIdentifier(4).withName("Profile");
         PrimaryDrawerItem itemDiscover = new PrimaryDrawerItem().withIdentifier(5).withName("Discover Recipes");

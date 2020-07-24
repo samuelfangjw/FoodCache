@@ -61,7 +61,7 @@ public class SocialFindFriendMain extends AppCompatActivity {
         editTextNameSearch = findViewById(R.id.friends_search_bar);
         recyclerView = findViewById(R.id.findfriend_recycler_view);
 
-        query = notebookRef.orderBy("name", Query.Direction.DESCENDING);
+        query = notebookRef.orderBy("nameLowerCase", Query.Direction.DESCENDING);
         FirestoreRecyclerOptions<Profile> options = new FirestoreRecyclerOptions.Builder<Profile>()
                 .setQuery(query, Profile.class)
                 .build();
@@ -90,8 +90,10 @@ public class SocialFindFriendMain extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (!s.toString().isEmpty()) {
-                    query = notebookRef.orderBy("name").startAt(s.toString()).endAt(s.toString() + "\uf8ff");
+                String nameLowerCase = s.toString().trim().toLowerCase();
+
+                if (!nameLowerCase.isEmpty()) {
+                    query = notebookRef.orderBy("nameLowerCase").startAt(nameLowerCase).endAt(nameLowerCase + "\uf8ff");
                     FirestoreRecyclerOptions<Profile> newOptions = new FirestoreRecyclerOptions.Builder<Profile>()
                             .setQuery(query, Profile.class)
                             .build();
@@ -99,7 +101,7 @@ public class SocialFindFriendMain extends AppCompatActivity {
                     Toast toast = Toast.makeText(SocialFindFriendMain.this, s, Toast.LENGTH_SHORT);
                     toast.show();
                 } else {
-                    query = notebookRef.orderBy("name", Query.Direction.DESCENDING);
+                    query = notebookRef.orderBy("nameLowerCase", Query.Direction.DESCENDING);
                     FirestoreRecyclerOptions<Profile> newOptions2 = new FirestoreRecyclerOptions.Builder<Profile>()
                             .setQuery(query, Profile.class)
                             .build();
@@ -107,7 +109,6 @@ public class SocialFindFriendMain extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     public void addFriendRequest(String requestuID) {

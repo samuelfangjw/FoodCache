@@ -20,6 +20,7 @@ public class Profile {
     Boolean useFamilySharing = false;
     Map<String, Long> recipesPrepared = new HashMap<>();
     ArrayList<String> friendRequests = new ArrayList<>();
+    String nameLowerCase;
 
     public Profile() {
         // empty constructor
@@ -59,6 +60,7 @@ public class Profile {
 
     public void setName(String name) {
         this.name = name;
+        this.nameLowerCase = name.toLowerCase();
     }
 
     public void setUsername(String username) {
@@ -145,5 +147,13 @@ public class Profile {
 
     public void setFriendRequests(ArrayList<String> friendRequests) {
         this.friendRequests = friendRequests;
+    }
+
+    public String getNameLowerCase() {
+        return nameLowerCase;
+    }
+
+    public void setNameLowerCase(String nameLowerCase) {
+        this.nameLowerCase = nameLowerCase;
     }
 }
