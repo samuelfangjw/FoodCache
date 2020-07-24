@@ -48,7 +48,10 @@ public class DiscoverRecipeAdapter extends RecyclerView.Adapter<DiscoverRecipeAd
         // Set item views based on your views and data model
         ImageView imageView = holder.imageView;
         TextView textView = holder.textView;
+        TextView descriptionTV = holder.descriptionTV;
+
         textView.setText(snippet.getName());
+        descriptionTV.setText(snippet.getDescription());
         String image_url = snippet.getImage();
         if (image_url != null) {
             Uri image_path = Uri.parse(image_url);
@@ -77,6 +80,7 @@ public class DiscoverRecipeAdapter extends RecyclerView.Adapter<DiscoverRecipeAd
     public class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView imageView;
         public TextView textView;
+        public TextView descriptionTV;
         public String path;
 
         public ViewHolder(View itemView) {
@@ -85,6 +89,7 @@ public class DiscoverRecipeAdapter extends RecyclerView.Adapter<DiscoverRecipeAd
 
             imageView = (ImageView) itemView.findViewById(R.id.recipe_image);
             textView = (TextView) itemView.findViewById(R.id.recipe_name);
+            descriptionTV = (TextView) itemView.findViewById(R.id.recipe_description);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

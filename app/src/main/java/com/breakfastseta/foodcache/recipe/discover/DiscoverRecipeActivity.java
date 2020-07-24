@@ -168,8 +168,9 @@ public class DiscoverRecipeActivity extends AppCompatActivity {
             String name = document.getString("name");
             String cuisine = document.getString("cuisine");
             String path = document.getReference().getPath();
+            String description = document.getString("description");
 
-            arr.add(new DiscoverSnippet(name, imagePath, path, cuisine));
+            arr.add(new DiscoverSnippet(name, imagePath, path, cuisine, description));
         }
 
         filteredArr.addAll(arr);

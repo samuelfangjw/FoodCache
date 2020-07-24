@@ -24,11 +24,6 @@ import com.bumptech.glide.Glide;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
-import org.angmarch.views.NiceSpinner;
-
-import java.util.Arrays;
-import java.util.List;
-
 import static android.app.Activity.RESULT_OK;
 
 public class EditRecipeFragmentOne extends Fragment {
@@ -39,10 +34,8 @@ public class EditRecipeFragmentOne extends Fragment {
     EditText editText_author;
     Button nextButton;
     Button addPhoto;
-    NiceSpinner cuisineSpinner;
     EditText editText_description;
     TextView textView_description;
-    List<String> cuisinesArr;
 
     Uri resultUri;
 
@@ -96,12 +89,8 @@ public class EditRecipeFragmentOne extends Fragment {
         editText_author = (EditText) view.findViewById(R.id.edit_text_author);
         nextButton = (Button) view.findViewById(R.id.next_button_one);
         addPhoto = (Button) view.findViewById(R.id.add_recipe_photo_button);
-        cuisineSpinner = (NiceSpinner) view.findViewById(R.id.cuisine);
         editText_description = (EditText) view.findViewById(R.id.description);
         textView_description = (TextView) view.findViewById(R.id.recipe_description);
-
-        cuisinesArr = Arrays.asList(getResources().getStringArray(R.array.cuisines));
-        cuisineSpinner.attachDataSource(cuisinesArr);
 
         editText_name.addTextChangedListener(new TextWatcher() {
             @Override
@@ -141,7 +130,7 @@ public class EditRecipeFragmentOne extends Fragment {
         nextButton.setOnClickListener(v -> {
             String name = editText_name.getText().toString();
             String author = editText_author.getText().toString();
-            String tab = cuisineSpinner.getSelectedItem().toString();
+            String tab = cuisine;
             String description = editText_description.getText().toString();
             if (name.isEmpty() || author.isEmpty() || description.isEmpty()) {
                 Toast.makeText(getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
@@ -161,8 +150,6 @@ public class EditRecipeFragmentOne extends Fragment {
         if (!description.isEmpty()) {
             editText_description.setText(description);
         }
-        int index = cuisinesArr.indexOf(cuisine);
-        cuisineSpinner.setSelectedIndex(index);
 
         if (imageUrl!= null) {
             Uri image_path = Uri.parse(imageUrl);

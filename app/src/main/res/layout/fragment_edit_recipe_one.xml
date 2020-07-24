@@ -120,21 +120,6 @@
                 android:maxLines="750"
                 android:textColor="@color/md_black_1000" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:text="Cuisine"
-                android:textColor="@color/md_black_1000"
-                android:textSize="20sp" />
-
-            <org.angmarch.views.NiceSpinner
-                android:id="@+id/cuisine"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginVertical="8dp" />
-
         </LinearLayout>
     </ScrollView>
 

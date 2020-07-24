@@ -6,12 +6,14 @@ public class DiscoverSnippet {
     private String image;
     private String path;
     private String cuisine;
+    private String description;
 
-    public DiscoverSnippet(String name, String image, String path, String cuisine) {
+    public DiscoverSnippet(String name, String image, String path, String cuisine, String description) {
         this.name = name;
         this.image = image;
         this.path = path;
         this.cuisine = cuisine;
+        this.description = description;
     }
 
     public String getName() {
@@ -28,5 +30,9 @@ public class DiscoverSnippet {
 
     public String getCuisine() {
         return cuisine;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }
