@@ -27,6 +27,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.mikepenz.actionitembadge.library.ActionItemBadge;
@@ -44,7 +45,7 @@ public class SocialFriendsActivity extends AppCompatActivity {
 
     ArrayList<QueryDocumentSnapshot> queryDocumentSnapshotsFriendProfArr = new ArrayList<>();
 
-    private SocialFriendsList adapter2;
+    private SocialFriendsListAdapter adapter2;
 
     private RecyclerView recyclerViewFriendList;
     private TextView message;
@@ -52,6 +53,8 @@ public class SocialFriendsActivity extends AppCompatActivity {
     private MenuItem menuItem;
 
     String uID = App.getUID();
+
+    ListenerRegistration registration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +94,7 @@ public class SocialFriendsActivity extends AppCompatActivity {
                     ActionItemBadge.hide(menuItem);
                 }
 
-                docRef.addSnapshotListener(SocialFriendsActivity.this, new EventListener<DocumentSnapshot>() {
+                registration = docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
 
@@ -202,11 +205,16 @@ public class SocialFriendsActivity extends AppCompatActivity {
     }
 
     private void createRecyclerViewFriendList() {
-        adapter2 = new SocialFriendsList(queryDocumentSnapshotsFriendProfArr);
+        adapter2 = new SocialFriendsListAdapter(queryDocumentSnapshotsFriendProfArr, this);
 
         recyclerViewFriendList.setAdapter(adapter2);
 
         recyclerViewFriendList.setLayoutManager(new LinearLayoutManager(this));
     }
 
+    @Override
+    protected void onDestroy() {
+        registration.remove();
+        super.onDestroy();
+    }
 }

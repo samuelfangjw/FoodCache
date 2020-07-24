@@ -108,22 +108,10 @@ public class SocialFriendsRequestAdapter extends
             imageViewProfile = itemView.findViewById(R.id.social_friend_request_profile_pic);
             acceptButton = itemView.findViewById(R.id.accept_button);
             declineButton = itemView.findViewById(R.id.decline_button);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition(); // to differentiate cards
-                    // check if position exists
-                    if (position != RecyclerView.NO_POSITION && listener != null) {
-                        listener.onItemClick(arr.get(position).getString("uid"), position);
-                    }
-                }
-            });
         }
     }
 
     public interface OnItemClickListener {
-        void onItemClick(String uid, int position);
         void AcceptFriend(String friendUID);
         void DeclineFriend(String friendUID);
     }

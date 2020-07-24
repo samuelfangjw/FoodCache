@@ -114,11 +114,6 @@ public class SocialFriendRequest extends AppCompatActivity {
         adapter = new SocialFriendsRequestAdapter(queryDocumentSnapshotsProfArr);
         adapter.setOnItemClickListener(new SocialFriendsRequestAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(String uid, int position) {
-
-            }
-
-            @Override
             public void AcceptFriend(String friendUID) {
                 acceptFriendRequest(friendUID, uID);
                 if (queryDocumentSnapshotsProfArr.isEmpty()) {
