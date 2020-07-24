@@ -36,7 +36,8 @@
             android:layout_marginBottom="8dp"
             android:layout_toEndOf="@id/find_friend_profile_pic"
             android:text="Name"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/md_black_1000"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:layout_toStartOf="@id/find_friend_add_button"
             android:textStyle="bold" />
 
