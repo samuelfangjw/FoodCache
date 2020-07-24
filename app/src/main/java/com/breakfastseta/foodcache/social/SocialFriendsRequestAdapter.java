@@ -20,19 +20,17 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class SocialFriendsRequest extends
-        RecyclerView.Adapter<SocialFriendsRequest.ViewHolder>{
+public class SocialFriendsRequestAdapter extends
+        RecyclerView.Adapter<SocialFriendsRequestAdapter.ViewHolder>{
 
     private ArrayList<QueryDocumentSnapshot> arr;
 
 
-    public SocialFriendsRequest(ArrayList<QueryDocumentSnapshot> arr) {
+    public SocialFriendsRequestAdapter(ArrayList<QueryDocumentSnapshot> arr) {
         this.arr = arr;
     }
 
-    private SocialFriendsRequest.OnItemClickListener listener;
-    private SocialFriendsRequest.AcceptFriendListener listener2Accept;
-    private SocialFriendsRequest.DeclineFriendListener listener2Decline;
+    private SocialFriendsRequestAdapter.OnItemClickListener listener;
 
     @NonNull
     @Override
@@ -71,8 +69,10 @@ public class SocialFriendsRequest extends
         holder.acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (listener2Accept != null) {
-                    listener2Accept.AcceptFriend(request.getString("uid"));
+                if (listener != null) {
+                    arr.remove(position);
+                    listener.AcceptFriend(request.getString("uid"));
+                    notifyDataSetChanged();
                 }
             }
         });
@@ -80,8 +80,10 @@ public class SocialFriendsRequest extends
         holder.declineButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (listener2Decline != null) {
-                    listener2Decline.DeclineFriend(request.getString("uid"));
+                if (listener != null) {
+                    arr.remove(position);
+                    listener.DeclineFriend(request.getString("uid"));
+                    notifyDataSetChanged();
                 }
             }
         });
@@ -120,27 +122,13 @@ public class SocialFriendsRequest extends
         }
     }
 
-    public interface AcceptFriendListener {
+    public interface OnItemClickListener {
+        void onItemClick(String uid, int position);
         void AcceptFriend(String friendUID);
-    }
-
-    public void setAcceptFriendListener(AcceptFriendListener listener2Accept) {
-        this.listener2Accept = listener2Accept;
-    }
-
-    public interface DeclineFriendListener {
         void DeclineFriend(String friendUID);
     }
 
-    public void setDeclineFriendListener(DeclineFriendListener listener2Decline) {
-        this.listener2Decline = listener2Decline;
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(String path, int position);
-    }
-
-    public void setOnItemClickListener(SocialFriendsRequest.OnItemClickListener listener) {
+    public void setOnItemClickListener(SocialFriendsRequestAdapter.OnItemClickListener listener) {
         this.listener = listener;
     }
 }

@@ -1,39 +1,37 @@
 package com.breakfastseta.foodcache.social;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
-import com.breakfastseta.foodcache.profile.Profile;
-import com.breakfastseta.foodcache.recipe.discover.DiscoverRecipeActivity;
-import com.breakfastseta.foodcache.recipe.discover.DiscoverRecipeAdapter;
-import com.breakfastseta.foodcache.recipe.viewrecipe.ViewRecipeActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.mikepenz.actionitembadge.library.ActionItemBadge;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class SocialFriendsActivity extends AppCompatActivity {
 
@@ -42,21 +40,18 @@ public class SocialFriendsActivity extends AppCompatActivity {
 
     private CollectionReference notebookRef = db.collection("Profiles");
 
-    private ArrayList<String> profilesArr = new ArrayList<>();
     private ArrayList<String> friendsArr = new ArrayList<>();
 
-    private SocialFriendsRequest adapter;
+    ArrayList<QueryDocumentSnapshot> queryDocumentSnapshotsFriendProfArr = new ArrayList<>();
+
     private SocialFriendsList adapter2;
 
-    private RecyclerView recyclerView;
     private RecyclerView recyclerViewFriendList;
-    private TextView friendRequestTextView;
-    private TextView friendListTextView;
-    private View divider;
+    private TextView message;
+
+    private MenuItem menuItem;
 
     String uID = App.getUID();
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,32 +63,121 @@ public class SocialFriendsActivity extends AppCompatActivity {
         setTitle("Friends");
         Util.createToolbar(this, toolbar);
 
-        recyclerView = findViewById(R.id.friend_request_recycler_view);
-        friendRequestTextView = findViewById(R.id.request_text);
-        divider = findViewById(R.id.divider_friends);
         recyclerViewFriendList = findViewById(R.id.social_friend_recycler_view);
-        friendListTextView = findViewById(R.id.friend_list_text);
-
-        getData();
+        message = findViewById(R.id.message);
 
         getFriendListData();
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.friends_menu, menu);
+        menuItem = menu.findItem(R.id.action_request);
+
+        DocumentReference docRef = db.collection("Profiles").document(uID);
+        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                ArrayList<String> friendRequests = (ArrayList<String>) documentSnapshot.get("friendRequests");
+                int count = 0;
+
+                if (friendRequests != null) {
+                    count += friendRequests.size();
+                }
+
+                if (count > 0) {
+                    ActionItemBadge.update(SocialFriendsActivity.this, menuItem, getDrawable(R.drawable.ic_people), ActionItemBadge.BadgeStyles.RED, count);
+                } else {
+                    ActionItemBadge.hide(menuItem);
+                }
+
+                docRef.addSnapshotListener(SocialFriendsActivity.this, new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+
+                        if (documentSnapshot != null) {
+                            ArrayList<String> friendRequests = (ArrayList<String>) documentSnapshot.get("friendRequests");
+                            int count = 0;
+
+                            if (friendRequests != null) {
+                                count += friendRequests.size();
+                            }
+
+                            if (count > 0) {
+                                ActionItemBadge.update(SocialFriendsActivity.this, menuItem, getDrawable(R.drawable.ic_people), ActionItemBadge.BadgeStyles.RED, count);
+                            } else {
+                                ActionItemBadge.hide(menuItem);
+                            }
+
+                            compareFriendsArray(documentSnapshot);
+                        }
+
+                    }
+                });
+            }
+        });
+
+        return true;
+    }
+
+    private void compareFriendsArray(DocumentSnapshot documentSnapshot) {
+        ArrayList<String> friendsArr2 = (ArrayList<String>) documentSnapshot.get("friends");
+
+        if (adapter2 != null && !friendsArr2.equals(friendsArr)) {
+            if (friendsArr2.isEmpty()) {
+                queryDocumentSnapshotsFriendProfArr.clear();
+                adapter2.notifyDataSetChanged();
+                message.setVisibility(View.VISIBLE);
+            } else {
+                message.setVisibility(View.GONE);
+                notebookRef.whereIn("uid", friendsArr2).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            queryDocumentSnapshotsFriendProfArr.clear();
+                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                queryDocumentSnapshotsFriendProfArr.add(documentSnapshot);
+                            }
+                            adapter2.notifyDataSetChanged();
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_request:
+                Intent intent = new Intent(this, SocialFriendRequest.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     // for friend list
     private void getFriendListData() {
-        notebookRef.document(uID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        DocumentReference docRef = notebookRef.document(uID);
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot documentSnapshot = task.getResult();
-                    friendsArr.addAll((ArrayList<String>) documentSnapshot.get("friends"));
+                    ArrayList<String> friendsArr2 = (ArrayList<String>) documentSnapshot.get("friends");
+
+                    if (friendsArr2 != null) {
+                        friendsArr.addAll(friendsArr2);
+                    }
+
                     if (friendsArr.isEmpty()) {
-                        recyclerViewFriendList.setVisibility(View.GONE);
-                        friendListTextView.setVisibility(View.GONE);
+                        message.setVisibility(View.VISIBLE);
+                        createRecyclerViewFriendList();
                     } else {
-                        recyclerViewFriendList.setVisibility(View.VISIBLE);
-                        friendListTextView.setVisibility(View.VISIBLE);
                         getFriendProfileData(friendsArr);
                     }
                 } else {
@@ -104,7 +188,6 @@ public class SocialFriendsActivity extends AppCompatActivity {
     }
 
     private void getFriendProfileData(ArrayList<String> friendsArr) {
-        ArrayList<QueryDocumentSnapshot> queryDocumentSnapshotsFriendProfArr = new ArrayList<QueryDocumentSnapshot>();
         notebookRef.whereIn("uid", friendsArr).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -112,105 +195,18 @@ public class SocialFriendsActivity extends AppCompatActivity {
                     for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                         queryDocumentSnapshotsFriendProfArr.add(documentSnapshot);
                     }
-                    createRecyclerViewFriendList(queryDocumentSnapshotsFriendProfArr);
+                    createRecyclerViewFriendList();
                 }
             }
         });
     }
 
-    private void createRecyclerViewFriendList(ArrayList<QueryDocumentSnapshot> arr) {
-        adapter2 = new SocialFriendsList(arr);
+    private void createRecyclerViewFriendList() {
+        adapter2 = new SocialFriendsList(queryDocumentSnapshotsFriendProfArr);
 
         recyclerViewFriendList.setAdapter(adapter2);
 
         recyclerViewFriendList.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    // for Friend Requests
-    private void getData() {
-
-        notebookRef.document(uID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot documentSnapshot = task.getResult();
-                    profilesArr.addAll((ArrayList<String>) documentSnapshot.get("friendRequests"));
-                    //Log.d(TAG, "onComplete: " + profilesArr.toString());
-                    if (profilesArr.isEmpty()) {
-                        recyclerView.setVisibility(View.GONE);
-                        friendRequestTextView.setVisibility(View.GONE);
-                        divider.setVisibility(View.GONE);
-                    } else {
-                        recyclerView.setVisibility(View.VISIBLE);
-                        friendRequestTextView.setVisibility(View.VISIBLE);
-                        divider.setVisibility(View.VISIBLE);
-                        getProfileData(profilesArr);
-                    }
-                } else {
-                    Log.d(TAG, "get failed with",  task.getException());
-                }
-            }
-        });
-
-    }
-
-    private void getProfileData(ArrayList<String> profilesArr) {
-        ArrayList<QueryDocumentSnapshot> queryDocumentSnapshotsProfArr = new ArrayList<QueryDocumentSnapshot>();
-        notebookRef.whereIn("uid", profilesArr).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot documentSnapshots : task.getResult()) {
-                        queryDocumentSnapshotsProfArr.add(documentSnapshots);
-                    }
-                    createRecyclerView(queryDocumentSnapshotsProfArr);
-                } else {
-                    Log.d(TAG, "Error getting profiles: ", task.getException());
-                }
-            }
-        });
-    }
-
-    private void createRecyclerView(ArrayList<QueryDocumentSnapshot> arr) {
-
-        adapter = new SocialFriendsRequest(arr);
-        adapter.setAcceptFriendListener(new SocialFriendsRequest.AcceptFriendListener() {
-            @Override
-            public void AcceptFriend(String friendUID) {
-                acceptFriendRequest(friendUID, uID);
-            }
-        });
-
-        adapter.setDeclineFriendListener(new SocialFriendsRequest.DeclineFriendListener() {
-            @Override
-            public void DeclineFriend(String friendUID) {
-                declineFriend(friendUID, uID);
-            }
-        });
-
-        recyclerView.setAdapter(adapter);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-    }
-
-    private void declineFriend(String friendUID, String uID) {
-        // update current user's friend request array to remove the friend request
-        notebookRef.document(uID).update("friendRequests", FieldValue.arrayRemove(friendUID));
-
-        Toast toast = Toast.makeText(SocialFriendsActivity.this, "Friend Request Declined!", Toast.LENGTH_SHORT);
-        toast.show();
-    }
-
-    private void acceptFriendRequest(String friendUID, String uID) {
-        // update current user's friend Request array and friend array
-        notebookRef.document(uID).update("friendRequests", FieldValue.arrayRemove(friendUID));
-        notebookRef.document(uID).update("friends", FieldValue.arrayUnion(friendUID));
-
-        // update friend's array
-        notebookRef.document(friendUID).update("friends", FieldValue.arrayUnion(uID));
-
-        Toast toast = Toast.makeText(SocialFriendsActivity.this, "Friend Request Accepted!", Toast.LENGTH_SHORT);
-        toast.show();
-    }
 }

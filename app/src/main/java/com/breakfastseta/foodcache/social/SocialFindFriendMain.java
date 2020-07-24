@@ -10,7 +10,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,7 +36,6 @@ public class SocialFindFriendMain extends AppCompatActivity {
     String uid = App.getUID();
 
     private CollectionReference notebookRef = db.collection("Profiles");
-    private CoordinatorLayout coordinatorLayout;
 
     private EditText editTextNameSearch;
     private RecyclerView recyclerView;
@@ -45,8 +43,6 @@ public class SocialFindFriendMain extends AppCompatActivity {
     private SocialFindFriendAdapter adapter;
 
     private Query query;
-
-    ArrayList<Profile> searchArr = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,16 +130,6 @@ public class SocialFindFriendMain extends AppCompatActivity {
                 }
             }
         });
-    }
-
-
-
-    private void search(String text) {
-        query = notebookRef.orderBy("name").whereLessThanOrEqualTo("name", text + "\uf8ff");
-        FirestoreRecyclerOptions<Profile> newOptions = new FirestoreRecyclerOptions.Builder<Profile>()
-                .setQuery(query, Profile.class)
-                .build();
-        adapter.updateOptions(newOptions);
     }
 
     @Override

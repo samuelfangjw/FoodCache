@@ -18,11 +18,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".social.SocialFriendsActivity"/>
-        <activity android:name=".social.SocialFindFriendMain"/>
+        <activity android:name=".social.SocialFriendRequest"></activity>
+        <activity android:name=".social.SocialFriendsActivity" />
+        <activity android:name=".social.SocialFindFriendMain" />
         <activity android:name=".inventory.ManageTabsActivity" />
-        <activity android:name=".social.EditSocialPost"
-            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".social.EditSocialPost"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".family.FamilyActivity" />
         <activity android:name=".inventory.unclassified.UnclassifiedActivity" />
         <activity android:name=".social.SocialAddPostActivity" />

@@ -1,74 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".social.SocialFriendsActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/primaryColor"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <RelativeLayout
-        android:visibility="visible"
-        android:id="@+id/request_box"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" >
-
-        <TextView
-            android:id="@+id/request_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Friend Requests"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:layout_margin="8dp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/friend_request_recycler_view"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/request_text" />
-
-        <View
-            android:id="@+id/divider_friends"
-            android:layout_width="379dp"
-            android:layout_height="1dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:background="?android:attr/listDivider"
-            android:layout_below="@id/friend_request_recycler_view"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:visibility="visible"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/request_box" >
-
-        <TextView
-            android:layout_centerHorizontal="true"
-            android:id="@+id/friend_list_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Friend List"
-            android:layout_alignParentTop="true"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:layout_margin="8dp" />
-
+            android:background="@color/primaryColor" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/social_friend_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/friend_list_text"/>
-    </RelativeLayout>
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/message"
+        android:visibility="gone"
+        android:text="Friends List is empty"
+        android:textColor="@color/md_black_1000"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
+
+</RelativeLayout>
