@@ -14,33 +14,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.R;
-import com.breakfastseta.foodcache.profile.Profile;
-import com.breakfastseta.foodcache.recipe.recommend.RecommendSnippet;
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class SocialFriendsRequest extends
-        RecyclerView.Adapter<SocialFriendsRequest.ViewHolder>{
+public class SocialFriendsList extends
+        RecyclerView.Adapter<SocialFriendsList.ViewHolder>{
 
     private ArrayList<QueryDocumentSnapshot> arr;
 
 
-    public SocialFriendsRequest(ArrayList<QueryDocumentSnapshot> arr) {
+    public SocialFriendsList(ArrayList<QueryDocumentSnapshot> arr) {
         this.arr = arr;
     }
 
-    private SocialFriendsRequest.OnItemClickListener listener;
-    private SocialFriendsRequest.AcceptFriendListener listener2Accept;
-    private SocialFriendsRequest.DeclineFriendListener listener2Decline;
+    private SocialFriendsList.OnItemClickListener listener;
 
     @NonNull
     @Override
@@ -49,7 +38,7 @@ public class SocialFriendsRequest extends
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
-        View requestView = inflater.inflate(R.layout.social_friend_request, parent, false);
+        View requestView = inflater.inflate(R.layout.social_friend_card, parent, false);
 
         // Return a new holder instance
         ViewHolder viewHolder = new ViewHolder(requestView);
@@ -77,23 +66,6 @@ public class SocialFriendsRequest extends
                     .into(imageView);
         }
 
-        holder.acceptButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listener2Accept != null) {
-                    listener2Accept.AcceptFriend(request.getString("uid"));
-                }
-            }
-        });
-
-        holder.declineButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listener2Decline != null) {
-                    listener2Decline.DeclineFriend(request.getString("uid"));
-                }
-            }
-        });
     }
 
     @Override
@@ -104,17 +76,13 @@ public class SocialFriendsRequest extends
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView textViewName;
         ImageView imageViewProfile;
-        Button acceptButton;
-        Button declineButton;
 
         public ViewHolder(View itemView) {
 
             super(itemView);
 
-            textViewName = itemView.findViewById(R.id.social_friend_request_name);
-            imageViewProfile = itemView.findViewById(R.id.social_friend_request_profile_pic);
-            acceptButton = itemView.findViewById(R.id.accept_button);
-            declineButton = itemView.findViewById(R.id.decline_button);
+            textViewName = itemView.findViewById(R.id.social_friend_name);
+            imageViewProfile = itemView.findViewById(R.id.social_friend_profile_pic);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -129,27 +97,11 @@ public class SocialFriendsRequest extends
         }
     }
 
-    public interface AcceptFriendListener {
-        void AcceptFriend(String friendUID);
-    }
-
-    public void setAcceptFriendListener(AcceptFriendListener listener2Accept) {
-        this.listener2Accept = listener2Accept;
-    }
-
-    public interface DeclineFriendListener {
-        void DeclineFriend(String friendUID);
-    }
-
-    public void setDeclineFriendListener(DeclineFriendListener listener2Decline) {
-        this.listener2Decline = listener2Decline;
-    }
-
     public interface OnItemClickListener {
         void onItemClick(String path, int position);
     }
 
-    public void setOnItemClickListener(SocialFriendsRequest.OnItemClickListener listener) {
+    public void setOnItemClickListener(SocialFriendsList.OnItemClickListener listener) {
         this.listener = listener;
     }
 }

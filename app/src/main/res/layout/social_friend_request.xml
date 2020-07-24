@@ -12,7 +12,7 @@
         android:padding="8dp">
 
         <ImageView
-            android:id="@+id/social_friend_profile_pic"
+            android:id="@+id/social_friend_request_profile_pic"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentStart="true"
@@ -25,16 +25,16 @@
             android:src="@drawable/ic_profile_pic" />
 
         <TextView
-            android:id="@+id/social_friend_name"
+            android:id="@+id/social_friend_request_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/social_friend_profile_pic"
-            android:layout_alignBottom="@+id/social_friend_profile_pic"
+            android:layout_alignTop="@+id/social_friend_request_profile_pic"
+            android:layout_alignBottom="@+id/social_friend_request_profile_pic"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:layout_toEndOf="@id/social_friend_profile_pic"
+            android:layout_toEndOf="@id/social_friend_request_profile_pic"
             android:text="Name"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textStyle="bold" />
@@ -43,7 +43,7 @@
             android:id="@+id/accept_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/social_friend_profile_pic"
+            android:layout_below="@+id/social_friend_request_profile_pic"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="0dp"
             android:layout_toStartOf="@+id/decline_button"
@@ -56,7 +56,7 @@
             android:id="@+id/decline_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/social_friend_profile_pic"
+            android:layout_below="@+id/social_friend_request_profile_pic"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"

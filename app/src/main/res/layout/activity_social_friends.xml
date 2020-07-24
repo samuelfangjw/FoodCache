@@ -37,7 +37,7 @@
             android:layout_below="@id/request_text" />
 
         <View
-            android:id="@+id/divider"
+            android:id="@+id/divider_friends"
             android:layout_width="379dp"
             android:layout_height="1dp"
             android:layout_marginStart="16dp"
