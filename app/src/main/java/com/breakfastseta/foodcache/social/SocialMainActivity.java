@@ -48,7 +48,7 @@ public class SocialMainActivity extends AppCompatActivity {
 
     private ListenerRegistration registration;
 
-    private ArrayList<String> friendArr = new ArrayList<String>();
+    private ArrayList<String> friendArr = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

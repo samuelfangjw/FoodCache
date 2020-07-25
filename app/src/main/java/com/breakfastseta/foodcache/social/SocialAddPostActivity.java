@@ -25,7 +25,6 @@ import com.breakfastseta.foodcache.DigitsInputFilter;
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.Util;
 import com.breakfastseta.foodcache.profile.Profile;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -296,7 +295,7 @@ public class SocialAddPostActivity extends AppCompatActivity {
     }
 
     private void findFriendList(SocialPostSnippet snippet) {
-        db.collection("Profiles").document().get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        db.collection("Profiles").document(App.getUID()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
