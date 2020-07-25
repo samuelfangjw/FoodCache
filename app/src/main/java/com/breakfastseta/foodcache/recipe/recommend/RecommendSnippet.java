@@ -10,15 +10,17 @@ public class RecommendSnippet {
     private String image;
     private String path;
     private String cuisine;
+    private String description;
     private ArrayList<Ingredient> ingredients;
     private double recipeScore;
 
-    public RecommendSnippet(String name, String image, String path, String cuisine, ArrayList<Ingredient> ingredients) {
+    public RecommendSnippet(String name, String image, String path, String cuisine, ArrayList<Ingredient> ingredients, String description) {
         this.name = name;
         this.image = image;
         this.path = path;
         this.cuisine = cuisine;
         this.ingredients = ingredients;
+        this.description = description;
     }
 
     public String getName() {
@@ -52,5 +54,9 @@ public class RecommendSnippet {
     @Override
     public String toString() {
         return "{name='" + name + ", recipeScore=" + recipeScore + '}';
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

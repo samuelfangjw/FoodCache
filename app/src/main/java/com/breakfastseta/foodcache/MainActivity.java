@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
             public void onComplete() {
                 Intent intent = new Intent(MainActivity.this, FoodcacheActivity.class);
                 startActivity(intent);
+                Util.selectedItem = 1;
                 finish();
             }
         });

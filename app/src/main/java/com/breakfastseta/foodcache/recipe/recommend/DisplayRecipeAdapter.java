@@ -49,8 +49,9 @@ public class DisplayRecipeAdapter extends
         // Set item views based on your views and data model
         TextView textView = holder.textViewName;
         ImageView imageView = holder.imageView;
+        TextView recipeDesc = holder.recipeDescription;
 
-
+        recipeDesc.setText(snippet.getDescription());
         textView.setText(snippet.getName());
         String image_url = snippet.getImage();
         if (image_url != null) {
@@ -69,6 +70,7 @@ public class DisplayRecipeAdapter extends
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView textViewName;
         ImageView imageView;
+        TextView recipeDescription;
 
         public ViewHolder(View itemView) {
 
@@ -76,6 +78,7 @@ public class DisplayRecipeAdapter extends
 
             textViewName = itemView.findViewById(R.id.recipe_name);
             imageView = itemView.findViewById(R.id.recipe_image);
+            recipeDescription = itemView.findViewById(R.id.recipe_description);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

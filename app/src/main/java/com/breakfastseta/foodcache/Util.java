@@ -11,7 +11,6 @@ import android.widget.ImageView;
 
 import androidx.appcompat.widget.Toolbar;
 
-import com.breakfastseta.foodcache.family.FamilyActivity;
 import com.breakfastseta.foodcache.inventory.FoodcacheActivity;
 import com.breakfastseta.foodcache.profile.Profile;
 import com.breakfastseta.foodcache.profile.ProfileActivity;
@@ -39,7 +38,7 @@ import java.text.DecimalFormat;
 
 public class Util {
 
-    private static int selectedItem = 1;
+    public static int selectedItem = 1;
     private static final String TAG = "Util";
 
     /*
@@ -150,39 +149,57 @@ public class Util {
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         switch (position) {
                             case 1:
-                                context.startActivity(new Intent(context, FoodcacheActivity.class));
+                                Intent intent1 = new Intent(context, FoodcacheActivity.class);
+                                ((Activity) context).finish();
+                                context.startActivity(intent1);
                                 selectedItem = 1;
                                 return true;
                             case 2:
-                                context.startActivity(new Intent(context, ShoppingListActivity.class));
+                                Intent intent2 = new Intent(context, ShoppingListActivity.class);
+                                ((Activity) context).finish();
+                                context.startActivity(intent2);
                                 selectedItem = 2;
                                 return true;
                             case 3:
-                                context.startActivity(new Intent(context, ProfileActivity.class));
+                                Intent intent3 = new Intent(context, ProfileActivity.class);
+                                ((Activity) context).finish();
+                                context.startActivity(intent3);
                                 selectedItem = 4;
                                 return true;
                             case 5:
-                                context.startActivity(new Intent(context, RecipeActivity.class));
+                                Intent intent5 = new Intent(context, RecipeActivity.class);
+                                ((Activity) context).finish();
+                                context.startActivity(intent5);
                                 selectedItem = 3;
                                 return true;
                             case 6:
-                                context.startActivity(new Intent(context, DiscoverRecipeActivity.class));
+                                Intent intent6 = new Intent(context, DiscoverRecipeActivity.class);
+                                ((Activity) context).finish();
+                                context.startActivity(intent6);
                                 selectedItem = 5;
                                 return true;
                             case 7:
-                                context.startActivity(new Intent(context, RecommendActivity.class));
+                                Intent intent7 = new Intent(context, RecommendActivity.class);
+                                ((Activity) context).finish();
+                                context.startActivity(intent7);
                                 selectedItem = 6;
                                 return true;
                             case 9:
-                                context.startActivity(new Intent(context, SocialMainActivity.class));
+                                Intent intent9 = new Intent(context, SocialMainActivity.class);
+                                ((Activity) context).finish();
+                                context.startActivity(intent9);
                                 selectedItem = 10;
                                 return true;
                             case 10:
-                                context.startActivity(new Intent(context, SocialFriendsActivity.class));
+                                Intent intent10 = new Intent(context, SocialFriendsActivity.class);
+                                ((Activity) context).finish();
+                                context.startActivity(intent10);
                                 selectedItem = 9;
                                 return true;
                             case 12:
-                                context.startActivity(new Intent(context, FamilyActivity.class));
+                                Intent intent12 = new Intent(context, ShoppingListActivity.class);
+                                ((Activity) context).finish();
+                                context.startActivity(intent12);
                                 selectedItem = 11;
                                 return true;
                         }

@@ -124,6 +124,7 @@ public class RecommendActivity extends AppCompatActivity implements ParametersFr
                                 String imagePath = document.getString("photo");
                                 String name = document.getString("name");
                                 String cuisine = document.getString("cuisine");
+                                String description = document.getString("description");
                                 String path = document.getReference().getPath();
                                 ArrayList<Map<String, Object>> ingredients = (ArrayList<Map<String, Object>>) document.get("ingredients");
                                 ArrayList<Ingredient> ingredientsArr = new ArrayList<>();
@@ -136,7 +137,7 @@ public class RecommendActivity extends AppCompatActivity implements ParametersFr
                                     ingredientsArr.add(new Ingredient(ingredient_name, ingredient_quantity, ingredient_units));
                                 }
 
-                                arrRecipes.add(new RecommendSnippet(name, imagePath, path, cuisine, ingredientsArr));
+                                arrRecipes.add(new RecommendSnippet(name, imagePath, path, cuisine, ingredientsArr, description));
                             }
                             getPrivateRecipes();
                         } else {
@@ -165,6 +166,7 @@ public class RecommendActivity extends AppCompatActivity implements ParametersFr
                             String imagePath = document.getString("photo");
                             String name = document.getString("name");
                             String cuisine = document.getString("cuisine");
+                            String description = document.getString("description");
                             String path = document.getReference().getPath();
                             ArrayList<Map<String, Object>> ingredients = (ArrayList<Map<String, Object>>) document.get("ingredients");
                             ArrayList<Ingredient> ingredientsArr = new ArrayList<>();
@@ -177,7 +179,7 @@ public class RecommendActivity extends AppCompatActivity implements ParametersFr
                                 ingredientsArr.add(new Ingredient(ingredient_name, ingredient_quantity, ingredient_units));
                             }
 
-                            arrRecipes.add(new RecommendSnippet(name, imagePath, path, cuisine, ingredientsArr));
+                            arrRecipes.add(new RecommendSnippet(name, imagePath, path, cuisine, ingredientsArr, description));
                         }
                         getIngredients();
                     }
