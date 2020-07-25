@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import androidx.appcompat.widget.Toolbar;
 
+import com.breakfastseta.foodcache.family.FamilyActivity;
 import com.breakfastseta.foodcache.inventory.FoodcacheActivity;
 import com.breakfastseta.foodcache.profile.Profile;
 import com.breakfastseta.foodcache.profile.ProfileActivity;
@@ -197,7 +198,7 @@ public class Util {
                                 selectedItem = 9;
                                 return true;
                             case 12:
-                                Intent intent12 = new Intent(context, ShoppingListActivity.class);
+                                Intent intent12 = new Intent(context, FamilyActivity.class);
                                 ((Activity) context).finish();
                                 context.startActivity(intent12);
                                 selectedItem = 11;

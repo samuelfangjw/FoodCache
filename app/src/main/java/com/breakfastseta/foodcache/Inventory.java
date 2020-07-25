@@ -26,13 +26,16 @@ public class Inventory {
 
     private OnFinishListener listener;
 
-    private static String uid = App.getFamilyUID();
+    private static String uid;
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private static CollectionReference inventoryRef = db.collection("Users").document(uid).collection("Inventory");
-    private static CollectionReference barcodeRef = db.collection("Users").document(uid).collection("Barcodes");
+    private static CollectionReference inventoryRef;
+    private static CollectionReference barcodeRef;
 
     Inventory() {
         // empty constructor
+        uid = App.getFamilyUID();
+        inventoryRef = db.collection("Users").document(uid).collection("Inventory");
+        barcodeRef = db.collection("Users").document(uid).collection("Barcodes");
     }
 
     public static Inventory create() {
