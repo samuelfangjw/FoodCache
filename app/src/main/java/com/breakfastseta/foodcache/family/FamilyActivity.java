@@ -326,7 +326,7 @@ public class FamilyActivity extends AppCompatActivity {
                             Toast.makeText(FamilyActivity.this, "Name Taken. Please Choose Another Name", Toast.LENGTH_SHORT).show();
                         } else {
                             setFamilyRefListener(nameLowercase);
-                            createFamily(nameLowercase);
+                            createFamily(name);
                             dialog.dismiss();
                         }
                     });
@@ -337,9 +337,9 @@ public class FamilyActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void createFamily(String nameLowercase) {
-        Family family = new Family(nameLowercase, App.getUID());
-        familyRef.document(nameLowercase).set(family);
+    private void createFamily(String name) {
+        Family family = new Family(name, App.getUID());
+        familyRef.document(name.toLowerCase()).set(family);
         profile.setFamilyUID(App.getUID());
         App.getProfileRef().update("familyUID", App.getUID());
     }
