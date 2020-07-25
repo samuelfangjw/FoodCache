@@ -108,10 +108,12 @@ public class SocialFeedAdapter extends
                                 PopupMenu popupMenu = new PopupMenu(mCtx, ((SocialFeedHolder) holder).buttonViewOptions);
                                 //inflating menu from xml resource
                                 popupMenu.inflate(R.menu.social_options_card_menu);
-                                //if not user's post, hide delete button
+                                //if not user's post, hide delete button & edit button
                                 if (!request.getString("uID").equals(uid)) {
                                     MenuItem option = popupMenu.getMenu().findItem(R.id.delete_menu);
                                     option.setVisible(false);
+                                    MenuItem edit = popupMenu.getMenu().findItem(R.id.edit_menu);
+                                    edit.setVisible(false);
                                 }
                                 //adding click listener
                                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -160,6 +162,8 @@ public class SocialFeedAdapter extends
                                 if (!request.getString("uID").equals(uid)) {
                                     MenuItem option = popupMenu.getMenu().findItem(R.id.delete_menu);
                                     option.setVisible(false);
+                                    MenuItem edit = popupMenu.getMenu().findItem(R.id.edit_menu);
+                                    edit.setVisible(false);
                                 }
                                 //adding click listener
                                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
