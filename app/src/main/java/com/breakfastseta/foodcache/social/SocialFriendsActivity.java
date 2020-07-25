@@ -135,6 +135,8 @@ public class SocialFriendsActivity extends AppCompatActivity {
         ArrayList<String> friendsArr2 = (ArrayList<String>) documentSnapshot.get("friends");
 
         if (adapter2 != null && !friendsArr2.equals(friendsArr)) {
+            friendsArr.clear();
+            friendsArr.addAll(friendsArr2);
             if (friendsArr2.isEmpty()) {
                 queryDocumentSnapshotsFriendProfArr.clear();
                 adapter2.notifyDataSetChanged();
