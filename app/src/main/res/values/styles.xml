@@ -20,8 +20,8 @@
         <item name="shapeAppearanceSmallComponent">@style/AppShapeAppearance.SmallComponent</item>
         <item name="shapeAppearanceMediumComponent">@style/AppShapeAppearance.MediumComponent</item>
         <item name="materialCardViewStyle">@style/AppCard</item>
-        <item name="android:textColorHint">@color/primaryTextColor</item>
-        <item name="android:textColorHintInverse">@color/primaryTextColor</item>
+        <item name="android:textColorHint">#8C8C8C</item>
+        <item name="android:textColorHintInverse">#8C8C8C</item>
     </style>
 
     <style name="AppShapeAppearance.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
