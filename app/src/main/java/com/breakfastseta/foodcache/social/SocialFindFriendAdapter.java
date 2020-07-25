@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.R;
 import com.breakfastseta.foodcache.profile.Profile;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -19,11 +20,14 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SocialFindFriendAdapter extends FirestoreRecyclerAdapter<Profile, SocialFindFriendAdapter.SocialFindFriendHolder> {
     private Context mCtx;
     private String uID;
+    private ArrayList<String> friends;
 
     private OnItemClickListener listener;
     private AddFriendListener listener2;
@@ -32,6 +36,8 @@ public class SocialFindFriendAdapter extends FirestoreRecyclerAdapter<Profile, S
         super(options);
         this.mCtx = mCtx;
         this.uID = uID;
+
+        friends = App.getProfile().getFriends();
     }
 
     @NonNull
@@ -46,7 +52,7 @@ public class SocialFindFriendAdapter extends FirestoreRecyclerAdapter<Profile, S
     protected void onBindViewHolder(@NonNull SocialFindFriendAdapter.SocialFindFriendHolder holder, int position, @NonNull Profile model) {
         holder.textViewUsername.setText(model.getName());
 
-        if (uID.equals(model.getUID())) {
+        if (uID.equals(model.getUID()) || friends.contains(model.getUID())) {
             holder.imageButtonAddFriend.setVisibility(View.GONE);
         }
 
