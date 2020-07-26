@@ -13,6 +13,10 @@
         android:layout_alignParentTop="true"
         android:background="@color/primaryColor" />
 
+
+
+
+
     <EditText
         android:id="@+id/edit_text_ingredient"
         android:layout_width="match_parent"
@@ -46,14 +50,24 @@
         android:layout_toEndOf="@+id/edit_text_quantity" />
 
     <TextView
+        android:id="@+id/text_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add an Expiry Date Below:"
+        android:layout_below="@id/spinner_units"
+        android:layout_marginTop="18dp"
+        android:layout_marginLeft="18dp"
+        android:textColor="@color/md_black_1000"/>
+
+    <TextView
         android:id="@+id/expiry_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/edit_text_quantity"
+        android:layout_below="@id/text_hint"
         android:textSize="20sp"
         android:layout_marginHorizontal="20dp"
         android:layout_marginVertical="8dp"
-        android:hint="@string/expiry_date"
+        android:hint="Tap to add Expiry Date"
         android:onClick="pickDate"
         android:textColor="@color/md_black_1000" />
 
