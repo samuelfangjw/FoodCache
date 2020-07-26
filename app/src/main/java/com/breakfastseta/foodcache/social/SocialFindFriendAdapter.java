@@ -54,6 +54,8 @@ public class SocialFindFriendAdapter extends FirestoreRecyclerAdapter<Profile, S
 
         if (uID.equals(model.getUID()) || friends.contains(model.getUID())) {
             holder.imageButtonAddFriend.setVisibility(View.GONE);
+        } else {
+            holder.imageButtonAddFriend.setVisibility(View.VISIBLE);
         }
 
         if (model.getPhotoURL() != null) {
