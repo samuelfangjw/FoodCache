@@ -1,6 +1,7 @@
 package com.breakfastseta.foodcache.recipe.addeditrecipe;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,8 @@ import com.breakfastseta.foodcache.R;
 import com.tobiasschuerg.prefixsuffix.PrefixSuffixEditText;
 
 import java.util.ArrayList;
+
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class AddRecipeFragmentThree extends Fragment {
 
@@ -108,6 +111,18 @@ public class AddRecipeFragmentThree extends Fragment {
                 editText_step.setPrefix("Step " + (stepNumber) + ": ");
                 adapter.delete(position);
 
+            }
+
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                        .addActionIcon(R.drawable.ic_delete)
+                        .addSwipeLeftLabel("Delete")
+                        .addSwipeRightLabel("Delete")
+                        .create()
+                        .decorate();
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
         };
 
