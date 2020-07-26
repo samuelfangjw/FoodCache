@@ -180,6 +180,7 @@ public class AddIngredientActivity extends AppCompatActivity {
                 @Override
                 public void onFinish() {
                     Toast.makeText(AddIngredientActivity.this, "Item Added Successfully", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
             });
         }
