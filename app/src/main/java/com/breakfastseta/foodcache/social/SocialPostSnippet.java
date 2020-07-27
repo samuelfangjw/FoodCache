@@ -21,6 +21,14 @@ public class SocialPostSnippet {
         this.type = type;
     }
 
+    public SocialPostSnippet(String date, String time, String path, SocialPostType type, String uID) {
+        this.date = date;
+        this.time = time;
+        this.uID = uID;
+        this.path = path;
+        this.type = type;
+    }
+
     public String getDate() {
         return date;
     }

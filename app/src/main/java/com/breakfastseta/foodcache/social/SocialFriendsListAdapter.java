@@ -15,10 +15,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.R;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -80,6 +83,8 @@ public class SocialFriendsListAdapter extends
                                 String myUID = App.getUID();
                                 profileRef.document(friendUID).update("friends", FieldValue.arrayRemove(myUID));
                                 profileRef.document(myUID).update("friends", FieldValue.arrayRemove(friendUID));
+                                removeRecipe(friendUID, myUID);
+                                App.getProfile().getFriends().remove(friendUID);
                                 break;
                         }
                         return false;
@@ -98,6 +103,19 @@ public class SocialFriendsListAdapter extends
                     .into(imageView);
         }
 
+    }
+
+    private void removeRecipe(String friendUID, String myUID) {
+        CollectionReference socialUsersRef = FirebaseFirestore.getInstance().collection("SocialUsers").document(myUID).collection("posts");
+
+        socialUsersRef.whereEqualTo("uID", friendUID).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot snapshots) {
+                for (DocumentSnapshot snapshot : snapshots) {
+                    snapshot.getReference().delete();
+                }
+            }
+        });
     }
 
     @Override

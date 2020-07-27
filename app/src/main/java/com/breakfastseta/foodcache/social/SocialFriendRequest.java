@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.breakfastseta.foodcache.App;
 import com.breakfastseta.foodcache.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -151,6 +152,52 @@ public class SocialFriendRequest extends AppCompatActivity {
 
         // update friend's array
         notebookRef.document(friendUID).update("friends", FieldValue.arrayUnion(uID));
+
+        CollectionReference postRef = FirebaseFirestore.getInstance().collection("SocialPosts");
+        CollectionReference socialUsersRef = FirebaseFirestore.getInstance().collection("SocialUsers").document(uID).collection("posts");
+        CollectionReference friendsSocialUsersRef = FirebaseFirestore.getInstance().collection("SocialUsers").document(friendUID).collection("posts");
+
+        postRef.whereEqualTo("uID", friendUID).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot snapshots) {
+                Log.d(TAG, "onSuccess: middle" + snapshots.size());
+                for (DocumentSnapshot snapshot : snapshots) {
+                    Log.d(TAG, "onSuccess: after");
+                    String date = snapshot.getString("date");
+                    String path = snapshot.getReference().getPath();
+                    String time = snapshot.getString("time");
+                    String type = snapshot.getString("type");
+
+                    SocialPostType typeEnum = type.equals("REQUESTPOST") ? SocialPostType.REQUESTPOST : SocialPostType.BLOGPOST;
+
+                    SocialPostSnippet snippet = new SocialPostSnippet(date, time, path, typeEnum, friendUID);
+
+                    socialUsersRef.add(snippet);
+                }
+            }
+        });
+
+        postRef.whereEqualTo("uID", uID).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot snapshots) {
+                Log.d(TAG, "onSuccess: middle" + snapshots.size());
+                for (DocumentSnapshot snapshot : snapshots) {
+                    Log.d(TAG, "onSuccess: after");
+                    String date = snapshot.getString("date");
+                    String path = snapshot.getReference().getPath();
+                    String time = snapshot.getString("time");
+                    String type = snapshot.getString("type");
+
+                    SocialPostType typeEnum = type.equals("REQUESTPOST") ? SocialPostType.REQUESTPOST : SocialPostType.BLOGPOST;
+
+                    SocialPostSnippet snippet = new SocialPostSnippet(date, time, path, typeEnum, friendUID);
+
+                    friendsSocialUsersRef.add(snippet);
+                }
+            }
+        });
+
+        App.getProfile().getFriends().add(friendUID);
 
         Toast toast = Toast.makeText(SocialFriendRequest.this, "Friend Request Accepted!", Toast.LENGTH_SHORT);
         toast.show();
