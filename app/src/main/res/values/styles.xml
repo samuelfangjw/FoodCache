@@ -39,4 +39,10 @@
         <item name="cardBackgroundColor">@color/primaryLightColor</item>
     </style>
 
+
+
+
+    <style name="ThemeToolbar" parent="Theme.AppCompat.Light">
+    </style>
+
 </resources>
