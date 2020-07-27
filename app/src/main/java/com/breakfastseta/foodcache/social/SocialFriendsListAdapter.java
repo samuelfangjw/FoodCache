@@ -107,8 +107,18 @@ public class SocialFriendsListAdapter extends
 
     private void removeRecipe(String friendUID, String myUID) {
         CollectionReference socialUsersRef = FirebaseFirestore.getInstance().collection("SocialUsers").document(myUID).collection("posts");
+        CollectionReference friendsSocialUsersRef = FirebaseFirestore.getInstance().collection("SocialUsers").document(friendUID).collection("posts");
 
         socialUsersRef.whereEqualTo("uID", friendUID).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot snapshots) {
+                for (DocumentSnapshot snapshot : snapshots) {
+                    snapshot.getReference().delete();
+                }
+            }
+        });
+
+        friendsSocialUsersRef.whereEqualTo("uID", myUID).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot snapshots) {
                 for (DocumentSnapshot snapshot : snapshots) {
