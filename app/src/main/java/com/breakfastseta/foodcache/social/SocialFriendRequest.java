@@ -190,7 +190,7 @@ public class SocialFriendRequest extends AppCompatActivity {
 
                     SocialPostType typeEnum = type.equals("REQUESTPOST") ? SocialPostType.REQUESTPOST : SocialPostType.BLOGPOST;
 
-                    SocialPostSnippet snippet = new SocialPostSnippet(date, time, path, typeEnum, friendUID);
+                    SocialPostSnippet snippet = new SocialPostSnippet(date, time, path, typeEnum, uID);
 
                     friendsSocialUsersRef.add(snippet);
                 }
