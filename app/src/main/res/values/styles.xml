@@ -40,9 +40,4 @@
     </style>
 
 
-
-
-    <style name="ThemeToolbar" parent="Theme.AppCompat.Light">
-    </style>
-
 </resources>
