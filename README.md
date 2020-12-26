@@ -1,7 +1,7 @@
 # FoodCache
 ![FoodCache Poster](images/Orbital_Poster.png)
 
-FoodCache is a Food Management App that helps reduce food wastage by keeping track of expiring ingredients, suggest recipes for meals to minimize food waste and act as a platform to share excess food and ingredients with friends and family. 
+FoodCache is a Food Management App that helps reduce food wastage by keeping track of expiring ingredients, suggesting recipes for meals to minimize food waste and acting as a platform to share excess food and ingredients with friends and family. 
 
 FoodCache is a project by team Breakfast Set A (Jarveis and Samuel) for CP2106 (Orbital), a summer-long self-directed, independent work course. The project acheived the Apollo 11 (Advanced) level of achievement. 
 
